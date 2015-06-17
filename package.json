@@ -9,7 +9,7 @@
       "email": "snoorghorbani@gmail.com"
     }
   ],
-  "main": null,
+  "main": "/dist/sutility-0.0.1.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/snoorghorbani/sutility.git"
