@@ -33,6 +33,7 @@
     })(this);
     fm.loadJS = (function (fm) {
         var qeue = [];
+        var dependenciesHistory = {};
         return function (files) {
             var thenFn = _.fn();
             var _dependencies = [];
@@ -42,17 +43,25 @@
                         if (!js[filePath]) {
                             js[filePath] = filePath;
                         }
-                        _dependencies.push(js[filePath]);
+                        if (!dependenciesHistory[js[filePath]]) {
+                            _dependencies.push(js[filePath]);
+                            dependenciesHistory[js[filePath]] = false;
+                        }
                     });
                 } else {
-                    _dependencies.push(js[files[i]]);
+                    if (!dependenciesHistory[js[files[i]]]) {
+                        _dependencies.push(js[files[i]]);
+                        dependenciesHistory[js[files[i]]] = false;
+                    }
                 }
             }
             
             for (var i = 0, file; file = _dependencies[i]; i++) {
                 var path = file;
                 _.loadJS(path, function (path) {
-                    for (var i = 0; i < qeue.length; i++) {
+                    dependenciesHistory[path] = true;
+                    
+                    for (var i = qeue.length - 1; i >= 0; i--) {
                         if (qeue[i].done)
                             continue;
                         qeue[i].depen = _.array.remove(qeue[i].depen, path);
@@ -66,7 +75,11 @@
             return {
                 then: function (fn) {
                     thenFn = fn;
-                    qeue.push({ depen: _dependencies, thenFn: fn });
+                    if (_dependencies.length == 0) {
+                        thenFn();
+                    } else {
+                        qeue.push({ depen: _dependencies, thenFn: fn });
+                    }
                 }
             };
         }
@@ -98,7 +111,15 @@
             that.extend(css, config.css);
         }
     })(this);
-    
+    //_.ready(function () {
+    //    for (var i = 0, controllerNode; controllerNode = controllerNodes[i]; i++) {
+    //        var controllerName = controllerNode.dataset.controller;
+    //        var controller = controllers[controllerName];
+    //        if (controller) {
+    //            instansiteController(controller, controllerNode);
+    //        }
+    //    }
+    //});
     var instansiteController = function (controller, controllerNode) {
         controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
         

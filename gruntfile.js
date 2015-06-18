@@ -9,9 +9,11 @@ module.exports = function (grunt) {
     var pkg, config;
     
     pkg = grunt.file.readJSON('package.json');
-    var Files = {
+    var FilesPattern = {
         modules: ['src/modules/*.js']
     };
+    
+    
     config = {
         banner : [
             '/**\n',
@@ -24,40 +26,31 @@ module.exports = function (grunt) {
         ].join(''),
         
         sources : [
-            'src/intro.js',
-            // add'l packages
-
-            'src/export.js',
-
-            'src/modules/css.js',
-            'src/modules/catchall.js',
-            'src/modules/array.js',
-            'src/modules/catchall.js',
-            'src/modules/className.js',
-            'src/modules/compare.js',
-            'src/modules/css.js',
-            'src/modules/dictionary.js',
-            'src/modules/enableBackup.js',
-            'src/modules/flyWeight.js',
-            'src/modules/framework.js',
-            'src/modules/is.js',
-            'src/modules/if.js',
-            'src/modules/publisher.js',
-            'src/modules/select.js',
-
-            'src/outro.js'
-        ],
-        modules: [
+            { name: 'core', value: 'src/export.js' , checked: true }
         ],
         pkg : pkg,
-        uglifyFiles : {}
     };
+    var files = {
+        modules: grunt.file.expand(['src/modules/*.js']),
+        uglifyFiles : {},
+        clearFiles: {},
+    }
+    for (var i = 0; i < files.modules.length; i++) {
+        var name = files.modules[i].substring(files.modules[i].lastIndexOf('/') + 1, files.modules[i].lastIndexOf('.'));
+        var module = {
+            name : name,
+            value: files.modules[i].toString()
+        };
+        config.sources.push(module);
+    }
     
     // setup dynamic filenames
-    config.versioned = [config.pkg.name, config.pkg.version].join('-');
-    config.dist = ['dist/', '.js'].join(config.versioned);
-    config.uglifyFiles[['dist/', '.min.js'].join(config.versioned)] = config.dist;
-    
+    config.versionedName = [config.pkg.name, config.pkg.version].join('-');
+    config.dist = ['dist/', '.js'].join(config.versionedName);
+    files.uglifyFiles[['dist/', '.min.js'].join(config.versionedName)] = config.dist;
+    files.clearFiles[['dist/', '.clear.js'].join(config.versionedName)] = config.dist;
+
+
     // Project configuration.
     grunt.initConfig({
         pkg : config.pkg,
@@ -79,8 +72,14 @@ module.exports = function (grunt) {
                             message: 'Select your modules:',
                             'default': 'basic',                       // default value if nothing is entered
                             choices: config.sources,
-                            //validate: function (value) { } ,        // return true if valid, error message if invalid
-                            //filter: function (value) { } ,          // modify the answer
+                            validate: function (value) {         // return true if valid, error message if invalid
+                                grunt.log.writelns("value");
+                                return true
+                            } ,
+                            filter: function (value) {           // modify the answer
+                                grunt.log.writelns(value);
+                                return ['src/intro.js' , value , 'src/outro.js'];
+                            } ,
                             //when: function (answers) { }            // only ask this question when this function returns true
                         }]
                 }
@@ -97,23 +96,40 @@ module.exports = function (grunt) {
             }
         },
         uglify : {
-            main: {
+            main : {
                 options : {
                     mangle : true,
                     sourceMap: true,
                     beautify: false,
-                    banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */',
+                    banner: config.banner,
                     compress: {
                         global_defs: {
                             "DEBUG": false
                         },
                         dead_code: true,
-                        drop_console: true
-                    },
+                        drop_console: true,
+                        conditionals: true,
+                    }
                 },
-                dist : {
-                    files : config.uglifyFiles
-                }
+                files : files.uglifyFiles
+            },
+            clear: {
+                options : {
+                    mangle : false,
+                    sourceMap: false,
+                    beautify: true,
+                    banner: config.banner,
+                    compress: {
+                        global_defs: {
+                            "DEBUG": false
+                        },
+                        dead_code: true,
+                        drop_console: true,
+                        properties : true,
+                        drop_debugger: true,
+                    }
+                },
+                files : files.clearFiles
             },
             modules: {
                 options: {
@@ -126,7 +142,9 @@ module.exports = function (grunt) {
                             "DEBUG": false
                         },
                         dead_code: true,
-                        drop_console: true
+                        drop_console: true,
+                        conditionals: true,
+                        join_vars: true,
                     },
                 },
                 files: [{
@@ -136,11 +154,10 @@ module.exports = function (grunt) {
                         dest: 'dist/modules'
                     }]
             }
-
         },
         jasmine : {
             tests : {
-                src : ['dist/', '.min.js'].join(config.versioned),
+                src : ['dist/', '.min.js'].join(config.versionedName),
                 options : {
                     specs : 'test/spec/*.spec.js',
                     template : 'test/grunt.tmpl'
@@ -164,7 +181,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-prompt');
     
     // Default task.
-    grunt.registerTask('default', ['clean', 'prompt:concat', 'concat', 'uglify', 'jasmine']);
+    //grunt.registerTask('default', ['clean', 'prompt:concat', 'concat', 'uglify', 'jasmine']);
+    grunt.registerTask('default', function (target) {
+        if (!target) {
+            grunt.task.run(['clean', 'prompt:concat', 'concat', 'jasmine']);
+        }
+    });
     // Debug task.
     //grunt.registerTask('debug', ['lint', 'concurrent:debug']);
     
@@ -175,7 +197,8 @@ module.exports = function (grunt) {
     //grunt.registerTask('lint', ['jshint', 'csslint']);
     
     // Build task(s).
-    grunt.registerTask('build', ['uglify']);
+    grunt.registerTask('build', ['uglify:main', 'uglify:modules']);
+    grunt.registerTask('clear', ['uglify:clear']);
     
     // Test task.
     //grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
