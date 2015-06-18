@@ -904,7 +904,7 @@ this.loadJS = (function (_) {
         if (loadedFiles[path]) {
             if (loadedFiles[path].state) {
                 setTimeout(function () {
-                    callback(path);
+                    callback(path, path);
                 }, 1);
             } else {
                 loadedFiles[path].callbacks.push(callback);
@@ -918,10 +918,13 @@ this.loadJS = (function (_) {
             
             var script = document.createElement('script')
             script.setAttribute("type", "text/javascript")
-            script.onload = function (a, b, c) {
+            script.onload = function (e) {
+                var filePath = e.path[0].getAttribute('src');
+                filePath = filePath.substring(1, filePath.length);
+                
                 loadedFiles[path].state = true;
                 for (var i = 0, fn; fn = loadedFiles[path].callbacks[i]; i++) {
-                    fn(path);
+                    fn(filePath, path);
                 }
             };
             script.setAttribute("src", '/' + path);
@@ -1216,6 +1219,573 @@ this.onscroll(function () {
 });
 
 //#endregion
+
+this.array = (function (_) {
+    var fn = function () { };
+    
+    fn.compact = function (arr) {
+        return _.filter(arr, _.i);
+    };
+    fn.union = function (arrays) {
+        var temp = {};
+                //todo : performance
+                //return _.each(arrays, function (arr) { temp[i] = ''; });
+    };
+    fn.uniq = function (arr) {
+    };
+    fn.remove = function (arr, i) {
+        return _.filter(arr, function (j) { return i !== j })
+    };
+    return fn;
+})(this);
+this.catchall = (function (_) {
+    var instatiate = null;
+    var keys = {};
+    var values = {};
+    var defaultCatchAllConfig = {
+        prefix: '/defaultPrefix',
+        partialPrefix: '/defaultPrefix/defaultFilterresult',
+        replace: ['/filter/', '/filter/filterresult/'],
+    };
+    var defaultKeyConfig = {
+        multi: false,
+        'default': null
+    };
+    var Fn = function (config) {
+        this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
+        return this;
+    };
+    
+    Fn.prototype.key = function (name, config) {
+        keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+        var pathName = decodeURIComponent(window.location.pathname);
+        var catchAlls = pathName.replace(this.config.prefix, '');
+        catchAlls = catchAlls.split('/');
+        _.each(catchAlls, function (ca) {
+            //if (ca.startsWith(name + '-')) {
+            if (_.strStartsWith(ca, name + '-')) {
+                values[name] = _.assignIfNotDefined(values[name], []);
+                if (ca.length > name.length + 1) {
+                    values[name].push(ca);
+                }
+            }
+        });
+        
+        Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
+        Fn.prototype.add[name] = function (a, b) {
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+            
+            if (keys[name].multi) {
+                values[name] = values[name] || [];
+                values[name].push(valueStr);
+            } else {
+                values[name] = [valueStr];
+            }
+        };
+        
+        Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
+        Fn.prototype.remove[name] = function (a, b) {
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+            values[name] = _.filter(values[name], function (a) { return a !== valueStr; });
+        };
+        Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
+        Fn.prototype.reset[name] = function () {
+            var defaultValue = keys[name].default;
+            var initByType = '';
+            initByType = _.if.is.equal(keys[name].multi, 'multi', function () { return []; });
+            values[name] = (defaultValue) ? defaultValue : initByType;
+        };
+    };
+    Fn.prototype.partial = function () {
+        var url = window.location.origin + this.config.partialPrefix;
+        _.each(values, function (value, key) {
+            _.each(value, function (str) {
+                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+                if (fine) {
+                    url += '/' + str;
+                }
+            });
+        });
+        return decodeURIComponent(url.toLowerCase());
+    };
+    Fn.prototype.build = function (f) {
+        var url = window.location.origin + this.config.prefix;
+        _.each(values, function (value, key) {
+            _.each(value, function (str) {
+                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+                if (fine) {
+                    url += '/' + str;
+                }
+            });
+        });
+        return decodeURIComponent(url.toLowerCase());
+    };
+    
+    return function (config) {
+        return (instatiate) ? instatiate : instatiate = new Fn(config);
+    };
+})(this);
+this.className = (function (_, undefined) {
+    var className = function (selectorOrDom, className) { };
+    
+    className.add = function (selectorOrDom, className) {
+        var nodes = _.select(selectorOrDom);
+        
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].classList) {
+                //ToDo
+                DOMTokenList.prototype.add.apply(nodes[i].classList, _.spliteAndTrim(className));
+                continue;
+            }
+            if (nodes[i].className.indexOf(className) === -1) {
+                nodes[i].className = nodes[i].className + ' ' + className;
+            }
+        }
+    };
+    className.remove = function (selectorOrDom, className) {
+        var nodes = _.select(selectorOrDom);
+        
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].classList) {
+                DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
+                continue;
+            }
+            
+            var reg = new RegExp(className, 'g');
+            nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+        }
+    };
+    className.toggle = function () { };
+    className.change = function (selectorOrDom, className, replaceWith) {
+        var nodes = _.select(selectorOrDom);
+        _.removeClass(nodes, className);
+        _.addClass(nodes, replaceWith);
+    };
+    
+    return className;
+})(this);
+this.compare = function (value, condition, param) {
+    switch (condition) {
+        case 'eq':
+            return value == param;
+        case 'neq':
+            return value != param;
+        case 'grt':
+            return value > param;
+        case 'lst':
+            return value < param;
+        case 'ct':
+            return value.toString().indexOf(param.toString()) > -1;
+    }
+};
+this.compare.conditions = { 'equal': 'eq', 'neq': 'neq', 'grt': 'grt', 'lst': 'lst', 'ct': 'ct' };
+
+this.css = (function (_) {
+    var toPX = function () { };
+    var toNumber = function () { };
+    var fn = function (selectorOrDom, style) {
+        var nodes = this.select(selectorOrDom);
+        for (var i = 0, node; node = nodes[i]; i++)
+            for (var k in style)
+                node.style[k] = style[k];
+    };
+    fn.computedValue = function (selectorOrDom, prop, numberOnly) {
+        if (window.getComputedStyle) {
+            var nodes = _.selectFirst(selectorOrDom);
+            var value = window.getComputedStyle(nodes, null).getPropertyValue(prop);
+            if (numberOnly)
+                value = _.regex.matchFirst(value);
+            return value;
+        }
+        _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
+    };
+    
+    return fn;
+})(this);
+this.dictionary = (function (that, undefined) {
+    var defaultValues = {};
+    var Fn = function (_defaultValues) {
+        //var initValue = that.extend({}, defaultValues);
+        defaultValues = _defaultValues || {};
+        _.extend(this, defaultValues);
+    };
+    Fn.prototype.default = function (obj) {
+        that.extend(defaultValues, obj);
+    };
+    Fn.prototype.reset = function (k) {
+        this[k] = defaultValues[k];
+    };
+    Fn.prototype.add = function (k, v) {
+        this[k] = v;
+    };
+    Fn.prototype.remove = function (k) { };
+    Fn.prototype.data = function () {
+        return _.cloneObj(this, false);
+    };
+    
+    return {
+        'new': function (defaultValue) {
+            return new Fn(defaultValue);
+        },
+        listen: function (fn) { },
+    };
+})(this);
+//TOTHINK freezable or statable : 
+//freeazable -> Defines an object that has a modifiable state and a read-only (frozen) state. 
+//Classes that derive from Freezable provide detailed change notification, can be made immutable, and can clone themselves.
+//https://msdn.microsoft.com/en-us/library/system.windows.freezable(v=vs.110).aspx
+this.enableBackup = (function (_, undefined) {
+    var o = {};
+    o.__repository = {};
+    
+    o.backup = function (key) {
+        key = _.assignIfNotDefined(key, 'last');
+        
+        this.__repository[key] = JSON.stringify(this);
+        return this.__repository[key];
+    };
+    o.resotre = function (key) {
+        key = _.assignIfNotDefined(key, 'last');
+        if (_.is.not.defined(this.__repository[key])) return;
+        
+        var json = JSON.parse(this.__repository[key]);
+        return _.update(this, json);
+    };
+    
+    return function (constructor_obj) {
+        var constructor = _.if.is.not.function(constructor_obj, function () {
+            return _.get.constructor(constructor_obj);
+        });
+        
+        _.prototype.extend(constructor, o);
+        
+        return constructor;
+    };
+})(this);
+this.flyWeight = (function (_, undefined) {
+            //1.Remove all extrinsic data
+            //2.Create a factory
+            //3.Create a manager(to store the extrinsic data)
+})(this);
+this.framework = (function (_) {
+    var CONST = { controllerSelector: '[data-controller]' };
+    var fm = function () { };
+    var factories = {};
+    var controllers = {};
+    var js = {};
+    var css = {};
+    fm.factory = (function (fm) {
+        return function (name, fn) {
+            var camelCaseName = _.camelCase(name);
+            window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
+            window[camelCaseName + 's'] = {};
+            var Constructor = fn();
+            factories[camelCaseName] = function (id, node, config) {
+                return window[camelCaseName + 's'][id] = new Constructor(id, node, config);
+            };
+        };
+    })(this);
+    fm.controller = (function (fm, undefined) {
+        var repositoy = {};
+        return function (name, fn) {
+            controllers[name] = {};
+            controllers[name].fn = fn;
+            //controllers[name].scope = window.scope = _.scope();
+            repositoy[name] = controllers[name].scope = _.scope();
+            
+            _.ready(function () {
+                var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
+                instansiteController(controllers[name], controllerNode);
+            });
+            return controllers[name].scope;
+        };
+    })(this);
+    fm.loadJS = (function (fm) {
+        var qeue = [];
+        var dependenciesHistory = {};
+        return function (files) {
+            var thenFn = _.fn();
+            var _dependencies = [];
+            for (var i = 0; i < files.length; i++) {
+                if (_.is.array(js[files[i]])) {
+                    _.each(js[files[i]], function (filePath) {
+                        if (!js[filePath]) {
+                            js[filePath] = filePath;
+                        }
+                        if (!dependenciesHistory[js[filePath]]) {
+                            _dependencies.push(js[filePath]);
+                            dependenciesHistory[js[filePath]] = false;
+                        }
+                    });
+                } else {
+                    if (!dependenciesHistory[js[files[i]]]) {
+                        _dependencies.push(js[files[i]]);
+                        dependenciesHistory[js[files[i]]] = false;
+                    }
+                }
+            }
+            
+            for (var i = 0, file; file = _dependencies[i]; i++) {
+                var path = file;
+                _.loadJS(path, function (path) {
+                    dependenciesHistory[path] = true;
+                    
+                    for (var i = qeue.length - 1; i >= 0; i--) {
+                        if (qeue[i].done)
+                            continue;
+                        qeue[i].depen = _.array.remove(qeue[i].depen, path);
+                        if (qeue[i].depen.length === 0) {
+                            qeue[i].done = true;
+                            qeue[i].thenFn();
+                        }
+                    }
+                });
+            }
+            return {
+                then: function (fn) {
+                    thenFn = fn;
+                    if (_dependencies.length == 0) {
+                        thenFn();
+                    } else {
+                        qeue.push({ depen: _dependencies, thenFn: fn });
+                    }
+                }
+            };
+        }
+    })(this);
+    fm.loadCSS = (function (fm) {
+        return function (files) {
+            var _dependencies = [];
+            for (var i = 0; i < files.length; i++) {
+                if (_.is.array(css[files[i]])) {
+                    _.each(css[files[i]], function (filePath) {
+                        if (!css[filePath]) {
+                            css[filePath] = filePath;
+                        }
+                        _dependencies.push(css[filePath]);
+                    });
+                } else {
+                    _dependencies.push(css[files[i]]);
+                }
+            }
+            for (var i = 0; i < _dependencies.length; i++) {
+                that.loadCSS(_dependencies[i]);
+            }
+            return this;
+        };
+    })(this);
+    fm.config = (function (_) {
+        return function (config) {
+            that.extend(js, config.js);
+            that.extend(css, config.css);
+        }
+    })(this);
+    //_.ready(function () {
+    //    for (var i = 0, controllerNode; controllerNode = controllerNodes[i]; i++) {
+    //        var controllerName = controllerNode.dataset.controller;
+    //        var controller = controllers[controllerName];
+    //        if (controller) {
+    //            instansiteController(controller, controllerNode);
+    //        }
+    //    }
+    //});
+    var instansiteController = function (controller, controllerNode) {
+        controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
+        
+        for (var factoryName in factories) {
+            var nodes = controllerNode.querySelectorAll('[' + factoryName + ']');
+            _.each(nodes, function (node) {
+                var id = node.getAttribute(factoryName);
+                var config = controller.scope.config[id] || {};
+                factories[factoryName](id, node, config);
+            });
+        }
+    };
+    
+    return fm;
+})(this);
+
+this.if = (function (_) {
+    var _if = {};
+    _if.is = {};
+    _if.is.not = {};
+    for (var i in _.is) (function (i) {
+        if (i != 'not') {
+            _if.is[i] = function (obj, fn) {
+                if (_.is[i](obj)) {
+                    return fn();
+                }
+            };
+            _if.is.not[i] = function (obj, fn) {
+                if (_.is.not[i](obj)) {
+                    return fn();
+                }
+            };
+        }
+    })(i);
+    return _if;
+})(this);
+this.is = (function (_, undefined) {
+    var is = function (node, selector) {
+        if (node.matches)
+            return node.matches(selector);
+        var nodes = this.argToArray(node.parentNode.querySelectorAll(selector));
+        return (nodes.indexOf(node) > -1) ? true : false;
+    };
+    
+    is.object = function (_var) {
+        return Object.prototype.toString.call(_var) === '[object Object]';
+    };
+    is.nodeList = function (obj) {
+        return Object.prototype.toString.call(obj) === '[object NodeList]';
+    };
+    is.HTMLCollection = function (obj) {
+        return Object.prototype.toString.call(obj) === '[object HTMLCollection]';
+    };
+    is.array = function (_var) {
+        return Object.prototype.toString.call(_var) === '[object Array]';
+    };
+    is.number = function (_var) {
+        return Object.prototype.toString.call(_var) === '[object Number]';
+    };
+    is.function = function (_var) {
+        return Object.prototype.toString.call(_var) === '[object Function]';
+    };
+    is.string = function (_var) {
+        return (Object.prototype.toString.call(_var) === '[object String]');//&& ((isEmpty));
+    };
+    is.undefined = function (_var) {
+        return Object.prototype.toString.call(_var) === '[object Undefined]';
+    };
+    is.event = function (_var) {
+        return !!Object.prototype.toString.call(_var).toLowerCase().search('event');
+    };
+    is.defined = function (_var) {
+        return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
+    };
+    is.json = function () { };
+    is.error = function () { };
+    
+    is.startWith = function () { };
+    is.endWith = function () { };
+    
+    is.value = function (_var) {
+        return (_var) ? true : false;
+    };
+    is.empty = function (o) {
+        for (var i in o)
+            if (o.hasOwnProperty(i))
+                return false;
+        return true;
+    };
+    is.truthy = function () { };
+    is.scalar = function (_var) {
+        //TODO : improve
+        return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not.function(_var);
+    };
+    is.prototypeProp = function (obj, prop) {
+        return (obj[prop] && !obj.hasOwnProperty(prop));
+    };
+    is.equal = function (fv, sv) {
+        if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+        if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+        
+        return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
+    };
+    
+    var not = {};
+    var i;
+    for (i in is) (function (i) {
+        if (is.hasOwnProperty(i)) not[i] = function (o) {
+            return !is[i](o);
+        };
+    })(i);
+    is.not = not;
+    
+    var all = {};
+    for (i in is) (function (i) {
+        if (is.hasOwnProperty(i)) all[i] = function (o) {
+
+        };
+    })(i);
+    is.all = all;
+    
+    var any = {};
+    for (var j in is) (function (j) {
+        if (is.hasOwnProperty(j)) any[j] = function (o) {
+
+        };
+    })(j);
+    is.any = any;
+    
+    return is;
+})(this);
+this.publisher = (function (that, undefined) {
+    var o = {};
+    o.subscribers = {
+        any: []
+    };
+    o.subscribe = function (fn, types) {
+        types = types || 'any';
+        var typesList = _.spliteAndTrim(types);
+        
+        for (var i = 0, type; type = typesList[i]; i++) {
+            if (_.is.not.defined(this.subscribers[type]))
+                this.subscribers[type] = [];
+            this.subscribers[type].push(fn);
+        }
+    };
+    o.unsubscribe = function (fn, type) {
+        this.visitSubscribers('unsubscribe', fn, type);
+
+    };
+    o.publish = function (type, publication) {
+        publication = _.assignIfNotDefined(publication, {});
+        this.visitSubscribers('publish', publication, type);
+    };
+    o.visitSubscribers = function (action, arg, type) {
+        var pubType = type || 'any',
+            subscribers = this.subscribers[pubType],
+            max = subscribers.length;
+        for (var i = 0, sub; sub = subscribers[i]; i++) {
+            if (action === 'publish') {
+                sub(arg);
+            } else if (action === 'unsubscribe') {
+                if (sub == arg) {
+                    subscribers.splice(i, 1);
+                }
+            }
+        }
+    };
+    return function (obj) {
+        obj = obj || {};
+        var i;
+        for (i in o) {
+            if (o.hasOwnProperty(i) && _.is.function(o[i])) {
+                obj[i] = o[i];
+            }
+        }
+        obj.subscribers = { any: [] };
+        return obj;
+    };
+})(this);
+//todo : move to DOM namespace
+this.select = function (selectorOrDom, parent) {
+    parent = parent || document.body;
+    var nodes = '';
+    if (this.is.string(selectorOrDom))
+        nodes = parent.querySelectorAll(selectorOrDom);
+    else
+        nodes = selectorOrDom;
+    if (this.is.nodeList(nodes)) nodes = this.argToArray(nodes);
+    else if (this.is.HTMLCollection(nodes)) nodes = this.argToArray(nodes);
+    else if (!this.is.array(nodes)) nodes = [nodes];
+    
+    return nodes;
+};
+this.selectFirst = function (selectorOrDom, parent) {
+    return _.valueOf(_.select(selectorOrDom, parent), 0);
+};
 
    };
 return {
