@@ -1,2 +1,6 @@
 ;(function(undefined){
-    "use strict";
+"use strict";
+var debugMode = true;
+var UTILITY = (function () {
+
+var U = function () {
