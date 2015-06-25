@@ -1272,6 +1272,30 @@ this.array = (function (_) {
     return fn;
 })(this);
 
+this.callConstantly = (function (_) {
+    return function (fn , count, context) {
+        return function () {
+            --count;
+            var res;
+            if (fn) {
+                res = fn.apply(context || {} , arguments);
+            }
+            if (count == 0) fn = null;
+            return res;
+        };
+    };
+})(this);
+this.callVoucher = (function (_) {
+    return function (fn , millisecond, context) {
+        setTimeout(function () {
+            fn = null;
+        }, millisecond);
+        return function () {
+            if (fn)
+                return fn.apply(context || {} , arguments);
+        };
+    };
+})(this);
 this.catchall = (function (_) {
     var instatiate = null;
     var keys = {};
@@ -1752,6 +1776,27 @@ this.if = (function (_) {
         }
     })(i);
     return _if;
+})(this);
+this.iterator = (function (_) {
+    return function (array) {
+        var index = -1;
+        return {
+            next: function () {
+                return index < array.length ?
+               { value: array[++index], done: false } :
+               { done: true };
+            },
+            prev: function () {
+                return index > -1?
+               { value: array[--index], done: false } :
+               { done: true };
+            },
+            current : function () {
+                return { value: array[index], done: false }
+            },
+            index : function () { return index }
+        }
+    };
 })(this);
 this.publisher = (function (that, undefined) {
     var o = {};

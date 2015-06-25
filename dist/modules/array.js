@@ -1,0 +1,3 @@
+/*! sutility - v0.0.1 - 2015-06-25 */
+this.array=function(a){var b=function(){};b.compact=function(b){return a.filter(b,a.i)},b.union=function(b){var c={},d=[];return a.each(b,function(a){c[a]=""}),a.each(c,function(a,b){d.push(b)}),d},b.uniq=function(a){};var c=function(b,d,e){for(var f=-1,g=b.length,h=-1,i=[];++f<g;){var j=b[f];if(a.is.array(j)&&(e||a.is.array(j)||a.is.arguments(j))){d&&(j=c(j,d,e));for(var k=-1,l=j.length;++k<l;)i[++h]=j[k]}else e||(i[++h]=j)}return i};return b.flattenDeep=function(a){var b=a?a.length:0;return b?c(a,!0):[]},b.remove=function(b,c){return a.filter(b,function(a){return c!==a})},b}(this);
+//# sourceMappingURL=array.js.map
