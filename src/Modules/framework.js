@@ -7,7 +7,6 @@
     var css = {};
     fm.factory = (function (fm) {
         return function (name, fn) {
-            var camelCaseName = _.camelCase(name);
             window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
             window[camelCaseName + 's'] = {};
             var Constructor = fn();
@@ -23,7 +22,7 @@
             controllers[name].fn = fn;
             //controllers[name].scope = window.scope = _.scope();
             repositoy[name] = controllers[name].scope = _.scope();
-            
+
             _.ready(function () {
                 var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
                 instansiteController(controllers[name], controllerNode);
@@ -55,12 +54,12 @@
                     }
                 }
             }
-            
+
             for (var i = 0, file; file = _dependencies[i]; i++) {
                 var path = file;
                 _.loadJS(path, function (path) {
                     dependenciesHistory[path] = true;
-                    
+
                     for (var i = qeue.length - 1; i >= 0; i--) {
                         if (qeue[i].done)
                             continue;
@@ -122,16 +121,17 @@
     //});
     var instansiteController = function (controller, controllerNode) {
         controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
-        
+
         for (var factoryName in factories) {
-            var nodes = controllerNode.querySelectorAll('[' + factoryName + ']');
+            var factoryAttrName = _.dashCase(factoryName);
+            var nodes = controllerNode.querySelectorAll('[' + factoryAttrName + ']');
             _.each(nodes, function (node) {
-                var id = node.getAttribute(factoryName);
+                var id = node.getAttribute(factoryAttrName);
                 var config = controller.scope.config[id] || {};
                 factories[factoryName](id, node, config);
             });
         }
     };
-    
+
     return fm;
 })(this);

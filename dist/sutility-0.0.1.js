@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.1 - 2015-06-18
+ * sutility v0.0.1 - 2015-06-25
  * Functional Library
  *
  * Copyright (c) 2015 soushinas noorghorbani <snoorghorbani@gmail.com>
@@ -745,7 +745,7 @@ this.propByPrefix = function (obj, prefix, removePrefixFromKey) {
 };
 this.camelCase = function (str) {
     if (!str) debugger;
-    return str.toLowerCase().replace(/-(.)/g, function (match, group1) {
+    return str.replace(/-(.)/g, function (match, group1) {
         return group1.toUpperCase();
     });
 };
@@ -1222,22 +1222,56 @@ this.onscroll(function () {
 
 this.array = (function (_) {
     var fn = function () { };
-    
+
     fn.compact = function (arr) {
         return _.filter(arr, _.i);
     };
     fn.union = function (arrays) {
         var temp = {};
-                //todo : performance
-                //return _.each(arrays, function (arr) { temp[i] = ''; });
+        var res = [];
+        //todo : performance
+        _.each(arrays, function (arr) { temp[arr] = ''; });
+        _.each(temp, function (value, key) { res.push(key) });
+        return res;
     };
     fn.uniq = function (arr) {
     };
+    var baseFlatten = function (array, isDeep, isStrict) {
+        var index = -1,
+            length = array.length,
+            resIndex = -1,
+            result = [];
+
+        while (++index < length) {
+            var value = array[index];
+            if (_.is.array(value) &&
+                (isStrict || _.is.array(value) || _.is.arguments(value))) {
+                if (isDeep) {
+                    // Recursively flatten arrays (susceptible to call stack limits).
+                    value = baseFlatten(value, isDeep, isStrict);
+                }
+                var valIndex = -1,
+                    valLength = value.length;
+
+                while (++valIndex < valLength) {
+                    result[++resIndex] = value[valIndex];
+                }
+            } else if (!isStrict) {
+                result[++resIndex] = value;
+            }
+        }
+        return result;
+    }
+    fn.flattenDeep = function (array) {
+        var length = array ? array.length : 0;
+        return length ? baseFlatten(array, true) : [];
+    }
     fn.remove = function (arr, i) {
         return _.filter(arr, function (j) { return i !== j })
     };
     return fn;
 })(this);
+
 this.catchall = (function (_) {
     var instatiate = null;
     var keys = {};
@@ -1476,7 +1510,6 @@ this.framework = (function (_) {
     var css = {};
     fm.factory = (function (fm) {
         return function (name, fn) {
-            var camelCaseName = _.camelCase(name);
             window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
             window[camelCaseName + 's'] = {};
             var Constructor = fn();
@@ -1492,7 +1525,7 @@ this.framework = (function (_) {
             controllers[name].fn = fn;
             //controllers[name].scope = window.scope = _.scope();
             repositoy[name] = controllers[name].scope = _.scope();
-            
+
             _.ready(function () {
                 var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
                 instansiteController(controllers[name], controllerNode);
@@ -1524,12 +1557,12 @@ this.framework = (function (_) {
                     }
                 }
             }
-            
+
             for (var i = 0, file; file = _dependencies[i]; i++) {
                 var path = file;
                 _.loadJS(path, function (path) {
                     dependenciesHistory[path] = true;
-                    
+
                     for (var i = qeue.length - 1; i >= 0; i--) {
                         if (qeue[i].done)
                             continue;
@@ -1591,39 +1624,19 @@ this.framework = (function (_) {
     //});
     var instansiteController = function (controller, controllerNode) {
         controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
-        
+
         for (var factoryName in factories) {
-            var nodes = controllerNode.querySelectorAll('[' + factoryName + ']');
+            var factoryAttrName = _.dashCase(factoryName);
+            var nodes = controllerNode.querySelectorAll('[' + factoryAttrName + ']');
             _.each(nodes, function (node) {
-                var id = node.getAttribute(factoryName);
+                var id = node.getAttribute(factoryAttrName);
                 var config = controller.scope.config[id] || {};
                 factories[factoryName](id, node, config);
             });
         }
     };
-    
-    return fm;
-})(this);
 
-this.if = (function (_) {
-    var _if = {};
-    _if.is = {};
-    _if.is.not = {};
-    for (var i in _.is) (function (i) {
-        if (i != 'not') {
-            _if.is[i] = function (obj, fn) {
-                if (_.is[i](obj)) {
-                    return fn();
-                }
-            };
-            _if.is.not[i] = function (obj, fn) {
-                if (_.is.not[i](obj)) {
-                    return fn();
-                }
-            };
-        }
-    })(i);
-    return _if;
+    return fm;
 })(this);
 this.is = (function (_, undefined) {
     var is = function (node, selector) {
@@ -1719,6 +1732,26 @@ this.is = (function (_, undefined) {
     is.any = any;
     
     return is;
+})(this);
+this.if = (function (_) {
+    var _if = {};
+    _if.is = {};
+    _if.is.not = {};
+    for (var i in _.is) (function (i) {
+        if (i != 'not') {
+            _if.is[i] = function (obj, fn) {
+                if (_.is[i](obj)) {
+                    return fn();
+                }
+            };
+            _if.is.not[i] = function (obj, fn) {
+                if (_.is.not[i](obj)) {
+                    return fn();
+                }
+            };
+        }
+    })(i);
+    return _if;
 })(this);
 this.publisher = (function (that, undefined) {
     var o = {};

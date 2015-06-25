@@ -1,1 +1,8 @@
 node_modules
+*.njsproj
+*.dat
+*.vspscc 
+.grunt
+public
+obj
+*.vspscc

@@ -174,7 +174,7 @@ module.exports = function (grunt) {
     
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    //grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -184,7 +184,7 @@ module.exports = function (grunt) {
     //grunt.registerTask('default', ['clean', 'prompt:concat', 'concat', 'uglify', 'jasmine']);
     grunt.registerTask('default', function (target) {
         if (!target) {
-            grunt.task.run(['clean', 'prompt:concat', 'concat', 'jasmine']);
+            grunt.task.run(['clean', 'prompt:concat', 'concat']);
         }
     });
     // Debug task.
@@ -203,47 +203,4 @@ module.exports = function (grunt) {
     // Test task.
     //grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
     
-    grunt.registerTask('boilerplate-check', 'Ensures defaults have been updated.', function () {
-        var configured, log;
-        
-        configured = true;
-        log = grunt.log;
-        if (pkg.name === 'project-name') {
-            log.writeln('project.json.name has not been configured.');
-            configured = false;
-        }
-        if (pkg.version === '0.0.0') {
-            log.writeln('project.json.version has not been configured. Consider 0.0.1');
-            configured = false;
-        }
-        if (pkg.author === 'Your Name <your.name@domain.com>') {
-            log.writeln('project.json.author has not been configured.');
-            configured = false;
-        }
-        if (pkg.description === '') {
-            log.writeln('project.json.description has not been configured.');
-            configured = false;
-        }
-        if (pkg.contributors[0].name === 'Your Name') {
-            log.writeln('project.json.contributors name has not been configured.');
-            configured = false;
-        }
-        if (pkg.contributors[0].email === 'your.name@domain.com') {
-            log.writeln('project.json.contributors email has not been configured.');
-            configured = false;
-        }
-        if (pkg.main === null) {
-            log.writeln('project.json.main is null. Use grunt --force and find the file in ./dist');
-            configured = false;
-        }
-        if (pkg.repository.url === 'https://github.com/...') {
-            log.writeln('project.json.repository.url has not been configured.');
-            configured = false;
-        }
-        if (!pkg.keywords.length) {
-            log.writeln('project.json.keywords have not been configured.');
-            configured = false;
-        }
-        return configured;
-    });
 };

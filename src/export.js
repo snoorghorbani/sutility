@@ -732,7 +732,7 @@ this.propByPrefix = function (obj, prefix, removePrefixFromKey) {
 };
 this.camelCase = function (str) {
     if (!str) debugger;
-    return str.toLowerCase().replace(/-(.)/g, function (match, group1) {
+    return str.replace(/-(.)/g, function (match, group1) {
         return group1.toUpperCase();
     });
 };
