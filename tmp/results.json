@@ -1,0 +1,16 @@
+{
+	"numResults": 2,
+	"creationDate": "2015-06-28 10:06:46",
+	"results": {
+		"examples/requiredTest.js": [
+			{
+				"line": 16,
+				"match": "_.valueOf"
+			},
+			{
+				"line": 16,
+				"match": "_.select"
+			}
+		]
+	}
+}

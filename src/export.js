@@ -1,7 +1,7 @@
 
 var that = this;
 if (DEBUG) {
-    var zz = 2
+    var zz = 2;
 };
 console.log(2);
 
@@ -470,7 +470,7 @@ this.exec = function (/*fn , context , arg*/) {
     return fn.apply(context || null, arg);
 };
 
-this.objectKeys = function (/*obj*/) {
+this.keys = function (/*obj*/) {
     var args = this.argToArray(arguments);
     var obj = args[0];
     var res = [];
@@ -808,7 +808,7 @@ this.attr = (function (_, undefined) {
 })(this);
 
 //#region remove from utility
-this.addClass = function (selectorOrDom, className) {
+this.className.add = function (selectorOrDom, className) {
     this.warn('change refrence');
     var nodes = this.select(selectorOrDom);
     
@@ -823,7 +823,7 @@ this.addClass = function (selectorOrDom, className) {
         }
     }
 };
-this.removeClass = function (selectorOrDom, className) {
+this.className.remove = function (selectorOrDom, className) {
     this.warn('change refrence');
     
     var nodes = this.select(selectorOrDom);
@@ -841,8 +841,8 @@ this.removeClass = function (selectorOrDom, className) {
 this.changeClass = function (selectorOrDom, className, replaceWith) {
     this.warn('change refrence');
     var nodes = this.select(selectorOrDom);
-    _.removeClass(nodes, className);
-    _.addClass(nodes, replaceWith);
+    _.className.remove(nodes, className);
+    _.className.add(nodes, replaceWith);
 };
 //#endregion
 
@@ -1101,8 +1101,8 @@ this.activated = function (parentOrSelector, selector, classname, callback) {
         var nodes = _.select(selector, parent);
         _.each(nodes, function (node) {
             _.event(node, 'click', function () {
-                _.removeClass(nodes, classname);
-                _.addClass(node, classname);
+                _.className.remove(nodes, classname);
+                _.className.add(node, classname);
                 callback && callback(this);
             });
         });

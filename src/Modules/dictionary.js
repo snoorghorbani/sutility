@@ -1,7 +1,6 @@
 ﻿this.dictionary = (function (that, undefined) {
     var defaultValues = {};
     var Fn = function (_defaultValues) {
-        //var initValue = that.extend({}, defaultValues);
         defaultValues = _defaultValues || {};
         _.extend(this, defaultValues);
     };

@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.1 - 2015-06-25
+ * sutility v0.0.1 - 2015-06-27
  * Functional Library
  *
  * Copyright (c) 2015 soushinas noorghorbani <snoorghorbani@gmail.com>
@@ -14,7 +14,7 @@ var U = function () {
 
 var that = this;
 if (DEBUG) {
-    var zz = 2
+                var zz = 2;
 };
 console.log(2);
 
@@ -1463,7 +1463,6 @@ this.css = (function (_) {
 this.dictionary = (function (that, undefined) {
     var defaultValues = {};
     var Fn = function (_defaultValues) {
-        //var initValue = that.extend({}, defaultValues);
         defaultValues = _defaultValues || {};
         _.extend(this, defaultValues);
     };

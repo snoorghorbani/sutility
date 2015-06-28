@@ -9,6 +9,7 @@ module.exports = function (grunt) {
     var pkg, config;
     
     pkg = grunt.file.readJSON('package.json');
+    var cuatomConfig = grunt.file.readJSON('config.json');
     var FilesPattern = {
         modules: ['src/modules/*.js']
     };
@@ -44,13 +45,15 @@ module.exports = function (grunt) {
         config.sources.push(module);
     }
     
+    var moduleDependencies = {};
+    
     // setup dynamic filenames
     config.versionedName = [config.pkg.name, config.pkg.version].join('-');
     config.dist = ['dist/', '.js'].join(config.versionedName);
     files.uglifyFiles[['dist/', '.min.js'].join(config.versionedName)] = config.dist;
     files.clearFiles[['dist/', '.clear.js'].join(config.versionedName)] = config.dist;
-
-
+    
+    
     // Project configuration.
     grunt.initConfig({
         pkg : config.pkg,
@@ -169,6 +172,41 @@ module.exports = function (grunt) {
                 jshintrc : 'jshint.json'
             },
             source : config.dist
+        },
+        search: {
+            methods: {
+                files: {
+                    src: files.modules
+                },
+                options: {
+                    searchString: /_\.(.\w+)/g,
+                    logFile: "tmp/results.json"
+                }
+            },
+            createModulesDependency: {
+                files: {
+                    src: cuatomConfig.scriptPath
+                },
+                options: {
+                    searchString: /_\.(.\w+)/g,
+                    logFile: "tmp/results.json",
+                    onComplete: function (matches) {
+                        for (var filePath in matches.matches) {
+                            var fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
+                            console.log('*********:: ' + fileName);
+                            moduleDependencies[fileName] = moduleDependencies[fileName] || [];
+                            for (var i = 0, m; m = matches.matches[filePath][i]; i++) {
+                                var dep = m.match.substring(2, m.match.length);
+                                if (moduleDependencies[fileName].indexOf(dep) < 0)
+                                    moduleDependencies[fileName].push(dep);
+                                console.log(dep);
+
+                            }
+                        }
+                        console.log(JSON.stringify(moduleDependencies));
+                    },
+                }
+            }
         }
     });
     
@@ -178,6 +216,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-search');
     grunt.loadNpmTasks('grunt-prompt');
     
     // Default task.
@@ -199,6 +238,9 @@ module.exports = function (grunt) {
     // Build task(s).
     grunt.registerTask('build', ['uglify:main', 'uglify:modules']);
     grunt.registerTask('clear', ['uglify:clear']);
+    grunt.registerTask('required', '****** required ******', function () {
+        grunt.task.run(['search:createModulesDependency']);
+    });
     
     // Test task.
     //grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
