@@ -1,6 +1,6 @@
 {
   "name": "sutility",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "author": "soushinas noorghorbani <snoorghorbani@gmail.com>",
   "description": "Functional Library",
   "contributors": [
@@ -33,6 +33,14 @@
     "grunt-contrib-uglify": "0.x.x",
     "grunt-prompt": "^1.3.0",
     "grunt-search": "^0.1.7",
+    "karma": "^0.12.37",
+    "karma-bro": "^0.11.1",
+    "karma-cli": "^0.1.0",
+    "karma-mocha": "^0.2.0",
+    "karma-sauce-launcher": "^0.2.14",
+    "karma-spec-reporter": "0.0.19",
+    "load-grunt-configs": "^0.4.3",
+    "mocha": "^2.2.5",
     "phantomjs": "^1.9.17"
   },
   "bundledDependencies": [],

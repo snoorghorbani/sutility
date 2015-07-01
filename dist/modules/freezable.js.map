@@ -1,0 +1,1 @@
+{"version":3,"file":"freezable.js","sources":["../../src/modules/freezable.js"],"names":["this","freezable","_","undefined","o","freeze","key","unfreeze","constructor_obj"],"mappings":";AAAAA,KAAKC,UAAY,SAAWC,EAAGC,GAC3B,GAAIC,KAKJ,OAHAA,GAAEC,OAAS,SAAUC,KACrBF,EAAEG,SAAW,SAAUD,KAEhB,SAAUE,MAClBR"}

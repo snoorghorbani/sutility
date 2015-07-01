@@ -45,12 +45,15 @@
     is.value = function (_var) {
         return (_var) ? true : false;
     };
-    is.empty = function (o) {
-        for (var i in o)
-            if (o.hasOwnProperty(i))
-                return false;
-        return true;
-    };
+                is.empty = function (o) {
+                    if (_.is.object(0))
+                        for (var i in o)
+                            if (o.hasOwnProperty(i))
+                                return false;
+                    if (_.is.array(o))
+                        return o.length === 0
+                    return true;
+                };
     is.truthy = function () { };
     is.scalar = function (_var) {
         //TODO : improve

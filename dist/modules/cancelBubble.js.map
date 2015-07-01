@@ -1,0 +1,1 @@
+{"version":3,"file":"cancelBubble.js","sources":["../../src/modules/cancelBubble.js"],"names":["this","cancelBubble","e","evt","window","event","stopPropagation"],"mappings":";AAAAA,KAAKC,aAAe,SAAUC,GAC1B,GAAIC,GAAMD,EAAIA,EAAIE,OAAOC,KACrBF,GAAIG,iBAAiBH,EAAIG,kBACJ,OAArBH,EAAIF,eAAuBE,EAAIF,cAAe"}

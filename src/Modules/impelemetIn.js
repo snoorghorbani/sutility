@@ -1,0 +1,1 @@
+﻿this.impelemetIn = function (child) { };

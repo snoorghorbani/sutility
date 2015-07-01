@@ -34,9 +34,14 @@
         _.removeClass(nodes, className);
         _.addClass(nodes, replaceWith);
     };
-       className.contains = function (selectorOrDom, className) {
+    className.contains = function (selectorOrDom, className) {
         var node = _.selectFirst(selectorOrDom);
         return node.classList.contains(className);
     };
+	className.if = function (selectorOrDom, className, fn) {
+                    var nodes = _.select(selectorOrDom);
+                    for (var i = 0; i < nodes.length; i++)
+                        ((fn(nodes[i])) ? _.className.add : _.className.remove)(nodes[i], className);
+	};
     return className;
 })(this);

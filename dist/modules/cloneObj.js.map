@@ -1,0 +1,1 @@
+{"version":3,"file":"cloneObj.js","sources":["../../src/modules/cloneObj.js"],"names":["this","cloneObj","obj","prototype","_","assignIfNotDefined","temp","object","key","hasOwnProperty"],"mappings":";AAAAA,KAAKC,SAAW,SAAUC,EAAKC,GAC3BA,EAAYC,EAAEC,mBAAmBF,GAAW,EAC5C,IAAIG,GAAOF,EAAEG,QACb,KAAK,GAAIC,KAAON,IACRC,GAAaD,EAAIO,eAAeD,MAChCF,EAAKE,GAAON,EAAIM,GAGxB,OAAOF"}

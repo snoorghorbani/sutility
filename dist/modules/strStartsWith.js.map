@@ -1,0 +1,1 @@
+{"version":3,"file":"strStartsWith.js","sources":["../../src/modules/strStartsWith.js"],"names":["this","strStartsWith","str","prefix","indexOf"],"mappings":";AAAAA,KAAKC,cAAgB,SAAUC,EAAKC,GAChC,MAA+B,KAAxBD,EAAIE,QAAQD"}

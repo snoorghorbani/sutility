@@ -1,0 +1,1 @@
+{"version":3,"file":"removeEventArg.js","sources":["../../src/modules/removeEventArg.js"],"names":["this","removeEventArg","a","_","each","i","j","currentScope","targetScope","remove"],"mappings":";AAAAA,KAAKC,eAAiB,SAAUC,GAC5BC,EAAEC,KAAKF,EAAG,SAAUG,EAAGC,GACfD,EAAEE,cAAgBF,EAAEG,aACpBL,EAAEM,OAAOP,EAAGI,IACjBN"}

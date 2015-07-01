@@ -4,16 +4,17 @@
  * Javascript Project Boilerplate
  * Version 0.1.0
  */
+
 module.exports = function (grunt) {
     "use strict";
     var pkg, config;
     
     pkg = grunt.file.readJSON('package.json');
+    //options.search = grunt.file.readJSON('tasks/options/search.json');
     var cuatomConfig = grunt.file.readJSON('config.json');
     var FilesPattern = {
         modules: ['src/modules/*.js']
     };
-    
     
     config = {
         banner : [
@@ -25,17 +26,21 @@ module.exports = function (grunt) {
             ' * Licensed <%= pkg.license %>\n',
             ' */\n'
         ].join(''),
-        
         sources : [
             { name: 'core', value: 'src/export.js' , checked: true }
         ],
         pkg : pkg,
+        browserPlatformModulesIdentifiers: /document|XHR|css|attribute|className|@pltf->bro/,
+        nodePlatformModulesIdentifiers: /@pltf->node/
     };
     var files = {
         modules: grunt.file.expand(['src/modules/*.js']),
         uglifyFiles : {},
         clearFiles: {},
+        nodeModules: [],
+        browserModules: []
     }
+    
     for (var i = 0; i < files.modules.length; i++) {
         var name = files.modules[i].substring(files.modules[i].lastIndexOf('/') + 1, files.modules[i].lastIndexOf('.'));
         var module = {
@@ -44,14 +49,57 @@ module.exports = function (grunt) {
         };
         config.sources.push(module);
     }
-    
-    var moduleDependencies = {};
+    var platforms = {
+        bro: "bro",
+        node: "node",
+    };
+    var modules = {
+        //path:path
+        //dependencies:[moduleName]
+        //platform:[bro andor node]
+    };
+    var initModules = function () {
+        for (var i = 0; i < files.modules.length; i++) {
+            var name = files.modules[i].substring(files.modules[i].lastIndexOf('/') + 1, files.modules[i].lastIndexOf('.'));
+            modules[name] = {
+                path : files.modules[i],
+                dependencies: [],
+                platform: []
+            };
+        }
+    }();
+    var nodeAndBroPack = { files: {} };
+    var getNodeModules = function () {
+        files.browserModules.splice(0, files.browserModules.length);
+        files.nodeModules.splice(0, files.nodeModules.length);
+        for (var name in modules) {
+            var module = modules[name];
+            if (module.platform.indexOf(platforms.node) == -1)
+                files.browserModules.push(module.path);
+            if (module.platform.indexOf(platforms.bro) == -1) {
+                files.nodeModules.push(module.path);
+            }
+        }
+        files.browserModules.unshift('src/intro.js');
+        files.browserModules.push('src/outro.js');
+        
+        files.nodeModules.unshift('src/intro.js');
+        files.nodeModules.push('src/outro.js');
+        
+        //fill nodeAndBroPack params
+        nodeAndBroPack.files[config.dist_node] = files.nodeModules
+        nodeAndBroPack.files[config.dist_bro] = files.browserModules
+    };
     
     // setup dynamic filenames
     config.versionedName = [config.pkg.name, config.pkg.version].join('-');
-    config.dist = ['dist/', '.js'].join(config.versionedName);
-    files.uglifyFiles[['dist/', '.min.js'].join(config.versionedName)] = config.dist;
-    files.clearFiles[['dist/', '.clear.js'].join(config.versionedName)] = config.dist;
+    config.dist_node = ['dist/', '.node.js'].join(config.versionedName);
+    config.dist_bro = ['dist/', '.browser.js'].join(config.versionedName);
+    files.clearFiles[['dist/', '.browser.clear.js'].join(config.versionedName)] = config.dist_bro;
+    files.clearFiles[['dist/', '.node.clear.js'].join(config.versionedName)] = config.dist_node;
+    files.uglifyFiles[['dist/', '.browser.min.js'].join(config.versionedName)] = config.dist_bro;
+    files.uglifyFiles[['dist/', '.node.min.js'].join(config.versionedName)] = config.dist_node;
+    
     
     
     // Project configuration.
@@ -88,15 +136,8 @@ module.exports = function (grunt) {
                 }
             }
         },
-        concat : {
-            options : {
-                stripBanners : true,
-                banner : config.banner
-            },
-            dist : {
-                src : config.sources,
-                dest : config.dist
-            }
+        concat: {
+            nodeAndBroPack: nodeAndBroPack
         },
         uglify : {
             main : {
@@ -158,8 +199,8 @@ module.exports = function (grunt) {
                     }]
             }
         },
-        jasmine : {
-            tests : {
+        "jasmine" : {
+            "tests" : {
                 src : ['dist/', '.min.js'].join(config.versionedName),
                 options : {
                     specs : 'test/spec/*.spec.js',
@@ -167,44 +208,92 @@ module.exports = function (grunt) {
                 }
             }
         },
-        jshint : {
-            options : {
-                jshintrc : 'jshint.json'
+        "jshint" : {
+            "options": {
+                "jshintrc": 'jshint.json'
             },
-            source : config.dist
+            "source" : config.dist
         },
-        search: {
-            methods: {
-                files: {
-                    src: files.modules
+        "search": {
+            "methods": {
+                "files": {
+                    "src": files.modules
                 },
-                options: {
-                    searchString: /_\.(.\w+)/g,
-                    logFile: "tmp/results.json"
+                "options": {
+                    "searchString": /_\.(.\w+)/g,
+                    "logFile": "tmp/results.json"
                 }
             },
-            createModulesDependency: {
-                files: {
-                    src: cuatomConfig.scriptPath
+            "createModulesDependency": {
+                "files": {
+                    "src": cuatomConfig.scriptPath
                 },
-                options: {
-                    searchString: /_\.(.\w+)/g,
-                    logFile: "tmp/results.json",
-                    onComplete: function (matches) {
+                "options": {
+                    "searchString": /_\.(.\w+)/g,
+                    "logFile": "tmp/results.json",
+                    "onComplete": function (matches) {
+                        console.log('************************************************************'['magenta']);
+                        console.log('*******************:: Dependencies ::*******************'['magenta']);
+                        console.log('************************************************************'['magenta']);
                         for (var filePath in matches.matches) {
                             var fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
-                            console.log('*********:: ' + fileName);
-                            moduleDependencies[fileName] = moduleDependencies[fileName] || [];
+                            modules[fileName] = modules[fileName] || {};
+                            modules[fileName].dependencies = modules[fileName].dependencies || [];
                             for (var i = 0, m; m = matches.matches[filePath][i]; i++) {
                                 var dep = m.match.substring(2, m.match.length);
-                                if (moduleDependencies[fileName].indexOf(dep) < 0)
-                                    moduleDependencies[fileName].push(dep);
-                                console.log(dep);
-
+                                if (modules[fileName].dependencies.indexOf(dep) < 0)
+                                    modules[fileName].dependencies.push(dep);
                             }
+                            console.log('------------------------------------------------------------'['grey']);
+                            
+                            var fixWidthName = fileName + new Array(20 - fileName.length).join(' ');
+                            console.log(fixWidthName + ' : ' + modules[fileName].dependencies);
                         }
-                        console.log(JSON.stringify(moduleDependencies));
-                    },
+                    }
+                }
+            },
+            "findBrowserModule": {
+                "files": {
+                    "src": cuatomConfig.scriptPath
+                },
+                "options": {
+                    "searchString": config.browserPlatformModulesIdentifiers,
+                    "logFile": "tmp/browserModules.json",
+                    "onComplete": function (matches) {
+                        console.log('************************************************************'['magenta']);
+                        console.log('*******************:: Browser Modules ::*******************'['magenta']);
+                        console.log('************************************************************'['magenta']);
+                        
+                        for (var filePath in matches.matches) {
+                            var fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
+                            console.log('------------------------------------------------------------'['grey']);
+                            console.log('Module Name :: '['grey'] + fileName);
+                            
+                            modules[fileName].platform.push(platforms.bro);
+                        }
+                    }
+                }
+            },
+            "findNodeModule": {
+                "files": {
+                    "src": cuatomConfig.scriptPath
+                },
+                "options": {
+                    "searchString": config.nodePlatformModulesIdentifiers,
+                    "logFile": "tmp/browserModules.json",
+                    "onComplete": function (matches) {
+                        console.log('************************************************************'['magenta']);
+                        console.log('*******************:: Node Modules ::*******************'['magenta']);
+                        console.log('************************************************************'['magenta']);
+                        
+                        for (var filePath in matches.matches) {
+                            var fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
+                            console.log('------------------------------------------------------------'['grey']);
+                            console.log('Module Name :: '['grey'] + fileName);
+                            
+                            modules[fileName].platform.push(platforms.node);
+                        }
+                    }
                 }
             }
         }
@@ -223,26 +312,17 @@ module.exports = function (grunt) {
     //grunt.registerTask('default', ['clean', 'prompt:concat', 'concat', 'uglify', 'jasmine']);
     grunt.registerTask('default', function (target) {
         if (!target) {
-            grunt.task.run(['clean', 'prompt:concat', 'concat']);
+            console.log('use "grunt" build for create sutility-[version].[platform].[type].js files in dist folder"'['green'])
         }
     });
-    // Debug task.
-    //grunt.registerTask('debug', ['lint', 'concurrent:debug']);
     
-    // Secure task(s).
-    //grunt.registerTask('secure', ['env:secure', 'lint', 'concurrent:default']);
-    
-    // Lint task(s).
-    //grunt.registerTask('lint', ['jshint', 'csslint']);
-    
-    // Build task(s).
-    grunt.registerTask('build', ['uglify:main', 'uglify:modules']);
-    grunt.registerTask('clear', ['uglify:clear']);
-    grunt.registerTask('required', '****** required ******', function () {
-        grunt.task.run(['search:createModulesDependency']);
+    grunt.registerTask('build', 'build sutility'['green'], function () {
+        grunt.task.run(['clean', 'search:createModulesDependency', 'search:findBrowserModule', 'search:findNodeModule']);
+        getNodeModules();
+        grunt.task.run(['concat']);
+        grunt.task.run(['uglify:main', 'uglify:clear']);
+        grunt.task.run(['uglify:modules']);
     });
-    
-    // Test task.
-    //grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
-    
+//grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
+
 };

@@ -1,0 +1,3 @@
+/*! sutility - v0.0.5 - 2015-07-01 */
+this.canvas=function(a){fn.arc=function(a,b,c,d,e,f,g){a.beginPath(),a.arc(b,c,d,e,f,g),a.closePath(),a.fill(),a.stroke()},fn.rect=function(a,b,c,d,e,f,g){a.beginPath(),a.rect(b,c,d,e),a.closePath(),f!==!1&&a.fill(),g!==!1&&a.stroke()},fn.text=function(a,b,c,d){a.beginPath(),a.fillText(b,c,d),a.fill(),a.closePath()},fn.line=function(a,b,c){a.beginPath(),a.moveTo(b.x,b.y),a.lineTo(c.x,c.y),a.closePath(),a.stroke()}}(this);
+//# sourceMappingURL=canvas.js.map

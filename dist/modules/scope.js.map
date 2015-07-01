@@ -1,0 +1,1 @@
+{"version":3,"file":"scope.js","sources":["../../src/modules/scope.js"],"names":["this","scope","Scope","fn","data","config","option","event","module"],"mappings":";AAAAA,KAAKC,MAAQ,WACT,GAAIC,GAAQ,WACRF,KAAKG,MACLH,KAAKI,QACLJ,KAAKK,UACLL,KAAKM,UACLN,KAAKO,SACLP,KAAKQ,UACLR,KAAAA,YAEJ,OAAO,IAAIE"}

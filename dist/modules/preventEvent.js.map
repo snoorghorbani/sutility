@@ -1,0 +1,1 @@
+{"version":3,"file":"preventEvent.js","sources":["../../src/modules/preventEvent.js"],"names":["this","preventEvent","e","eve","window","event","preventDefault","stopPropagation"],"mappings":";AACAA,KAAKC,aAAe,SAAUC,GAC1B,GAAIC,GAAMD,GAAKE,OAAOC,KACtBF,GAAIG,iBACJH,EAAII"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"transitionCallback.js","sources":["../../src/modules/transitionCallback.js"],"names":["this","transitionCallback","el","fn","t","getTransitionEvent","_fn","removeEventListener","addEventListener"],"mappings":";AAACA,KAAKC,mBAAqB,SAAUC,EAAKC,GAC9B,GAAIC,GAAIJ,KAAKK,qBACTC,EAAM,WACNH,IACAD,EAAGK,oBAAoBH,EAAGE,GAE9BJ,GAAGM,iBAAiBJ,EAAGE"}

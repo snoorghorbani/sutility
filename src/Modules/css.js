@@ -1,4 +1,5 @@
-﻿this.css = (function (_) {
+﻿
+this.css = (function (_) {
     var toPX = function () { };
     var toNumber = function () { };
     var fn = function (selectorOrDom, style) {
