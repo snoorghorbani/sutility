@@ -17,6 +17,7 @@
     "tests"
   ],
   "devDependencies": {
-    "phantom": "~2.0.0"
+    "phantom": "~2.0.0",
+    "chai": "~3.0.0"
   }
 }

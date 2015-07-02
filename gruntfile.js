@@ -323,6 +323,7 @@ module.exports = function (grunt) {
         grunt.task.run(['uglify:main', 'uglify:clear']);
         grunt.task.run(['uglify:modules']);
     });
-//grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
+    //grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
+    grunt.registerTask('test', ['karma:unit']);
 
 };

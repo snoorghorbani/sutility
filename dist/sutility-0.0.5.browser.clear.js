@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.5 - 2015-07-01
+ * sutility v0.0.5 - 2015-07-02
  * Functional Library
  *
  * Copyright (c) 2015 soushinas noorghorbani <snoorghorbani@gmail.com>
@@ -122,17 +122,18 @@
                 var evt = e ? e : window.event;
                 evt.stopPropagation && evt.stopPropagation(), null !== evt.cancelBubble && (evt.cancelBubble = !0);
             }, this.canvas = function(_) {
-                fn.arc = function(ctx, x, y, r, f, t, b) {
+                var Fn = function() {};
+                return Fn.arc = function(ctx, x, y, r, f, t, b) {
                     ctx.beginPath(), ctx.arc(x, y, r, f, t, b), ctx.closePath(), ctx.fill(), ctx.stroke();
-                }, fn.rect = function(ctx, x, y, w, h, fill, stroke) {
+                }, Fn.rect = function(ctx, x, y, w, h, fill, stroke) {
                     ctx.beginPath(), ctx.rect(x, y, w, h), ctx.closePath(), fill !== !1 && ctx.fill(), 
                     stroke !== !1 && ctx.stroke();
-                }, fn.text = function(ctx, text, x, y) {
+                }, Fn.text = function(ctx, text, x, y) {
                     ctx.beginPath(), ctx.fillText(text, x, y), ctx.fill(), ctx.closePath();
-                }, fn.line = function(ctx, startPoint, endPoint) {
+                }, Fn.line = function(ctx, startPoint, endPoint) {
                     ctx.beginPath(), ctx.moveTo(startPoint.x, startPoint.y), ctx.lineTo(endPoint.x, endPoint.y), 
                     ctx.closePath(), ctx.stroke();
-                };
+                }, Fn;
             }(this), this.catchall = function(_) {
                 var instatiate = null, keys = {}, values = {}, defaultCatchAllConfig = {
                     prefix: "/defaultPrefix",
