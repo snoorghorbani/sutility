@@ -7,6 +7,6 @@ public
 obj
 *.vspscc
 *.ntvs_analysis.dat*
-tmp/results.json
-tmp/browserModules.json
+tmp/*
 *.rar
+bin/*
