@@ -12,12 +12,11 @@ module.exports = function (config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['mocha'],
         
-        
         // list of files / patterns to load in the browser
         files: [
             'public/lib/chai/chai.js',
             'dist/sutility-0.0.5.browser.js',
-            'test/modules/each.js',
+            'test/modules/*.js',
         ],
         
         
@@ -48,7 +47,7 @@ module.exports = function (config) {
         
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_DEBUG,
+        logLevel: config.LOG_INFO,
         
         
         // enable / disable watching file and executing tests whenever any file changes
@@ -57,10 +56,24 @@ module.exports = function (config) {
         
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS', 'ChromeCanary'],
-        //browsers: ['Firefox'],
-        
-        
+        //browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS', 'ChromeCanary'],
+        browsers: ['PhantomJS'],
+        //'client' : {
+        //    'mocha' : {
+        //        'ui' : 'tdd'
+        //    }
+        //},
+        'plugins' : [
+            'karma-mocha',
+            'karma-junit-reporter',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-phantomjs-launcher',
+            'karma-opera-launcher',
+            'karma-ie-launcher',
+            'karma-jasmine'
+        ],
+                
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false

@@ -25,7 +25,7 @@ describe('Array', function () {
     
     describe('_.map()', function () {
         
-        it('should return -1 when the value is not present', function () {
+        it('should return same array', function () {
             console.log('_.map');
             var test = [1, 2];
             var res = _.map(test, _.i)

@@ -1,6 +1,8 @@
 ;(function(undefined){
 "use strict";
-var debugMode = true;
+var DEBUG = true;
 var UTILITY = (function () {
 
 var U = function () {
+var _ = this;
+ var that = this;

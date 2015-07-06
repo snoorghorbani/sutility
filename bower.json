@@ -1,23 +1,23 @@
 {
-  "name": "sutility",
-  "version": "0.0.1",
-  "authors": [
-    "snoorghorbani <snoorghorbani@gmail.com>"
-  ],
-  "moduleType": [
-    "es6"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "public/lib",
-    "test",
-    "tests"
-  ],
-  "devDependencies": {
-    "phantom": "~2.0.0",
-    "chai": "~3.0.0"
-  }
+    "name": "sutility",
+    "version": "0.0.1",
+    "authors": [
+        "snoorghorbani <snoorghorbani@gmail.com>"
+    ],
+    "moduleType": [
+        "es6"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "public/lib",
+        "test",
+        "tests"
+    ],
+    "devDependencies": {
+        "phantom": "~2.0.0",
+        "chai": "~3.0.0"
+    }
 }

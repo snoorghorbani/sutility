@@ -126,11 +126,11 @@ module.exports = function (grunt) {
                             validate: function (value) {         // return true if valid, error message if invalid
                                 grunt.log.writelns("value");
                                 return true
-                            } ,
+                            },
                             filter: function (value) {           // modify the answer
                                 grunt.log.writelns(value);
                                 return ['src/intro.js' , value , 'src/outro.js'];
-                            } ,
+                            },
                             //when: function (answers) { }            // only ask this question when this function returns true
                         }]
                 }
@@ -325,5 +325,5 @@ module.exports = function (grunt) {
     });
     //grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
     grunt.registerTask('test', ['karma:unit']);
-
+    grunt.registerTask('pro', ['prompt']);
 };

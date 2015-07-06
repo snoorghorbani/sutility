@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.5 - 2015-07-02
+ * sutility v0.0.5 - 2015-07-05
  * Functional Library
  *
  * Copyright (c) 2015 soushinas noorghorbani <snoorghorbani@gmail.com>
@@ -7,8 +7,9 @@
  */
 (function(undefined) {
     "use strict";
-    var UTILITY = function() {
+    var DEBUG = !0, UTILITY = function() {
         var U = function() {
+            var _ = this, that = this;
             this.activated = function(parentOrSelector, selector, classname, callback) {
                 classname = classname || "active";
                 var parents = _.select(parentOrSelector);
@@ -62,10 +63,12 @@
                     if ("number" == typeof callback) n = callback; else if (that.is["function"](callback)) for (var index = 0; callback(array[index++]); ) n++; else n++;
                     return item = array.slice(0, n), that.is.array(item) && 1 === item.length ? item[0] : item;
                 }, fn.reverse = function(ar) {
+                    DEBUG && _.is.not.array(ar) && _.fail("is Not Array");
                     for (var res = [], i = ar.length - 1, j = 0; i >= 0; i--, j++) res[j] = ar[i];
                     return res;
                 }, fn.concat = function(fa, sa) {
-                    return fa.concat(sa);
+                    return DEBUG && (_.is.not.array(fa) && _.fail("is Not Array"), _.is.not.array(sa) && _.fail("is Not Array")), 
+                    fa.concat(sa);
                 }, fn.indexOf = function(arr, idxOrIterator, context) {
                     var res;
                     return _.is["function"](idxOrIterator) ? _.each(arr, function(item, idx) {
@@ -215,7 +218,7 @@
                     }
                 }, className.toggle = function() {}, className.change = function(selectorOrDom, className, replaceWith) {
                     var nodes = _.select(selectorOrDom);
-                    _.removeClass(nodes, className), _.addClass(nodes, replaceWith);
+                    _.className.remove(nodes, className), _.className.add(nodes, replaceWith);
                 }, className.contains = function(selectorOrDom, className) {
                     var node = _.selectFirst(selectorOrDom);
                     return node.classList.contains(className);
@@ -291,7 +294,11 @@
                     }
                     _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
                 }, fn;
-            }(this), this.data = function(_) {}(this), this.dataset = function(_, undefined) {
+            }(this), this.dashCase = function(str) {
+                return str.replace(/([A-Z])/g, function(match, group1) {
+                    return "-" + group1.toLowerCase();
+                });
+            }, this.data = function(_) {}(this), this.dataset = function(_, undefined) {
                 var dataset = function() {};
                 return dataset.add = function() {}, dataset.get = function(el, name) {
                     return el.dataset[name];
@@ -354,9 +361,10 @@
                 }
             }, this.exec = function() {
                 var args = this.argToArray(arguments), fn = args.shift(), context = args.shift(), arg = args.shift();
-                return fn.apply(context || null, arg);
+                return DEBUG && _.is.not["function"](fn) && _.warn(fn + "is not function"), fn.apply(context || null, arg);
             }, this.extend = function(toObj, fromObj, proroAssign) {
-                return _.is.array(toObj) ? _.safeAssignArray(toObj, fromObj) : _.is.object(toObj) ? (_.safeClear(toObj), 
+                return DEBUG && _.is.not.defined(toObj) && _.fail("destination object cant be null"), 
+                _.is.array(toObj) ? _.safeAssignArray(toObj, fromObj) : _.is.object(toObj) ? (_.safeClear(toObj), 
                 _.each(fromObj, function(value, key) {
                     toObj[key] = value;
                 }, this, proroAssign)) : toObj = fromObj, toObj;
@@ -401,6 +409,7 @@
                 var fm = function() {}, factories = {}, controllers = {}, js = {}, css = {};
                 fm.factory = function(fm) {
                     return function(name, fn) {
+                        var camelCaseName = _.camelCase(name);
                         window[camelCaseName + "s"] && _.fail(camelCaseName + "s exists"), window[camelCaseName + "s"] = {};
                         var Constructor = fn();
                         factories[camelCaseName] = function(id, node, config) {
@@ -501,6 +510,10 @@
                 };
                 for (var i in transition) if (_.is.defined(fakeElement.style[i])) return transition[i];
             }, this.getValue = function(obj, path) {
+                if (DEBUG) {
+                    if (!obj) return undefined;
+                    if (!obj) return this.warn("UTILITY getValue function first parameter not defined");
+                }
                 if (null !== obj[path]) return obj[path];
                 path = path.split(".");
                 for (var i = 0, res = obj[path[i++]]; i < path.length; ) res = res[path[i++]];
@@ -536,6 +549,7 @@
                     res[flag] = res[flag] || [], res[flag].push(fn(item));
                 }), res;
             }, this.haveKey = function(obj, path) {
+                DEBUG && _.is.not.object(obj) && this.warn("is Not Object");
                 for (var route, tempObj = obj, routes = path.split("."), i = 0; route = routes[i]; i++) {
                     if (!tempObj[route] && 0 !== tempObj[route]) return _.warn([ "dont have ", route, "property" ].join(" ")), 
                     !1;
@@ -586,8 +600,7 @@
                 }, is.prototypeProp = function(obj, prop) {
                     return obj[prop] && !obj.hasOwnProperty(prop);
                 }, is.equal = function(fv, sv) {
-                    return fv || that.warn("equal function :" + fv + " is Not Object"), sv || that.warn("equal function :" + sv + " is Not Object"), 
-                    JSON.stringify(fv) == JSON.stringify(sv) ? !0 : !1;
+                    return JSON.stringify(fv) == JSON.stringify(sv) ? !0 : !1;
                 };
                 var i, not = {};
                 for (i in is) (function(i) {
@@ -655,9 +668,9 @@
                 }), res;
             }, this.leftCurry = function(fn, context) {
                 return context = context || that, function() {
-                    var leftArgs = that.argToArray(arguments);
+                    var leftArgs = _.argToArray(arguments);
                     return function() {
-                        var args = that.concat(leftArgs, that.argToArray(arguments));
+                        var args = _.array.concat(leftArgs, _.argToArray(arguments));
                         return fn.apply(context, args);
                     };
                 };
@@ -681,7 +694,7 @@
                         }, loadedFiles[path].callbacks.push(callback);
                         var script = document.createElement("script");
                         script.setAttribute("type", "text/javascript"), script.onload = function(e) {
-                            var filePath = e.path[0].getAttribute("src");
+                            var n = e.explicitOriginalTarget || e.path[0], filePath = n.getAttribute("src");
                             filePath = filePath.substring(1, filePath.length), loadedFiles[path].state = !0;
                             for (var fn, i = 0; fn = loadedFiles[path].callbacks[i]; i++) fn(filePath, path);
                         }, script.setAttribute("src", "/" + path), document.getElementsByTagName("head")[0].appendChild(script);
@@ -863,7 +876,8 @@
                     return str.toUpperCase();
                 });
             }, this.remove = function(ar, idx) {
-                return obj.length > idx ? obj.splice(idx, len || 1) : null;
+                return DEBUG && (_.is.not.array(ar) && this.fail("is Not Array"), ar.length < idx && this.fail("greeter that array length")), 
+                obj.length > idx ? obj.splice(idx, len || 1) : null;
             }, this.removeEventArg = function(a) {
                 _.each(a, function(i, j) {
                     i.currentScope && i.targetScope && _.remove(a, j);
@@ -895,7 +909,18 @@
                     this.module = {}, this["const"] = {};
                 };
                 return new Scope();
-            }, this.select = function(selectorOrDom, parent) {
+            }, this.scroll = function() {
+                var Fn = function() {};
+                return Fn.to = function(selectorOrDom, to, duration) {
+                    var node = _.selectFirst(selectorOrDom);
+                    if (!(0 > duration)) {
+                        var difference = to - node.scrollTop, perTick = difference / duration * 10;
+                        setTimeout(function() {
+                            node.scrollTop = node.scrollTop + perTick, node.scrollTop !== to && _.scroll.to(node, to, duration - 10);
+                        }, 10);
+                    }
+                }, Fn;
+            }(), this.select = function(selectorOrDom, parent) {
                 parent = parent || document.body;
                 var nodes = "";
                 return nodes = this.is.string(selectorOrDom) ? parent.querySelectorAll(selectorOrDom) : selectorOrDom, 
@@ -926,6 +951,7 @@
                     fromObj[key] !== undefined && (toObj[key] = fromObj[key]);
                 }), toObj;
             }, this.upsert = function(container, item, indicator, updateAll) {
+                DEBUG && debugMode && _.is.not.array(container);
                 var newItem = !0;
                 _.each(container, function(v, i) {
                     indicator(v) && (newItem = !1, that.safeAssign(container[i], item));
@@ -951,6 +977,8 @@
                     item[key] && res.push(item[key]);
                 }), res;
             }, this.verify = function(obj, comparator) {
+                DEBUG && (_.is.not.object(obj) && _.fail("is Not Object"), _.is.not.object(comparator) && _.fail("is Not Object"), 
+                _.haveKey(comparator, "key") && _.haveKey(comparator, "condition") && _.haveKey(comparator, "value") || _.fail("dont have correct comparator attrs"));
                 var value = obj[comparator.key];
                 return value !== undefined && _.compare(value, comparator.condition, comparator.value);
             }, this.warn = function(text) {

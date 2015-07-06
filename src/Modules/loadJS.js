@@ -19,7 +19,8 @@
             var script = document.createElement('script')
             script.setAttribute("type", "text/javascript")
             script.onload = function (e) {
-                var filePath = e.path[0].getAttribute('src');
+                var n = e.explicitOriginalTarget || e.path[0];
+                var filePath = n.getAttribute('src');
                 filePath = filePath.substring(1, filePath.length);
                 
                 loadedFiles[path].state = true;

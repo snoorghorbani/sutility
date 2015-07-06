@@ -1,9 +1,11 @@
 ;(function(undefined){
 "use strict";
-var debugMode = true;
+var DEBUG = true;
 var UTILITY = (function () {
 
 var U = function () {
+var _ = this;
+ var that = this;
 this.activated = function (parentOrSelector, selector, classname, callback) {
     classname = classname || 'active';
     var parents = _.select(parentOrSelector);
@@ -424,8 +426,8 @@ this.className = (function (_, undefined) {
     className.toggle = function () { };
     className.change = function (selectorOrDom, className, replaceWith) {
         var nodes = _.select(selectorOrDom);
-        _.removeClass(nodes, className);
-        _.addClass(nodes, replaceWith);
+        _.className.remove(nodes, className);
+        _.className.add(nodes, replaceWith);
     };
     className.contains = function (selectorOrDom, className) {
         var node = _.selectFirst(selectorOrDom);
@@ -559,6 +561,12 @@ this.css = (function (_) {
     
     return fn;
 })(this);
+this.dashCase = function (str) {
+    return str.replace(/([A-Z])/g, function (match, group1) {
+        return '-' + group1.toLowerCase();
+    });
+};
+
 this.data = (function (_) {
             //_.scope = function () {
             //    var scope = function () { };
@@ -800,6 +808,7 @@ this.framework = (function (_) {
     var css = {};
     fm.factory = (function (fm) {
         return function (name, fn) {
+            var camelCaseName = _.camelCase(name);
             window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
             window[camelCaseName + 's'] = {};
             var Constructor = fn();
@@ -1197,8 +1206,8 @@ this.is = (function (_, undefined) {
         return (obj[prop] && !obj.hasOwnProperty(prop));
     };
     is.equal = function (fv, sv) {
-        if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-        if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+        //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+        //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
         
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };
@@ -1283,9 +1292,9 @@ this.keys = function (/*obj*/) {
 this.leftCurry = function (fn, context) {
     context = context || that;
     return function (/*left args*/) {
-        var leftArgs = that.argToArray(arguments);
+        var leftArgs = _.argToArray(arguments);
         return function (/*right args*/) {
-            var args = that.concat(leftArgs, that.argToArray(arguments));
+            var args = _.array.concat(leftArgs, _.argToArray(arguments));
             return fn.apply(context, args);
         };
     };
@@ -1323,7 +1332,8 @@ this.loadJS = (function (_) {
             var script = document.createElement('script')
             script.setAttribute("type", "text/javascript")
             script.onload = function (e) {
-                var filePath = e.path[0].getAttribute('src');
+                var n = e.explicitOriginalTarget || e.path[0];
+                var filePath = n.getAttribute('src');
                 filePath = filePath.substring(1, filePath.length);
                 
                 loadedFiles[path].state = true;
@@ -1771,6 +1781,23 @@ this.scope = function () {
     return new Scope();
 };
 
+this.scroll = (function () {
+    var Fn = function () { };
+    Fn.to = function (selectorOrDom, to, duration) {
+        var node = _.selectFirst(selectorOrDom);
+        if (duration < 0) return;
+        var difference = to - node.scrollTop;
+        var perTick = difference / duration * 10;
+        
+        setTimeout(function () {
+            node.scrollTop = node.scrollTop + perTick;
+            if (node.scrollTop === to) return;
+            _.scroll.to(node, to, duration - 10);
+        }, 10);
+    }
+
+    return Fn;
+}());
 //todo : move to DOM namespace
 this.select = function (selectorOrDom, parent) {
     parent = parent || document.body;

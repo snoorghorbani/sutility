@@ -63,8 +63,8 @@
         return (obj[prop] && !obj.hasOwnProperty(prop));
     };
     is.equal = function (fv, sv) {
-        if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-        if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+        //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+        //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
         
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };

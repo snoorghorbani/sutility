@@ -31,8 +31,8 @@
     className.toggle = function () { };
     className.change = function (selectorOrDom, className, replaceWith) {
         var nodes = _.select(selectorOrDom);
-        _.removeClass(nodes, className);
-        _.addClass(nodes, replaceWith);
+        _.className.remove(nodes, className);
+        _.className.add(nodes, replaceWith);
     };
     className.contains = function (selectorOrDom, className) {
         var node = _.selectFirst(selectorOrDom);

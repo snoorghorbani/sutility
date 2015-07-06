@@ -1,0 +1,1 @@
+{"version":3,"file":"dashCase.js","sources":["../../src/modules/dashCase.js"],"names":["this","dashCase","str","replace","match","group1","toLowerCase"],"mappings":";AAAAA,KAAKC,SAAW,SAAUC,GACtB,MAAOA,GAAIC,QAAQ,WAAY,SAAUC,EAAOC,GAC5C,MAAO,IAAMA,EAAOC"}

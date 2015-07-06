@@ -7,6 +7,7 @@
     var css = {};
     fm.factory = (function (fm) {
         return function (name, fn) {
+            var camelCaseName = _.camelCase(name);
             window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
             window[camelCaseName + 's'] = {};
             var Constructor = fn();
