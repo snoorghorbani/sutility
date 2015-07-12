@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.5 - 2015-07-05
+ * sutility v0.0.6 - 2015-07-11
  * Functional Library
  *
  * Copyright (c) 2015 soushinas noorghorbani <snoorghorbani@gmail.com>
@@ -384,10 +384,10 @@
             }, this.fail = function(text) {
                 throw new Error(text);
             };
-            this.filter = function(obj, condFn) {
-                var res = [];
+            this.filter = function(obj, obj_FnCondition) {
+                var res = [], condFn = _.is["function"](obj_FnCondition) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
                 return _.each(obj, function(item) {
-                    condFn(item) && res.push && res.push(item);
+                    condFn(item) && res.push(item);
                 }), res;
             };
             this.fine = function(ar, fn) {
@@ -412,9 +412,9 @@
                         var camelCaseName = _.camelCase(name);
                         window[camelCaseName + "s"] && _.fail(camelCaseName + "s exists"), window[camelCaseName + "s"] = {};
                         var Constructor = fn();
-                        factories[camelCaseName] = function(id, node, config) {
+                        return factories[camelCaseName] = function(id, node, config) {
                             return window[camelCaseName + "s"][id] = new Constructor(id, node, config);
-                        };
+                        }, Constructor;
                     };
                 }(this), fm.controller = function(fm, undefined) {
                     var repositoy = {};
@@ -601,11 +601,18 @@
                     return obj[prop] && !obj.hasOwnProperty(prop);
                 }, is.equal = function(fv, sv) {
                     return JSON.stringify(fv) == JSON.stringify(sv) ? !0 : !1;
+                }, is.closet = function(fo, so) {
+                    return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
+                }, is.contain = function(str, searchStr) {
+                    var reg = _.is.regex(searchStr) ? searchStr : new RegExp(searchStr, "g");
+                    return str.match(reg) && str.match(reg).length > 0;
+                }, is.regex = function(r) {
+                    return "RegExp" === r.constructor.name;
                 };
                 var i, not = {};
                 for (i in is) (function(i) {
-                    is.hasOwnProperty(i) && (not[i] = function(o) {
-                        return !is[i](o);
+                    is.hasOwnProperty(i) && (not[i] = function(a, b, c) {
+                        return !is[i](a, b, c);
                     });
                 })(i);
                 is.not = not;
@@ -695,8 +702,8 @@
                         var script = document.createElement("script");
                         script.setAttribute("type", "text/javascript"), script.onload = function(e) {
                             var n = e.explicitOriginalTarget || e.path[0], filePath = n.getAttribute("src");
-                            filePath = filePath.substring(1, filePath.length), loadedFiles[path].state = !0;
-                            for (var fn, i = 0; fn = loadedFiles[path].callbacks[i]; i++) fn(filePath, path);
+                            filePath && (path = filePath.substring(1, filePath.length)), loadedFiles[path].state = !0;
+                            for (var fn, i = 0; fn = loadedFiles[path].callbacks[i]; i++) fn(path);
                         }, script.setAttribute("src", "/" + path), document.getElementsByTagName("head")[0].appendChild(script);
                     }
                 };
@@ -712,11 +719,12 @@
                     return hash in fn.cache ? fn.cache[hash] : fn.cache[hash] = fn.apply(this, args);
                 };
             }, this.merge = function(toObj, fromObj) {
-                _.is.object(fromObj) ? _.each(fromObj, function(value, key) {
-                    toObj[key] = fromObj[key];
+                var temp = _.cloneObj(toObj);
+                return _.is.object(fromObj) ? _.each(fromObj, function(value, key) {
+                    temp[key] = fromObj[key];
                 }) : _.is.array(fromObj) && _.each(fromObj, function(value) {
-                    toObj.push(value);
-                });
+                    temp.push(value);
+                }), temp;
             }, this.multiply = function(fn, ln) {
                 return fn * ln;
             }, this.note = function(text) {}, this.objToTwoDimArray = function() {
@@ -784,7 +792,15 @@
                         handler();
                     });
                 });
-            }), this.pascalCase = function(str) {
+            }), this.partial = function(obj, keys) {
+                DEBUG && (_.is.not.object(obj), _.is.not.array(keys));
+                for (var key, res = {}, i = 0; key = keys[i]; i++) {
+                    var keyParts = key.split("."), resultKey = keyParts.shift(), path = [ keyParts.join(".") ];
+                    DEBUG && _.is.not.defined(obj[resultKey]), _.is.not.contain(key, "\\.") ? res[key] = obj[key] : _.is.contain(key, "\\.") && (res[resultKey] = _.assignIfNotDefined(res[resultKey] || {}), 
+                    res[resultKey] = _.merge(res[resultKey], _.partial(obj[resultKey], path)));
+                }
+                return res;
+            }, this.pascalCase = function(str) {
                 return str[0].toUpperCase() + str.substr(1, str.lenght);
             }, this.pipe = function(_) {
                 var pipes = {};
@@ -887,7 +903,27 @@
                 return res;
             }, this.replaceInArray = function(array, from, replaceBy) {
                 Array.prototype.splice.apply(array, [ from, replaceBy.length + from ].concat(replaceBy));
-            }, this.rightCurry = function(fn) {
+            }, this.report = function(_) {
+                var Fn = function(object, depts, path) {
+                    var depts = depts || 0, path = path || "", temp = {}, nodes = [];
+                    if (depts++, _.is.object(object)) {
+                        temp = {};
+                        for (var key in object) {
+                            var isArray = _.is.array(object[key]), isObject = _.is.object(object[key]), keyPath = path ? path + "." + key : key;
+                            temp.name = key, temp.path = keyPath, temp.depts = depts, temp.type = "value", temp.isLastNode = !(isArray || isObject), 
+                            _.is.object(object[key]) && (temp.type = "object"), _.is.array(object[key]) && (temp.type = "array"), 
+                            nodes.push(_.cloneObj(temp)), isObject && (nodes = nodes.concat(that.report(object[key], depts, keyPath))), 
+                            isArray && (nodes = nodes.concat(that.report(object[key][0], depts, keyPath)));
+                        }
+                    }
+                    return nodes;
+                };
+                return Fn.skeleton = function(obj) {
+                    return _.array.compact(_.map(Fn(obj), function(i) {
+                        return i.isLastNode ? i.path : !1;
+                    }));
+                }, Fn;
+            }(this), this.rightCurry = function(fn) {
                 return function() {
                     var rightArgs = that.argToArray(arguments);
                     return function() {
@@ -914,9 +950,10 @@
                 return Fn.to = function(selectorOrDom, to, duration) {
                     var node = _.selectFirst(selectorOrDom);
                     if (!(0 > duration)) {
-                        var difference = to - node.scrollTop, perTick = difference / duration * 10;
+                        var difference = to - window.pageYOffset, perTick = difference / duration * 10;
                         setTimeout(function() {
-                            node.scrollTop = node.scrollTop + perTick, node.scrollTop !== to && _.scroll.to(node, to, duration - 10);
+                            var y = window.pageYOffset + perTick;
+                            window.scrollTo(0, y), node.scrollTop !== to && _.scroll.to(node, to, duration - 10);
                         }, 10);
                     }
                 }, Fn;

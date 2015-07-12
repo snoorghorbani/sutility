@@ -14,6 +14,7 @@
             factories[camelCaseName] = function (id, node, config) {
                 return window[camelCaseName + 's'][id] = new Constructor(id, node, config);
             };
+            return Constructor;
         };
     })(this);
     fm.controller = (function (fm, undefined) {

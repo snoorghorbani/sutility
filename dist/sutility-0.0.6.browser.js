@@ -723,6 +723,23 @@ this.extend = function (toObj, fromObj, proroAssign) {
     //}  else { this.warn('safeAssign dont have correct arguments') }
     return toObj;
 };
+
+//this.extend = function (toObj, fromObj, proroAssign) {
+//    if (DEBUG) {
+//        if (_.is.not.defined(toObj)) _.fail('destination object cant be null');
+//    }
+    
+//    if (_.is.array(toObj)) {
+//        _.safeAssignArray(toObj, fromObj);
+//    } else if (_.is.object(toObj)) {
+//        _.safeClear(toObj);
+//        _.each(fromObj, function (value, key) {
+//            toObj[key] = value;
+//        }, this, proroAssign);
+//    } else { toObj = fromObj; }
+//    //}  else { this.warn('safeAssign dont have correct arguments') }
+//    return toObj;
+//};
 this.extendFunc = function (fn, callBack) {
     var data = arguments[2];
     return function () {
@@ -752,15 +769,14 @@ this.fail = function (text) {
     throw new Error(text);
 };
 
-var filter = this.filter = function (obj, condFn) {
+var filter = this.filter = function (obj, obj_FnCondition) {
     var res = [];
-    //if (is.object(obj)) var res = {};
+    var condFn = (_.is.function(obj_FnCondition)) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
     
     _.each(obj, function (item) {
         if (condFn(item))
-            res.push && res.push(item);
+            res.push(item);
     });
-    
     return res;
 };
 
@@ -815,6 +831,7 @@ this.framework = (function (_) {
             factories[camelCaseName] = function (id, node, config) {
                 return window[camelCaseName + 's'][id] = new Constructor(id, node, config);
             };
+            return Constructor;
         };
     })(this);
     fm.controller = (function (fm, undefined) {
@@ -1188,15 +1205,15 @@ this.is = (function (_, undefined) {
     is.value = function (_var) {
         return (_var) ? true : false;
     };
-                is.empty = function (o) {
-                    if (_.is.object(0))
-                        for (var i in o)
-                            if (o.hasOwnProperty(i))
-                                return false;
-                    if (_.is.array(o))
-                        return o.length === 0
-                    return true;
-                };
+    is.empty = function (o) {
+        if (_.is.object(0))
+            for (var i in o)
+                if (o.hasOwnProperty(i))
+                    return false;
+        if (_.is.array(o))
+            return o.length === 0
+        return true;
+    };
     is.truthy = function () { };
     is.scalar = function (_var) {
         //TODO : improve
@@ -1211,12 +1228,21 @@ this.is = (function (_, undefined) {
         
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };
-    
+    is.closet = function (fo, so) {
+        return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
+    };
+    is.contain = function (str , searchStr) {
+        var reg = (_.is.regex(searchStr))?searchStr: new RegExp(searchStr, 'g');
+        return str.match(reg) && str.match(reg).length > 0;
+    };
+    is.regex = function (r) {
+        return r.constructor.name === "RegExp";
+    };
     var not = {};
     var i;
     for (i in is) (function (i) {
-        if (is.hasOwnProperty(i)) not[i] = function (o) {
-            return !is[i](o);
+        if (is.hasOwnProperty(i)) not[i] = function (a, b, c) {
+            return !is[i](a, b, c);
         };
     })(i);
     is.not = not;
@@ -1334,11 +1360,13 @@ this.loadJS = (function (_) {
             script.onload = function (e) {
                 var n = e.explicitOriginalTarget || e.path[0];
                 var filePath = n.getAttribute('src');
-                filePath = filePath.substring(1, filePath.length);
+                if (filePath) {
+                    path = filePath.substring(1, filePath.length);
+                }
                 
                 loadedFiles[path].state = true;
                 for (var i = 0, fn; fn = loadedFiles[path].callbacks[i]; i++) {
-                    fn(filePath, path);
+                    fn(path);
                 }
             };
             script.setAttribute("src", '/' + path);
@@ -1377,19 +1405,20 @@ this.memoize = function (fn) {
 this.merge = function (toObj, fromObj/*, copyPrototype*/) {
     //var copyPrototype = (copyPrototype != undefined) ? copyPrototype : true;
     //TODO: refactor
+    var temp = _.cloneObj(toObj)
     if (_.is.object(fromObj)) {
         _.each(fromObj, function (value, key) {
-            toObj[key] = fromObj[key];
+            temp[key] = fromObj[key];
         });
     } else if (_.is.array(fromObj)) {
         _.each(fromObj, function (value) {
-            toObj.push(value);
+            temp.push(value);
         });
     }
-
+    return temp;
             //copyPrototype && this.each(fromObj, function (value, key) {
             //	if (this.isPrototypeProp(fromObj, key)) {
-            //		toObj[key] = fromObj[key];
+            //		temp[key] = fromObj[key];
             //	}
             //}, this)
 };
@@ -1533,6 +1562,34 @@ this.onscroll(function () {
     });
 });
 
+this.partial = function (obj, keys) {
+    if (DEBUG) {
+        if (_.is.not.object(obj)) debugger;
+        if (_.is.not.array(keys)) debugger;
+    }
+    
+    var res = {};
+    for (var i = 0, key; key = keys[i]; i++) {
+        var keyParts = key.split('.');
+        var resultKey = keyParts.shift();
+        var path = [keyParts.join('.')];
+        if (DEBUG) {
+            if (_.is.not.defined(obj[resultKey])) debugger;
+        }
+        if (_.is.not.contain(key, '\\.')) {
+            res[key] = obj[key];
+        } else if (_.is.contain(key, '\\.')) {
+            res[resultKey] = _.assignIfNotDefined(res[resultKey] || {});
+            res[resultKey] = _.merge(res[resultKey] , _.partial(obj[resultKey] , path));
+        }
+        //if ((_.is.not.object(obj[key]))) {
+        //    res[key] = obj[key];
+        //} else if (_.is.object(obj[key])) {
+        //    res[key] = _.partial(obj[key] , _.keys(obj[key]))
+        //}
+    }
+    return res;
+};
 this.pascalCase = function (str) {
     if (DEBUG) {
         if (!str) debugger;
@@ -1736,6 +1793,49 @@ this.repeat = function (len, fn, context) {
 this.replaceInArray = function (array, from, replaceBy) {
     Array.prototype.splice.apply(array, [from, replaceBy.length + from].concat(replaceBy));
 };
+this.report = (function (_) {
+    var Fn = function (object, depts, path) {
+        var depts = depts || 0;
+        var path = path || "";
+        var temp = {};
+        var nodes = []
+        
+        depts++
+        if (_.is.object(object)) {
+            temp = {};
+            for (var key in object) {
+                var isArray = _.is.array(object[key]),
+                    isObject = _.is.object(object[key]),
+                    keyPath = (path)? path + '.' + key:key;
+                temp.name = key;
+                temp.path = keyPath;
+                temp.depts = depts;
+                temp.type = 'value';
+                temp.isLastNode = !(isArray || isObject);
+                if (_.is.object(object[key]))
+                    temp['type'] = 'object';
+                if (_.is.array(object[key]))
+                    temp['type'] = 'array';
+                
+                nodes.push(_.cloneObj(temp))
+                
+                if (isObject)
+                    nodes = nodes.concat(that.report(object[key], depts, keyPath));
+                if (isArray)
+                    nodes = nodes.concat(that.report(object[key][0], depts, keyPath));
+            }
+        }
+        return nodes;
+    }
+    
+    Fn.skeleton = function (obj) {
+        return  _.array.compact(_.map(Fn(obj), function (i) {
+            return (i.isLastNode)? i.path:false;
+        }));
+    };
+
+    return Fn;
+}(this))
 this.rightCurry = function (fn) {
     return function (/*right args*/) {
         var rightArgs = that.argToArray(arguments);
@@ -1786,18 +1886,21 @@ this.scroll = (function () {
     Fn.to = function (selectorOrDom, to, duration) {
         var node = _.selectFirst(selectorOrDom);
         if (duration < 0) return;
-        var difference = to - node.scrollTop;
+        var difference = to - window.pageYOffset;
         var perTick = difference / duration * 10;
         
         setTimeout(function () {
-            node.scrollTop = node.scrollTop + perTick;
+            var y = window.pageYOffset + perTick;
+            
+            window.scrollTo(0, y)
             if (node.scrollTop === to) return;
             _.scroll.to(node, to, duration - 10);
         }, 10);
     }
-
+    
     return Fn;
 }());
+
 //todo : move to DOM namespace
 this.select = function (selectorOrDom, parent) {
     parent = parent || document.body;
@@ -1815,6 +1918,7 @@ this.select = function (selectorOrDom, parent) {
 this.selectFirst = function (selectorOrDom, parent) {
     return _.valueOf(_.select(selectorOrDom, parent), 0);
 };
+
 
 this.sortBy = function (obj, typeOrOperator, path) {
     if (_.is.function(typeOrOperator))

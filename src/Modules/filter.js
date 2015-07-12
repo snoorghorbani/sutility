@@ -1,11 +1,10 @@
-﻿var filter = this.filter = function (obj, condFn) {
+﻿var filter = this.filter = function (obj, obj_FnCondition) {
     var res = [];
-    //if (is.object(obj)) var res = {};
+    var condFn = (_.is.function(obj_FnCondition)) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
     
     _.each(obj, function (item) {
         if (condFn(item))
-            res.push && res.push(item);
+            res.push(item);
     });
-    
     return res;
 };

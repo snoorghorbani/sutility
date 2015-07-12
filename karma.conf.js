@@ -15,7 +15,7 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'public/lib/chai/chai.js',
-            'dist/sutility-0.0.5.browser.js',
+            'dist/sutility-0.0.6.browser.js',
             'test/modules/*.js',
         ],
         
@@ -57,7 +57,7 @@ module.exports = function (config) {
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         //browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS', 'ChromeCanary'],
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome', 'Firefox', 'PhantomJS'],
         //'client' : {
         //    'mocha' : {
         //        'ui' : 'tdd'

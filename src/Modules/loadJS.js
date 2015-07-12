@@ -21,11 +21,13 @@
             script.onload = function (e) {
                 var n = e.explicitOriginalTarget || e.path[0];
                 var filePath = n.getAttribute('src');
-                filePath = filePath.substring(1, filePath.length);
+                if (filePath) {
+                    path = filePath.substring(1, filePath.length);
+                }
                 
                 loadedFiles[path].state = true;
                 for (var i = 0, fn; fn = loadedFiles[path].callbacks[i]; i++) {
-                    fn(filePath, path);
+                    fn(path);
                 }
             };
             script.setAttribute("src", '/' + path);

@@ -45,15 +45,15 @@
     is.value = function (_var) {
         return (_var) ? true : false;
     };
-                is.empty = function (o) {
-                    if (_.is.object(0))
-                        for (var i in o)
-                            if (o.hasOwnProperty(i))
-                                return false;
-                    if (_.is.array(o))
-                        return o.length === 0
-                    return true;
-                };
+    is.empty = function (o) {
+        if (_.is.object(0))
+            for (var i in o)
+                if (o.hasOwnProperty(i))
+                    return false;
+        if (_.is.array(o))
+            return o.length === 0
+        return true;
+    };
     is.truthy = function () { };
     is.scalar = function (_var) {
         //TODO : improve
@@ -68,12 +68,21 @@
         
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };
-    
+    is.closet = function (fo, so) {
+        return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
+    };
+    is.contain = function (str , searchStr) {
+        var reg = (_.is.regex(searchStr))?searchStr: new RegExp(searchStr, 'g');
+        return str.match(reg) && str.match(reg).length > 0;
+    };
+    is.regex = function (r) {
+        return r.constructor.name === "RegExp";
+    };
     var not = {};
     var i;
     for (i in is) (function (i) {
-        if (is.hasOwnProperty(i)) not[i] = function (o) {
-            return !is[i](o);
+        if (is.hasOwnProperty(i)) not[i] = function (a, b, c) {
+            return !is[i](a, b, c);
         };
     })(i);
     is.not = not;

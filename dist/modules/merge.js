@@ -1,3 +1,3 @@
-/*! sutility - v0.0.5 - 2015-07-05 */
-this.merge=function(a,b){_.is.object(b)?_.each(b,function(c,d){a[d]=b[d]}):_.is.array(b)&&_.each(b,function(b){a.push(b)})};
+/*! sutility - v0.0.6 - 2015-07-11 */
+this.merge=function(a,b){var c=_.cloneObj(a);return _.is.object(b)?_.each(b,function(a,d){c[d]=b[d]}):_.is.array(b)&&_.each(b,function(a){c.push(a)}),c};
 //# sourceMappingURL=merge.js.map

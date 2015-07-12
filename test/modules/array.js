@@ -4,9 +4,7 @@ var should = chai.should();
 describe('Array', function () {
     
     before(function () {
-        console.log('**********************************');
-        console.log('*     start testing sutility     *');
-        console.log('**********************************');
+        console.log('start testing Array');
     });
     //beforeEach(function () {
     //    console.log('invoke before each method');
@@ -15,11 +13,11 @@ describe('Array', function () {
     //afterEach(function () {
     //    console.log('invoke after each method');
     //});
-    after(function () {
-        console.log('**********************************');
-        console.log('*       done without error       *');
-        console.log('**********************************');
-    });
+    //after(function () {
+    //    console.log('**********************************');
+    //    console.log('*       done without error       *');
+    //    console.log('**********************************');
+    //});
     
     
     
