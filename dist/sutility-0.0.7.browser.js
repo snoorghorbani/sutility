@@ -322,7 +322,7 @@ this.catchall = (function (_) {
         Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
         Fn.prototype.remove[name] = function (a, b) {
             var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-            values[name] = _.filter(values[name], function (a) { return a !== valueStr; });
+            values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
         };
         Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
         Fn.prototype.reset[name] = function () {
@@ -769,17 +769,20 @@ this.fail = function (text) {
     throw new Error(text);
 };
 
-var filter = this.filter = function (obj, obj_FnCondition) {
+this.filter = function (arr, obj_FnCondition) {
+    if (DEBUG) {
+        if (_.is.not.object(obj_FnCondition) && _.is.not.function(obj_FnCondition)) debugger;
+    }
+    
     var res = [];
     var condFn = (_.is.function(obj_FnCondition)) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
     
-    _.each(obj, function (item) {
+    _.each(arr, function (item) {
         if (condFn(item))
             res.push(item);
     });
     return res;
 };
-
 this.fine = function (ar, fn) {
     var status = true;
     _.each(ar, function (i) {
@@ -1191,7 +1194,7 @@ this.is = (function (_, undefined) {
         return Object.prototype.toString.call(_var) === '[object Undefined]';
     };
     is.event = function (_var) {
-        return !!Object.prototype.toString.call(_var).toLowerCase().search('event');
+        return Object.prototype.toString.call(_var).toLowerCase().search('event') > 0;
     };
     is.defined = function (_var) {
         return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
@@ -1228,7 +1231,14 @@ this.is = (function (_, undefined) {
         
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };
-    is.closet = function (fo, so) {
+    is.equalText = function (fv, sv) {
+        if (DEBUG) {
+            if (_.is.not.string(fv)) that.warn('equal function :' + fv + ' is Not String');
+            if (_.is.not.string(sv)) that.warn('equal function :' + sv + ' is Not String');
+        }
+        
+        return (fv.toLowerCase(fv) === sv.toLowerCase(sv)) ? true : false;
+    }; is.closet = function (fo, so) {
         return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
     };
     is.contain = function (str , searchStr) {
@@ -1389,8 +1399,8 @@ this.memoize = function (fn) {
     return function () {
         var args = Array.prototype.slice.call(arguments),
             hash = "",
-            i = args.length;
-        currentArg = null;
+            i = args.length,
+            currentArg = null;
         while (i--) {
             currentArg = args[i];
             hash += (currentArg === Object(currentArg))
@@ -1405,22 +1415,18 @@ this.memoize = function (fn) {
 this.merge = function (toObj, fromObj/*, copyPrototype*/) {
     //var copyPrototype = (copyPrototype != undefined) ? copyPrototype : true;
     //TODO: refactor
-    var temp = _.cloneObj(toObj)
-    if (_.is.object(fromObj)) {
-        _.each(fromObj, function (value, key) {
-            temp[key] = fromObj[key];
-        });
-    } else if (_.is.array(fromObj)) {
-        _.each(fromObj, function (value) {
-            temp.push(value);
-        });
+    if (DEBUG) {
+        if (_.is.not.object(fromObj)) {
+            debuggerl
+        }
     }
+    
+    var temp = _.cloneObj(toObj)
+    _.each(fromObj, function (value, key) {
+        temp[key] = fromObj[key];
+    });
+    
     return temp;
-            //copyPrototype && this.each(fromObj, function (value, key) {
-            //	if (this.isPrototypeProp(fromObj, key)) {
-            //		temp[key] = fromObj[key];
-            //	}
-            //}, this)
 };
 this.multiply = function (fn, ln) {
     return fn * ln;
@@ -1565,10 +1571,14 @@ this.onscroll(function () {
 this.partial = function (obj, keys) {
     if (DEBUG) {
         if (_.is.not.object(obj)) debugger;
-        if (_.is.not.array(keys)) debugger;
+        if (_.is.not.defined(keys)) debugger;
     }
     
     var res = {};
+    
+    if (_.is.not.array(keys))
+        keys = _.report.skeleton(keys);
+    
     for (var i = 0, key; key = keys[i]; i++) {
         var keyParts = key.split('.');
         var resultKey = keyParts.shift();
@@ -1582,11 +1592,6 @@ this.partial = function (obj, keys) {
             res[resultKey] = _.assignIfNotDefined(res[resultKey] || {});
             res[resultKey] = _.merge(res[resultKey] , _.partial(obj[resultKey] , path));
         }
-        //if ((_.is.not.object(obj[key]))) {
-        //    res[key] = obj[key];
-        //} else if (_.is.object(obj[key])) {
-        //    res[key] = _.partial(obj[key] , _.keys(obj[key]))
-        //}
     }
     return res;
 };
@@ -1793,14 +1798,14 @@ this.repeat = function (len, fn, context) {
 this.replaceInArray = function (array, from, replaceBy) {
     Array.prototype.splice.apply(array, [from, replaceBy.length + from].concat(replaceBy));
 };
-this.report = (function (_) {
+;this.report = (function (_) {
     var Fn = function (object, depts, path) {
         var depts = depts || 0;
         var path = path || "";
         var temp = {};
         var nodes = []
         
-        depts++
+        depts++;
         if (_.is.object(object)) {
             temp = {};
             for (var key in object) {
@@ -1817,7 +1822,7 @@ this.report = (function (_) {
                 if (_.is.array(object[key]))
                     temp['type'] = 'array';
                 
-                nodes.push(_.cloneObj(temp))
+                nodes.push(_.cloneObj(temp));
                 
                 if (isObject)
                     nodes = nodes.concat(that.report(object[key], depts, keyPath));
@@ -1829,22 +1834,24 @@ this.report = (function (_) {
     }
     
     Fn.skeleton = function (obj) {
-        return  _.array.compact(_.map(Fn(obj), function (i) {
+        return _.array.compact(_.map(Fn(obj), function (i) {
             return (i.isLastNode)? i.path:false;
         }));
     };
-
+    
     return Fn;
-}(this))
-this.rightCurry = function (fn) {
-    return function (/*right args*/) {
-        var rightArgs = that.argToArray(arguments);
-        return function (/*left args*/) {
-            var args = that.concat(that.argToArray(arguments), rightArgs);
-            return fn.apply(that, args);
+}(this));
+this.rightCurry = (function (_) {
+    return function (fn) {
+        return function (/*right args*/) {
+            var rightArgs = that.argToArray(arguments);
+            return function (/*left args*/) {
+                var args = _.array.concat(that.argToArray(arguments), rightArgs);
+                return fn.apply(that, args);
+            };
         };
     };
-};
+}(this))
 this.runInFunc = function (fn) {
     if (this.is.not.function(fn)) this.warn(fn + 'is not function');
     return function () {

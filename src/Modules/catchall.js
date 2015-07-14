@@ -46,7 +46,7 @@
         Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
         Fn.prototype.remove[name] = function (a, b) {
             var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-            values[name] = _.filter(values[name], function (a) { return a !== valueStr; });
+            values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
         };
         Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
         Fn.prototype.reset[name] = function () {

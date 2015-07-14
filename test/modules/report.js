@@ -21,7 +21,7 @@ describe('Report', function () {
                 { name: "a", path: "a", depts: 1, type: "array", isLastNode: false },
                 { name: "d", path: "a.d", depts: 2, type: "value", isLastNode: true },
                 { name: "b", path: "b", depts: 1, type: "object", isLastNode: false },
-                { name: "bb", path: "b.bb", depts: 2, type: "value", isLastNode: true },
+                { name: "bb", path: "b.bb", depts: 2, type: "value", isLastNode: true }, 
                 { name: "bc", path: "b.bc", depts: 2, type: "object", isLastNode: false },
                 { name: "cc", path: "b.bc.cc", depts: 3, type: "value", isLastNode: true }
             ]

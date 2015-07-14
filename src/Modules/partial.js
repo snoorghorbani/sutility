@@ -1,10 +1,14 @@
 ﻿this.partial = function (obj, keys) {
     if (DEBUG) {
         if (_.is.not.object(obj)) debugger;
-        if (_.is.not.array(keys)) debugger;
+        if (_.is.not.defined(keys)) debugger;
     }
     
     var res = {};
+    
+    if (_.is.not.array(keys))
+        keys = _.report.skeleton(keys);
+    
     for (var i = 0, key; key = keys[i]; i++) {
         var keyParts = key.split('.');
         var resultKey = keyParts.shift();
@@ -18,11 +22,6 @@
             res[resultKey] = _.assignIfNotDefined(res[resultKey] || {});
             res[resultKey] = _.merge(res[resultKey] , _.partial(obj[resultKey] , path));
         }
-        //if ((_.is.not.object(obj[key]))) {
-        //    res[key] = obj[key];
-        //} else if (_.is.object(obj[key])) {
-        //    res[key] = _.partial(obj[key] , _.keys(obj[key]))
-        //}
     }
     return res;
 };

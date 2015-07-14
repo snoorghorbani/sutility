@@ -31,7 +31,7 @@
         return Object.prototype.toString.call(_var) === '[object Undefined]';
     };
     is.event = function (_var) {
-        return !!Object.prototype.toString.call(_var).toLowerCase().search('event');
+        return Object.prototype.toString.call(_var).toLowerCase().search('event') > 0;
     };
     is.defined = function (_var) {
         return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
@@ -68,7 +68,14 @@
         
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };
-    is.closet = function (fo, so) {
+    is.equalText = function (fv, sv) {
+        if (DEBUG) {
+            if (_.is.not.string(fv)) that.warn('equal function :' + fv + ' is Not String');
+            if (_.is.not.string(sv)) that.warn('equal function :' + sv + ' is Not String');
+        }
+        
+        return (fv.toLowerCase(fv) === sv.toLowerCase(sv)) ? true : false;
+    }; is.closet = function (fo, so) {
         return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
     };
     is.contain = function (str , searchStr) {

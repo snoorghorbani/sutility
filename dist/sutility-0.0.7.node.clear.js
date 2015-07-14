@@ -1,8 +1,8 @@
 /**
- * sutility v0.0.6 - 2015-07-11
+ * sutility v0.0.7 - 2015-07-14
  * Functional Library
  *
- * Copyright (c) 2015 soushinas noorghorbani <snoorghorbani@gmail.com>
+ * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
  * Licensed MIT
  */
 (function(undefined) {
@@ -160,7 +160,7 @@
                     }, Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {}), Fn.prototype.remove[name] = function(a, b) {
                         var valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
                         values[name] = _.filter(values[name], function(a) {
-                            return a !== valueStr;
+                            return a.toLowerCase() !== valueStr.toLowerCase();
                         });
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
                         var defaultValue = keys[name]["default"], initByType = "";
@@ -383,14 +383,13 @@
                 return matched;
             }, this.fail = function(text) {
                 throw new Error(text);
-            };
-            this.filter = function(obj, obj_FnCondition) {
+            }, this.filter = function(arr, obj_FnCondition) {
+                DEBUG && _.is.not.object(obj_FnCondition) && _.is.not["function"](obj_FnCondition);
                 var res = [], condFn = _.is["function"](obj_FnCondition) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
-                return _.each(obj, function(item) {
+                return _.each(arr, function(item) {
                     condFn(item) && res.push(item);
                 }), res;
-            };
-            this.fine = function(ar, fn) {
+            }, this.fine = function(ar, fn) {
                 var status = !0;
                 return _.each(ar, function(i) {
                     fn(i) || (status = !1);
@@ -586,7 +585,7 @@
                 }, is.undefined = function(_var) {
                     return "[object Undefined]" === Object.prototype.toString.call(_var);
                 }, is.event = function(_var) {
-                    return !!Object.prototype.toString.call(_var).toLowerCase().search("event");
+                    return Object.prototype.toString.call(_var).toLowerCase().search("event") > 0;
                 }, is.defined = function(_var) {
                     return "[object Undefined]" !== Object.prototype.toString.call(_var) && "[object Null]" !== Object.prototype.toString.call(_var) && "" !== Object;
                 }, is.json = function() {}, is.error = function() {}, is.startWith = function() {}, 
@@ -601,6 +600,9 @@
                     return obj[prop] && !obj.hasOwnProperty(prop);
                 }, is.equal = function(fv, sv) {
                     return JSON.stringify(fv) == JSON.stringify(sv) ? !0 : !1;
+                }, is.equalText = function(fv, sv) {
+                    return DEBUG && (_.is.not.string(fv) && that.warn("equal function :" + fv + " is Not String"), 
+                    _.is.not.string(sv) && that.warn("equal function :" + sv + " is Not String")), fv.toLowerCase(fv) === sv.toLowerCase(sv) ? !0 : !1;
                 }, is.closet = function(fo, so) {
                     return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
                 }, is.contain = function(str, searchStr) {
@@ -714,16 +716,15 @@
                 }), results;
             }, this.memoize = function(fn) {
                 return fn.cache || (fn.cache = {}), function() {
-                    var args = Array.prototype.slice.call(arguments), hash = "", i = args.length;
-                    for (currentArg = null; i--; ) currentArg = args[i], hash += currentArg === Object(currentArg) ? JSON.stringify(currentArg) : currentArg;
+                    for (var args = Array.prototype.slice.call(arguments), hash = "", i = args.length, currentArg = null; i--; ) currentArg = args[i], 
+                    hash += currentArg === Object(currentArg) ? JSON.stringify(currentArg) : currentArg;
                     return hash in fn.cache ? fn.cache[hash] : fn.cache[hash] = fn.apply(this, args);
                 };
             }, this.merge = function(toObj, fromObj) {
+                DEBUG && _.is.not.object(fromObj) && debuggerl;
                 var temp = _.cloneObj(toObj);
-                return _.is.object(fromObj) ? _.each(fromObj, function(value, key) {
+                return _.each(fromObj, function(value, key) {
                     temp[key] = fromObj[key];
-                }) : _.is.array(fromObj) && _.each(fromObj, function(value) {
-                    temp.push(value);
                 }), temp;
             }, this.multiply = function(fn, ln) {
                 return fn * ln;
@@ -793,8 +794,10 @@
                     });
                 });
             }), this.partial = function(obj, keys) {
-                DEBUG && (_.is.not.object(obj), _.is.not.array(keys));
-                for (var key, res = {}, i = 0; key = keys[i]; i++) {
+                DEBUG && (_.is.not.object(obj), _.is.not.defined(keys));
+                var res = {};
+                _.is.not.array(keys) && (keys = _.report.skeleton(keys));
+                for (var key, i = 0; key = keys[i]; i++) {
                     var keyParts = key.split("."), resultKey = keyParts.shift(), path = [ keyParts.join(".") ];
                     DEBUG && _.is.not.defined(obj[resultKey]), _.is.not.contain(key, "\\.") ? res[key] = obj[key] : _.is.contain(key, "\\.") && (res[resultKey] = _.assignIfNotDefined(res[resultKey] || {}), 
                     res[resultKey] = _.merge(res[resultKey], _.partial(obj[resultKey], path)));
@@ -923,15 +926,17 @@
                         return i.isLastNode ? i.path : !1;
                     }));
                 }, Fn;
-            }(this), this.rightCurry = function(fn) {
-                return function() {
-                    var rightArgs = that.argToArray(arguments);
+            }(this), this.rightCurry = function(_) {
+                return function(fn) {
                     return function() {
-                        var args = that.concat(that.argToArray(arguments), rightArgs);
-                        return fn.apply(that, args);
+                        var rightArgs = that.argToArray(arguments);
+                        return function() {
+                            var args = _.array.concat(that.argToArray(arguments), rightArgs);
+                            return fn.apply(that, args);
+                        };
                     };
                 };
-            }, this.runInFunc = function(fn) {
+            }(this), this.runInFunc = function(fn) {
                 return this.is.not["function"](fn) && this.warn(fn + "is not function"), function() {
                     fn();
                 };

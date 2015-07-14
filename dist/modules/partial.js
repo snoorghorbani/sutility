@@ -1,3 +1,3 @@
-/*! sutility - v0.0.6 - 2015-07-11 */
-this.partial=function(a,b){for(var c,d={},e=0;c=b[e];e++){var f=c.split("."),g=f.shift(),h=[f.join(".")];_.is.not.contain(c,"\\.")?d[c]=a[c]:_.is.contain(c,"\\.")&&(d[g]=_.assignIfNotDefined(d[g]||{}),d[g]=_.merge(d[g],_.partial(a[g],h)))}return d};
+/*! sutility - v0.0.7 - 2015-07-14 */
+this.partial=function(a,b){var c={};_.is.not.array(b)&&(b=_.report.skeleton(b));for(var d,e=0;d=b[e];e++){var f=d.split("."),g=f.shift(),h=[f.join(".")];_.is.not.contain(d,"\\.")?c[d]=a[d]:_.is.contain(d,"\\.")&&(c[g]=_.assignIfNotDefined(c[g]||{}),c[g]=_.merge(c[g],_.partial(a[g],h)))}return c};
 //# sourceMappingURL=partial.js.map

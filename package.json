@@ -1,7 +1,7 @@
 {
   "name": "sutility",
-  "version": "0.0.6",
-  "author": "soushinas noorghorbani <snoorghorbani@gmail.com>",
+  "version": "0.0.7",
+  "author": "soushians noorghorbani <snoorghorbani@gmail.com>",
   "description": "Functional Library",
   "contributors": [
     {
@@ -9,14 +9,15 @@
       "email": "snoorghorbani@gmail.com"
     }
   ],
-  "main": "/dist/sutility-0.0.1.js",
+  "main": "/dist/sutility-0.0.7.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/snoorghorbani/sutility.git"
   },
   "keywords": [
     "functional",
-    "simple framework",
+    "utility",
+    "basic framework",
     "is."
   ],
   "dependencies": {
@@ -39,6 +40,7 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.0",
     "karma-cli": "^0.1.0",
+    "karma-coverage": "^0.4.2",
     "karma-firefox-launcher": "^0.1.6",
     "karma-ie-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",

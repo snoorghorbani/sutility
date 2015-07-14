@@ -3,8 +3,8 @@ this.memoize = function (fn) {
     return function () {
         var args = Array.prototype.slice.call(arguments),
             hash = "",
-            i = args.length;
-        currentArg = null;
+            i = args.length,
+            currentArg = null;
         while (i--) {
             currentArg = args[i];
             hash += (currentArg === Object(currentArg))

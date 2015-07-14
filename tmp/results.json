@@ -1,6 +1,6 @@
 {
-	"numResults": 212,
-	"creationDate": "2015-07-11 11:08:49",
+	"numResults": 213,
+	"creationDate": "2015-07-14 06:23:56",
 	"results": {
 		"src/modules/activated.js": [
 			{
@@ -387,14 +387,22 @@
 			},
 			{
 				"line": 3,
-				"match": "_.rightCurry"
-			},
-			{
-				"line": 3,
 				"match": "_.is"
 			},
 			{
-				"line": 5,
+				"line": 7,
+				"match": "_.is"
+			},
+			{
+				"line": 7,
+				"match": "_.rightCurry"
+			},
+			{
+				"line": 7,
+				"match": "_.is"
+			},
+			{
+				"line": 9,
 				"match": "_.each"
 			}
 		],
@@ -546,31 +554,39 @@
 				"match": "_.is"
 			},
 			{
-				"line": 72,
+				"line": 73,
 				"match": "_.is"
 			},
 			{
-				"line": 72,
+				"line": 74,
+				"match": "_.is"
+			},
+			{
+				"line": 79,
+				"match": "_.is"
+			},
+			{
+				"line": 79,
 				"match": "_.partial"
 			},
 			{
-				"line": 72,
+				"line": 79,
 				"match": "_.report"
 			},
 			{
-				"line": 75,
+				"line": 82,
 				"match": "_.is"
 			},
 			{
-				"line": 112,
+				"line": 119,
 				"match": "_.is"
 			},
 			{
-				"line": 115,
+				"line": 122,
 				"match": "_.is"
 			},
 			{
-				"line": 120,
+				"line": 127,
 				"match": "_.is"
 			}
 		],
@@ -606,23 +622,15 @@
 		],
 		"src/modules/merge.js": [
 			{
-				"line": 4,
-				"match": "_.cloneObj"
-			},
-			{
 				"line": 5,
 				"match": "_.is"
 			},
 			{
-				"line": 6,
-				"match": "_.each"
-			},
-			{
-				"line": 9,
-				"match": "_.is"
-			},
-			{
 				"line": 10,
+				"match": "_.cloneObj"
+			},
+			{
+				"line": 11,
 				"match": "_.each"
 			}
 		],
@@ -656,44 +664,36 @@
 				"match": "_.is"
 			},
 			{
-				"line": 13,
+				"line": 9,
 				"match": "_.is"
 			},
 			{
-				"line": 15,
-				"match": "_.is"
+				"line": 10,
+				"match": "_.report"
 			},
 			{
 				"line": 17,
 				"match": "_.is"
 			},
 			{
-				"line": 18,
-				"match": "_.assignIfNotDefined"
-			},
-			{
 				"line": 19,
-				"match": "_.merge"
-			},
-			{
-				"line": 19,
-				"match": "_.partial"
+				"match": "_.is"
 			},
 			{
 				"line": 21,
 				"match": "_.is"
 			},
 			{
+				"line": 22,
+				"match": "_.assignIfNotDefined"
+			},
+			{
 				"line": 23,
-				"match": "_.is"
+				"match": "_.merge"
 			},
 			{
-				"line": 24,
+				"line": 23,
 				"match": "_.partial"
-			},
-			{
-				"line": 24,
-				"match": "_.keys"
 			}
 		],
 		"src/modules/propByPrefix.js": [
@@ -816,6 +816,12 @@
 			{
 				"line": 37,
 				"match": "_.map"
+			}
+		],
+		"src/modules/rightCurry.js": [
+			{
+				"line": 6,
+				"match": "_.array"
 			}
 		],
 		"src/modules/safeClear.js": [
