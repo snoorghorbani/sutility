@@ -111,7 +111,7 @@ module.exports = function (grunt) {
         taskData: {
             uglify: {},
             concat: {
-                files: [],
+                files: {},
                 options: {}
             }
         },
@@ -126,21 +126,19 @@ module.exports = function (grunt) {
     usedInBox.taskData.uglify[['dist/', '.usedin.min.js'].join(config.versionedName)] = usedInBox.distPath;
 
     var generateUsedInConcatTask = function () {
-        console.log(usedInBox.temp.modules)
+        usedInBox.taskData.concat.files[usedInBox.distPath] = [];
         for (var i = 0, name; name = usedInBox.temp.modules[i]; i++) {
             console.log(name)
             var module = modules[name];
-            usedInBox.taskData.concat.files.push(module.path);
+            module && usedInBox.taskData.concat.files[usedInBox.distPath].push(module.path);
         }
-        usedInBox.taskData.concat.files.unshift('src/intro.js');
-        usedInBox.taskData.concat.files.push('src/outro.js');
+        usedInBox.taskData.concat.files[usedInBox.distPath].unshift('src/intro.js');
+        usedInBox.taskData.concat.files[usedInBox.distPath].push('src/outro.js');
 
         //fill usedIn params
         usedInBox.taskData.concat.options = {
             banner: config.banner
         };
-        //usedInBox.taskData.concat.files[usedInBox.distPath] = files.usedIn;
-        console.log(usedInBox.taskData.concat)
     };
 
     //#endregion
@@ -181,7 +179,7 @@ module.exports = function (grunt) {
         },
         concat: {
             nodeAndBroPack: nodeAndBroPack,
-            usedIn: usedInConcatTask
+            usedIn: usedInBox.taskData.concat
         },
         uglify: {
             main: {
@@ -287,7 +285,7 @@ module.exports = function (grunt) {
             },
             "createModulesDependency": {
                 "files": {
-                    "src": cuatomConfig.scriptPath
+                    "src": cuatomConfig.usedIn
                 },
                 "options": {
                     "searchString": /_\.(.\w+)/g,
