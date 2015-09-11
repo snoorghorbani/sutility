@@ -4,10 +4,10 @@
     _.each(parents, function (parent) {
         var nodes = _.select(selector, parent);
         _.each(nodes, function (node) {
-            _.event(node, 'click', function (e) {
+            _.event(node, 'click', function () {
                 _.className.remove(nodes, classname);
                 _.className.add(node, classname);
-                callback && callback(this,e);
+                callback && callback(this);
             });
         });
     });

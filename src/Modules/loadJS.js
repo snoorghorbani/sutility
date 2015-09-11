@@ -19,7 +19,7 @@
             var script = document.createElement('script')
             script.setAttribute("type", "text/javascript")
             script.onload = function (e) {
-                            var n = e.srcElement || e.explicitOriginalTarget || e.path[0];
+                var n = e.explicitOriginalTarget || e.path[0];
                 var filePath = n.getAttribute('src');
                 if (filePath) {
                     path = filePath.substring(1, filePath.length);

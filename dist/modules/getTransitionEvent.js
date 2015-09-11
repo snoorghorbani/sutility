@@ -1,3 +1,3 @@
-/*! sutility - v0.0.71 - 2015-09-11 */
+/*! sutility - v0.0.7 - 2015-07-14 */
 this.getTransitionEvent=function(){var a=document.createElement("div"),b={WebkitTransition:"webkitTransitionEnd",OTransition:"TranstionEnd",MozTransition:"transtionend",transition:"transtionend"};for(var c in b)if(_.is.defined(a.style[c]))return b[c]};
 //# sourceMappingURL=getTransitionEvent.js.map

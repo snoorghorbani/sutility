@@ -87,11 +87,8 @@ module.exports = function (grunt) {
         files.nodeModules.push('src/outro.js');
         
         //fill nodeAndBroPack params
-        nodeAndBroPack.options = {
-            banner: config.banner
-        };
-        nodeAndBroPack.files[config.dist_node] = files.nodeModules;
-        nodeAndBroPack.files[config.dist_bro] = files.browserModules;
+        nodeAndBroPack.files[config.dist_node] = files.nodeModules
+        nodeAndBroPack.files[config.dist_bro] = files.browserModules
     };
     
     // setup dynamic filenames

@@ -2,7 +2,7 @@
     var repos = [];
     return function (fn) {
         repos.push(fn);
-        if (document.readyState == "interactive" || document.readyState == "complete") {
+        if (document.readyState == "interactive") {
             fn();
             return;
         }

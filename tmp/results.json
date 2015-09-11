@@ -1,37 +1,7 @@
 {
-	"numResults": 241,
-	"creationDate": "2015-09-11 06:22:25",
+	"numResults": 213,
+	"creationDate": "2015-07-14 06:23:56",
 	"results": {
-		"src/modules/activate.js": [
-			{
-				"line": 3,
-				"match": "_.select"
-			},
-			{
-				"line": 4,
-				"match": "_.dispatcher"
-			},
-			{
-				"line": 5,
-				"match": "_.className"
-			},
-			{
-				"line": 6,
-				"match": "_.className"
-			},
-			{
-				"line": 9,
-				"match": "_.each"
-			},
-			{
-				"line": 10,
-				"match": "_.select"
-			},
-			{
-				"line": 11,
-				"match": "_.each"
-			}
-		],
 		"src/modules/activated.js": [
 			{
 				"line": 3,
@@ -236,59 +206,35 @@
 				"match": "_.select"
 			},
 			{
-				"line": 21,
-				"match": "_.is"
+				"line": 23,
+				"match": "_.spliteAndTrim"
 			},
 			{
-				"line": 24,
-				"match": "_.spliteAndTrim"
+				"line": 33,
+				"match": "_.select"
+			},
+			{
+				"line": 34,
+				"match": "_.className"
+			},
+			{
+				"line": 35,
+				"match": "_.className"
 			},
 			{
 				"line": 38,
-				"match": "_.spliteAndTrim"
-			},
-			{
-				"line": 47,
-				"match": "_.select"
-			},
-			{
-				"line": 49,
-				"match": "_.is"
-			},
-			{
-				"line": 53,
-				"match": "_.spliteAndTrim"
-			},
-			{
-				"line": 66,
-				"match": "_.spliteAndTrim"
-			},
-			{
-				"line": 75,
-				"match": "_.select"
-			},
-			{
-				"line": 76,
-				"match": "_.className"
-			},
-			{
-				"line": 77,
-				"match": "_.className"
-			},
-			{
-				"line": 80,
 				"match": "_.selectFirst"
 			},
 			{
-				"line": 84,
+				"line": 42,
 				"match": "_.select"
 			},
 			{
-				"line": 86,
+				"line": 44,
 				"match": "_.className"
 			},
 			{
-				"line": 86,
+				"line": 44,
 				"match": "_.className"
 			}
 		],
@@ -302,21 +248,7 @@
 				"match": "_.object"
 			}
 		],
-		"src/modules/coockie.js": [
-			{
-				"line": 5,
-				"match": "_.is"
-			},
-			{
-				"line": 12,
-				"match": "_.compileString"
-			}
-		],
 		"src/modules/css.js": [
-			{
-				"line": 9,
-				"match": "_.camelCase"
-			},
 			{
 				"line": 13,
 				"match": "_.selectFirst"
@@ -348,28 +280,6 @@
 			{
 				"line": 18,
 				"match": "_.cloneObj"
-			}
-		],
-		"src/modules/dispatcher.js": [
-			{
-				"line": 15,
-				"match": "_.is"
-			},
-			{
-				"line": 30,
-				"match": "_.is"
-			},
-			{
-				"line": 32,
-				"match": "_.is"
-			},
-			{
-				"line": 39,
-				"match": "_.is"
-			},
-			{
-				"line": 41,
-				"match": "_.is"
 			}
 		],
 		"src/modules/enableBackup.js": [
@@ -514,71 +424,67 @@
 		],
 		"src/modules/framework.js": [
 			{
-				"line": 6,
-				"match": "_.fail"
-			},
-			{
-				"line": 17,
+				"line": 10,
 				"match": "_.camelCase"
 			},
 			{
-				"line": 18,
+				"line": 11,
 				"match": "_.fail"
 			},
 			{
-				"line": 32,
+				"line": 25,
 				"match": "_.scope"
 			},
 			{
-				"line": 33,
+				"line": 26,
 				"match": "_.scope"
 			},
 			{
-				"line": 35,
+				"line": 28,
 				"match": "_.ready"
 			},
 			{
-				"line": 36,
+				"line": 29,
 				"match": "_.selectFirst"
 			},
 			{
-				"line": 47,
+				"line": 39,
 				"match": "_.fn"
 			},
 			{
-				"line": 51,
+				"line": 42,
 				"match": "_.is"
 			},
 			{
-				"line": 52,
+				"line": 43,
 				"match": "_.each"
 			},
 			{
-				"line": 74,
+				"line": 62,
 				"match": "_.loadJS"
 			},
 			{
-				"line": 80,
+				"line": 68,
 				"match": "_.array"
 			},
 			{
-				"line": 105,
+				"line": 92,
 				"match": "_.is"
 			},
 			{
-				"line": 106,
+				"line": 93,
 				"match": "_.each"
 			},
 			{
-				"line": 128,
+				"line": 115,
 				"match": "_.ready"
 			},
 			{
-				"line": 141,
+				"line": 128,
 				"match": "_.dashCase"
 			},
 			{
-				"line": 143,
+				"line": 130,
 				"match": "_.each"
 			}
 		],
@@ -656,31 +562,31 @@
 				"match": "_.is"
 			},
 			{
-				"line": 80,
+				"line": 79,
 				"match": "_.is"
 			},
 			{
-				"line": 80,
+				"line": 79,
 				"match": "_.partial"
 			},
 			{
-				"line": 80,
+				"line": 79,
 				"match": "_.report"
 			},
 			{
-				"line": 83,
+				"line": 82,
 				"match": "_.is"
 			},
 			{
-				"line": 130,
+				"line": 119,
 				"match": "_.is"
 			},
 			{
-				"line": 133,
+				"line": 122,
 				"match": "_.is"
 			},
 			{
-				"line": 138,
+				"line": 127,
 				"match": "_.is"
 			}
 		],
@@ -714,43 +620,17 @@
 				"match": "_.each"
 			}
 		],
-		"src/modules/mediaHandler.js": [
-			{
-				"line": 23,
-				"match": "_.leftCurry"
-			},
-			{
-				"line": 24,
-				"match": "_.leftCurry"
-			},
-			{
-				"line": 25,
-				"match": "_.leftCurry"
-			},
-			{
-				"line": 25,
-				"match": "_.fn"
-			}
-		],
 		"src/modules/merge.js": [
 			{
-				"line": 2,
+				"line": 5,
+				"match": "_.is"
+			},
+			{
+				"line": 10,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 3,
-				"match": "_.is"
-			},
-			{
-				"line": 4,
-				"match": "_.each"
-			},
-			{
-				"line": 7,
-				"match": "_.is"
-			},
-			{
-				"line": 8,
+				"line": 11,
 				"match": "_.each"
 			}
 		],

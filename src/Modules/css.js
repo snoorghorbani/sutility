@@ -6,7 +6,7 @@ this.css = (function (_) {
         var nodes = this.select(selectorOrDom);
         for (var i = 0, node; node = nodes[i]; i++)
             for (var k in style)
-                node.style[_.camelCase(k)] = style[k];
+                node.style[k] = style[k];
     };
     fn.computedValue = function (selectorOrDom, prop, numberOnly) {
         if (window.getComputedStyle) {

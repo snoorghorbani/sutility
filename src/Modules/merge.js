@@ -1,13 +1,16 @@
 ﻿this.merge = function (toObj, fromObj/*, copyPrototype*/) {
-var temp = _.cloneObj(toObj);
-                if (_.is.object(fromObj)) {
-                    _.each(fromObj, function (value, key) {
-                        temp[key] = fromObj[key];
-                    });
-                } else if (_.is.array(fromObj)) {
-                    _.each(fromObj, function (value) {
-                        temp.push(value);
-                    });
-                }
-                return temp;
+    //var copyPrototype = (copyPrototype != undefined) ? copyPrototype : true;
+    //TODO: refactor
+    if (DEBUG) {
+        if (_.is.not.object(fromObj)) {
+            debuggerl
+        }
+    }
+    
+    var temp = _.cloneObj(toObj)
+    _.each(fromObj, function (value, key) {
+        temp[key] = fromObj[key];
+    });
+    
+    return temp;
 };
