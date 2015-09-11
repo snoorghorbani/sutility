@@ -17,7 +17,7 @@ describe('is.equalText', function () {
             
             
             var res = _.is.equalText(data, "dont");
-            assert.isFalse(res, "the value must false");
+            assert.isFalse(res, "the value must false"   );
         });
     });
 });
