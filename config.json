@@ -1,3 +1,4 @@
 ﻿{
-    "scriptPath":"src/**/*.js"
+    "scriptPath": "src/**/*.js",
+    "usedIn" : "examples/requiredTest.js"
 }

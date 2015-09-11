@@ -1,7 +1,4 @@
-﻿/*
-@pltf->node
-*/
-this.array = (function (_) {
+﻿this.array = (function (_) {
     var fn = function () { };
     
     fn.compact = function (arr) {

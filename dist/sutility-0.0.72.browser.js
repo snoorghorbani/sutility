@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.71 - 2015-09-11
+ * sutility v0.0.72 - 2015-09-11
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -64,9 +64,6 @@ this.arrToObj = function (/*arr , key , removeKey*/) {
     return res;
 };
 
-/*
-@pltf->node
-*/
 this.array = (function (_) {
     var fn = function () { };
     

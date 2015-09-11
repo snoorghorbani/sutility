@@ -1,6 +1,6 @@
 {
 	"numResults": 241,
-	"creationDate": "2015-09-11 06:22:25",
+	"creationDate": "2015-09-11 10:30:50",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -74,63 +74,63 @@
 		],
 		"src/modules/array.js": [
 			{
-				"line": 8,
+				"line": 5,
 				"match": "_.filter"
 			},
 			{
-				"line": 14,
+				"line": 11,
 				"match": "_.each"
 			},
 			{
-				"line": 15,
+				"line": 12,
 				"match": "_.each"
 			},
 			{
-				"line": 28,
+				"line": 25,
 				"match": "_.is"
 			},
 			{
-				"line": 29,
+				"line": 26,
 				"match": "_.is"
 			},
 			{
-				"line": 29,
+				"line": 26,
 				"match": "_.is"
 			},
 			{
-				"line": 51,
+				"line": 48,
 				"match": "_.filter"
 			},
 			{
-				"line": 75,
+				"line": 72,
 				"match": "_.is"
 			},
 			{
-				"line": 75,
+				"line": 72,
 				"match": "_.fail"
 			},
 			{
-				"line": 88,
+				"line": 85,
 				"match": "_.is"
 			},
 			{
-				"line": 88,
+				"line": 85,
 				"match": "_.fail"
 			},
 			{
-				"line": 89,
+				"line": 86,
 				"match": "_.is"
 			},
 			{
-				"line": 89,
+				"line": 86,
 				"match": "_.fail"
 			},
 			{
-				"line": 97,
+				"line": 94,
 				"match": "_.is"
 			},
 			{
-				"line": 98,
+				"line": 95,
 				"match": "_.each"
 			}
 		],
