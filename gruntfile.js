@@ -128,7 +128,7 @@ module.exports = function (grunt) {
     var generateUsedInConcatTask = function () {
         usedInBox.taskData.concat.files[usedInBox.distPath] = [];
         for (var i = 0, name; name = usedInBox.temp.modules[i]; i++) {
-            console.log(name)
+
             var module = modules[name];
             module && usedInBox.taskData.concat.files[usedInBox.distPath].push(module.path);
         }
@@ -285,7 +285,7 @@ module.exports = function (grunt) {
             },
             "createModulesDependency": {
                 "files": {
-                    "src": cuatomConfig.usedIn
+                    "src": cuatomConfig.scriptPath
                 },
                 "options": {
                     "searchString": /_\.(.\w+)/g,
