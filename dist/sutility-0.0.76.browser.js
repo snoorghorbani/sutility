@@ -1,14 +1,15 @@
 /**
- * sutility v0.0.75 - 2015-09-11
+ * sutility v0.0.76 - 2015-09-11
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
  * Licensed MIT
  */
 ;(function(undefined){
-"use strict";
+    "use strict";
+    var instance = null;
 var DEBUG = true;
-var UTILITY = (function () {
+var SUTILITY = (function () {
 
 var U = function () {
 var _ = this;
@@ -457,32 +458,32 @@ this.className = (function (_, undefined) {
                 nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
             }
         }
-    };
-    var nodes = _.select(selectorOrDom);
-    //#region shim for ie
-    if (_.is.ie()) {
-        debugger;
+        var nodes = _.select(selectorOrDom);
+        //#region shim for ie
+        if (_.is.ie()) {
+            debugger;
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].classList) {
+                    var classNames = _.spliteAndTrim(className)
+                    for (var i = 0; i < classNames.length; i++) {
+                        DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
+                    }
+                }
+
+                var reg = new RegExp(className, 'g');
+                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+            }
+        };
+        //#endregion
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].classList) {
-                var classNames = _.spliteAndTrim(className)
-                for (var i = 0; i < classNames.length; i++) {
-                    DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
-                }
+                DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
+                continue;
             }
 
             var reg = new RegExp(className, 'g');
             nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
         }
-    };
-    //#endregion
-    for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].classList) {
-            DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
-            continue;
-        }
-
-        var reg = new RegExp(className, 'g');
-        nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
     }
     className.toggle = function () { };
     className.change = function (selectorOrDom, className, replaceWith) {
@@ -2289,21 +2290,21 @@ this.warn = function (text) {
     return undefined;
 };
 
-   };
+};
 return {
-installHelperOn: function (_this) {
-    U.call(_this);
-},
-get: function () {
-    return new U();
-}
+    install: function () {
+        return (instance)?instance : new U();
+    },
+    installTo: function (_) {
+        return (Object.prototype.toString.call(_) === '[object Object]') ? U.call(_) : window[_] = this.install();
+    }
 };
 
 })();
 
 if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = UTILITY.get();;
+    exports = module.exports = SUTILITY.install();;
 } else {
-this._ = UTILITY.get();
+    window.SUTILITY = SUTILITY;
 }
 }).call(this);

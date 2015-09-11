@@ -1,14 +1,15 @@
 /**
- * sutility v0.0.75 - 2015-09-11
+ * sutility v0.0.76 - 2015-09-11
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
  * Licensed MIT
  */
 ;(function(undefined){
-"use strict";
+    "use strict";
+    var instance = null;
 var DEBUG = true;
-var UTILITY = (function () {
+var SUTILITY = (function () {
 
 var U = function () {
 var _ = this;
@@ -1770,21 +1771,21 @@ this.warn = function (text) {
     return undefined;
 };
 
-   };
+};
 return {
-installHelperOn: function (_this) {
-    U.call(_this);
-},
-get: function () {
-    return new U();
-}
+    install: function () {
+        return (instance)?instance : new U();
+    },
+    installTo: function (_) {
+        return (Object.prototype.toString.call(_) === '[object Object]') ? U.call(_) : window[_] = this.install();
+    }
 };
 
 })();
 
 if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = UTILITY.get();;
+    exports = module.exports = SUTILITY.install();;
 } else {
-this._ = UTILITY.get();
+    window.SUTILITY = SUTILITY;
 }
 }).call(this);

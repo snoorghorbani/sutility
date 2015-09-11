@@ -1,18 +1,18 @@
-   };
+};
 return {
-installHelperOn: function (_this) {
-    U.call(_this);
-},
-get: function () {
-    return new U();
-}
+    install: function () {
+        return (instance)?instance : new U();
+    },
+    installTo: function (_) {
+        return (Object.prototype.toString.call(_) === '[object Object]') ? U.call(_) : window[_] = this.install();
+    }
 };
 
 })();
 
 if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = UTILITY.get();;
+    exports = module.exports = SUTILITY.install();;
 } else {
-this._ = UTILITY.get();
+    window.SUTILITY = SUTILITY;
 }
 }).call(this);

@@ -43,32 +43,32 @@
                 nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
             }
         }
-    };
-    var nodes = _.select(selectorOrDom);
-    //#region shim for ie
-    if (_.is.ie()) {
-        debugger;
+        var nodes = _.select(selectorOrDom);
+        //#region shim for ie
+        if (_.is.ie()) {
+            debugger;
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].classList) {
+                    var classNames = _.spliteAndTrim(className)
+                    for (var i = 0; i < classNames.length; i++) {
+                        DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
+                    }
+                }
+
+                var reg = new RegExp(className, 'g');
+                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+            }
+        };
+        //#endregion
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].classList) {
-                var classNames = _.spliteAndTrim(className)
-                for (var i = 0; i < classNames.length; i++) {
-                    DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
-                }
+                DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
+                continue;
             }
 
             var reg = new RegExp(className, 'g');
             nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
         }
-    };
-    //#endregion
-    for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].classList) {
-            DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
-            continue;
-        }
-
-        var reg = new RegExp(className, 'g');
-        nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
     }
     className.toggle = function () { };
     className.change = function (selectorOrDom, className, replaceWith) {

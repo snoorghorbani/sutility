@@ -1,7 +1,8 @@
 ;(function(undefined){
-"use strict";
+    "use strict";
+    var instance = null;
 var DEBUG = true;
-var UTILITY = (function () {
+var SUTILITY = (function () {
 
 var U = function () {
 var _ = this;

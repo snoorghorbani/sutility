@@ -1,3 +1,3 @@
-/*! sutility - v0.0.75 - 2015-09-11 */
+/*! sutility - v0.0.76 - 2015-09-11 */
 this.camelCase=function(a){return a.replace(/-(.)/g,function(a,b){return b.toUpperCase()})};
 //# sourceMappingURL=camelCase.js.map
