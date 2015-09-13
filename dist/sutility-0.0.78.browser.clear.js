@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.77 - 2015-09-13
+ * sutility v0.0.78 - 2015-09-13
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -7,7 +7,8 @@
  */
 (function(undefined) {
     "use strict";
-    var instance = null, DEBUG = !0, SUTILITY = function() {
+    var instance = null, DEBUG = !0;
+    windowSUTILITY = function() {
         var U = function() {
             var _ = this, that = this;
             this.activate = function(selector, classname, callback) {
@@ -1130,6 +1131,5 @@
                 return "[object Object]" === Object.prototype.toString.call(_) ? U.call(_) : window[_] = this.install();
             }
         };
-    }();
-    "undefined" != typeof exports && "undefined" != typeof module && module.exports ? exports = module.exports = SUTILITY.install() : window.SUTILITY = SUTILITY;
+    }(), "undefined" != typeof exports && "undefined" != typeof module && module.exports ? exports = module.exports = SUTILITY.install() : window.SUTILITY = SUTILITY;
 }).call(this);
