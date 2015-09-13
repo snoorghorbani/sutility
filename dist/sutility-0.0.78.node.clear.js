@@ -8,7 +8,7 @@
 (function(undefined) {
     "use strict";
     var instance = null, DEBUG = !0;
-    windowSUTILITY = function() {
+    window.SUTILITY = function() {
         var U = function() {
             var _ = this, that = this;
             this.argToArray = function(arg) {

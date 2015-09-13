@@ -9,7 +9,7 @@
     "use strict";
     var instance = null;
 var DEBUG = true;
-windowSUTILITY = (function () {
+window.SUTILITY = (function () {
 
 var U = function () {
 var _ = this;
