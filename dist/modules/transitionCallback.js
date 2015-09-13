@@ -1,3 +1,3 @@
-/*! sutility - v0.0.76 - 2015-09-13 */
+/*! sutility - v0.0.77 - 2015-09-13 */
 this.transitionCallback=function(a,b){var c=this.getTransitionEvent(),d=function(){b(),a.removeEventListener(c,d)};a.addEventListener(c,d)};
 //# sourceMappingURL=transitionCallback.js.map

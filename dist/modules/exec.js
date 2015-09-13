@@ -1,3 +1,3 @@
-/*! sutility - v0.0.76 - 2015-09-13 */
+/*! sutility - v0.0.77 - 2015-09-13 */
 this.exec=function(){var a=this.argToArray(arguments),b=a.shift(),c=a.shift(),d=a.shift();return b.apply(c||null,d)};
 //# sourceMappingURL=exec.js.map
