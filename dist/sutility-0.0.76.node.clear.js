@@ -10,22 +10,7 @@
     var instance = null, DEBUG = !0, SUTILITY = function() {
         var U = function() {
             var _ = this, that = this;
-            this.activate = function(selector, classname, callback) {
-                classname = classname || "active", _.dispatcher(selector, "click", function(e, el, itemsSelector) {
-                    _.className.remove(itemsSelector, classname), _.className.add(el, classname), callback && callback(el, e);
-                });
-            }, this.activated = function(parentOrSelector, selector, classname, callback) {
-                classname = classname || "active";
-                var parents = _.select(parentOrSelector);
-                _.each(parents, function(parent) {
-                    var nodes = _.select(selector, parent);
-                    _.each(nodes, function(node) {
-                        _.event(node, "click", function(e) {
-                            _.className.remove(nodes, classname), _.className.add(node, classname), callback && callback(this, e);
-                        });
-                    });
-                });
-            }, this.argToArray = function(arg) {
+            this.argToArray = function(arg) {
                 return Array.prototype.slice.call(arg);
             }, this.arrToObj = function() {
                 var args = _.argToArray(arguments), arr = args.shift(), key = args.shift(), removeKey = args.shift(), res = {};
@@ -93,16 +78,7 @@
             }, this.attr = function(_, undefined) {
                 var attr = function() {};
                 return attr;
-            }(this), this.availableDim = function() {
-                var inner = document.createElement("div");
-                inner.style.position = "fixed", inner.style.top = "0px", inner.style.right = "0px", 
-                inner.style.bottom = "0px", inner.style.left = "0px", document.body.appendChild(inner);
-                var height = inner.offsetHeight, width = inner.offsetWidth;
-                return inner.parentNode.removeChild(inner), {
-                    height: height,
-                    width: width
-                };
-            }, this.bind = function(el, obj, decorator) {
+            }(this), this.bind = function(el, obj, decorator) {
                 decorator = decorator || this.i;
             }, this.callConstantly = function(_) {
                 return function(fn, count, context) {
@@ -211,40 +187,7 @@
                         that.exec(callback, context || null, args);
                     }), fnResault) : that.exec(callback, context || null, [ fnResault ]);
                 };
-            }, this.className = function(_, undefined) {
-                var className = function(selectorOrDom, className) {};
-                return className.add = function(selectorOrDom, className) {
-                    for (var nodes = _.select(selectorOrDom), i = 0; i < nodes.length; i++) nodes[i].classList ? DOMTokenList.prototype.add.apply(nodes[i].classList, _.spliteAndTrim(className)) : -1 === nodes[i].className.indexOf(className) && (nodes[i].className = nodes[i].className + " " + className);
-                }, className.remove = function(selectorOrDom, className) {
-                    var nodes = _.select(selectorOrDom);
-                    if (_.is.ie()) for (var i = 0; i < nodes.length; i++) {
-                        if (nodes[i].classList) for (var classNames = _.spliteAndTrim(className), j = 0; j < classNames.length; j++) DOMTokenList.prototype.remove.call(nodes[i].classList, classNames[j]);
-                        var reg = new RegExp(className, "g");
-                        nodes[i].className = nodes[i].className.replace(reg, "").trim();
-                    } else for (var i = 0; i < nodes.length; i++) if (nodes[i].classList) DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className)); else {
-                        var reg = new RegExp(className, "g");
-                        nodes[i].className = nodes[i].className.replace(reg, "").trim();
-                    }
-                    var nodes = _.select(selectorOrDom);
-                    if (_.is.ie()) for (var i = 0; i < nodes.length; i++) {
-                        if (nodes[i].classList) for (var classNames = _.spliteAndTrim(className), i = 0; i < classNames.length; i++) DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
-                        var reg = new RegExp(className, "g");
-                        nodes[i].className = nodes[i].className.replace(reg, "").trim();
-                    }
-                    for (var i = 0; i < nodes.length; i++) if (nodes[i].classList) DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className)); else {
-                        var reg = new RegExp(className, "g");
-                        nodes[i].className = nodes[i].className.replace(reg, "").trim();
-                    }
-                }, className.toggle = function() {}, className.change = function(selectorOrDom, className, replaceWith) {
-                    var nodes = _.select(selectorOrDom);
-                    _.className.remove(nodes, className), _.className.add(nodes, replaceWith);
-                }, className.contains = function(selectorOrDom, className) {
-                    var node = _.selectFirst(selectorOrDom);
-                    return node.classList.contains(className);
-                }, className["if"] = function(selectorOrDom, className, fn) {
-                    for (var nodes = _.select(selectorOrDom), i = 0; i < nodes.length; i++) (fn(nodes[i]) ? _.className.add : _.className.remove)(nodes[i], className);
-                }, className;
-            }(this), this.clone = function(arOrObj) {
+            }, this.clone = function(arOrObj) {
                 if (arOrObj.concat) return arOrObj.concat();
                 var temp = {};
                 for (var key in arOrObj) temp[key] = arOrObj[key];
@@ -302,39 +245,7 @@
             }, this.contain = function(obj, value) {
                 for (var i = 0; i < obj.length; i++) if (obj[i] == value) return !0;
                 return !1;
-            }, this.cookie = function(_) {
-                var Fn = function() {};
-                return Fn.set = function(key, value, exdays) {
-                    _.is.object(value) && (value = JSON.stringify(value));
-                    var d = new Date();
-                    d.setTime(d.getTime() + 24 * exdays * 60 * 60 * 1e3);
-                    var expires = "expires=" + d.toUTCString();
-                    return document.cookie = _.compileString("{{key}}={{value}};{{expires}},", {
-                        key: key,
-                        value: value,
-                        expires: expires
-                    }), document.cookie;
-                }, Fn.get = function(key) {
-                    for (var name = key + "=", ca = document.cookie.split(";"), i = 0; i < ca.length; i++) {
-                        for (var c = ca[i]; " " == c.charAt(0); ) c = c.substring(1);
-                        if (0 == c.indexOf(name)) return c.substring(name.length, c.length);
-                    }
-                    return "";
-                }, Fn.remove = function(key) {
-                    Fn.set(key, "", 0);
-                }, Fn;
-            }(this), this.countBy = function() {}, this.css = function(_) {
-                var fn = function(selectorOrDom, style) {
-                    for (var node, nodes = this.select(selectorOrDom), i = 0; node = nodes[i]; i++) for (var k in style) node.style[_.camelCase(k)] = style[k];
-                };
-                return fn.computedValue = function(selectorOrDom, prop, numberOnly) {
-                    if (window.getComputedStyle) {
-                        var nodes = _.selectFirst(selectorOrDom), value = window.getComputedStyle(nodes, null).getPropertyValue(prop);
-                        return numberOnly && (value = _.regex.matchFirst(value)), value;
-                    }
-                    _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
-                }, fn;
-            }(this), this.dashCase = function(str) {
+            }, this.countBy = function() {}, this.dashCase = function(str) {
                 return str.replace(/([A-Z])/g, function(match, group1) {
                     return "-" + group1.toLowerCase();
                 });
@@ -361,27 +272,6 @@
                     },
                     listen: function(fn) {}
                 };
-            }(this), this.dispatcher = function(_) {
-                var eventList = {}, fn = function(domOrSelector, state, fn) {
-                    eventList[state] || (eventList[state] = [], listener(state));
-                    for (var temp, tempHandler = {
-                        fn: fn,
-                        domOrSelector: domOrSelector
-                    }, isSet = !1, i = 0; temp = eventList[state][i]; i++) _.is.equal(tempHandler, temp) && (isSet = !0);
-                    eventList[state].push(tempHandler);
-                }, listener = function(state) {
-                    document.body.addEventListener(state, function(e) {
-                        for (var handler, done = !1, i = 0; handler = eventList[state][i]; i++) {
-                            var el = e.target;
-                            if (done = !1, _.is.element(handler.domOrSelector)) {
-                                do _.is.same(el, handler.domOrSelector) ? (handler.fn(e, el, handler.domOrSelector), 
-                                done = !0) : el = el.parentNode; while (!done && "body" != el.tagName.toLowerCase());
-                            } else if (_.is.string(handler.domOrSelector)) do _.is(el, handler.domOrSelector) ? (handler.fn(e, el, handler.domOrSelector), 
-                            done = !0) : el = el.parentNode; while (!done && "body" != el.tagName.toLowerCase());
-                        }
-                    });
-                };
-                return fn;
             }(this), this.each = function(obj, iterator, context, onProto) {
                 if (onProto = this.assignIfNotDefined(onProto, !1), !obj) return !1;
                 this.is.nodeList(obj) && this.each(this.argToArray(obj), iterator, context);
@@ -465,83 +355,7 @@
                 });
             }, this.flyWeight = function(_, undefined) {}(this), this.fn = function() {
                 return function() {};
-            }, this.framework = function(_) {
-                return function(config) {
-                    config = config || {}, config.version = config.version || 1, config.run_env || _.fail("you must define application run_env function in app.js"), 
-                    window.RUN_ENV = config.run_env();
-                    var fm = function() {}, factories = {}, controllers = {}, js = {}, css = {};
-                    fm.factory = function(fm) {
-                        return function(name, fn) {
-                            var camelCaseName = _.camelCase(name);
-                            window[camelCaseName + "s"] && _.fail(camelCaseName + "s exists"), window[camelCaseName + "s"] = {};
-                            var Constructor = fn();
-                            return factories[camelCaseName] = function(id, node, config) {
-                                return window[camelCaseName + "s"][id] = new Constructor(id, node, config);
-                            }, Constructor;
-                        };
-                    }(this), fm.controller = function(fm, undefined) {
-                        var repositoy = {};
-                        return function(name, fn) {
-                            return controllers[name] = {}, controllers[name].fn = fn, repositoy[name] = controllers[name].scope = _.scope(), 
-                            _.ready(function() {
-                                var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
-                                controllerNode && instansiteController(controllers[name], controllerNode);
-                            }), controllers[name].scope;
-                        };
-                    }(this), fm.loadJS = function(fm) {
-                        var qeue = [], dependenciesHistory = {};
-                        return function(files) {
-                            var thenFn = _.fn(), _dependencies = [];
-                            if ("development" == RUN_ENV) {
-                                for (var i = 0; i < files.length; i++) _.is.array(js[files[i]]) ? _.each(js[files[i]], function(filePath) {
-                                    js[filePath] || (js[filePath] = filePath), dependenciesHistory[js[filePath]] || (_dependencies.push(js[filePath]), 
-                                    dependenciesHistory[js[filePath]] = !1);
-                                }) : dependenciesHistory[js[files[i]]] || (_dependencies.push(js[files[i]]), dependenciesHistory[js[files[i]]] = !1);
-                                for (var i = 0; i < _dependencies.length; i++) _dependencies[i] += "?version=" + config.version;
-                                for (var file, i = 0; file = _dependencies[i]; i++) {
-                                    var path = file;
-                                    _.loadJS(path, function(path) {
-                                        dependenciesHistory[path] = !0;
-                                        for (var i = qeue.length - 1; i >= 0; i--) qeue[i].done || (qeue[i].depen = _.array.remove(qeue[i].depen, path), 
-                                        0 === qeue[i].depen.length && (qeue[i].done = !0, qeue[i].thenFn()));
-                                    });
-                                }
-                            }
-                            return {
-                                then: function(fn) {
-                                    thenFn = fn, 0 == _dependencies.length ? thenFn() : qeue.push({
-                                        depen: _dependencies,
-                                        thenFn: fn
-                                    });
-                                }
-                            };
-                        };
-                    }(this), fm.loadCSS = function(fm) {
-                        return function(files) {
-                            for (var _dependencies = [], i = 0; i < files.length; i++) _.is.array(css[files[i]]) ? _.each(css[files[i]], function(filePath) {
-                                css[filePath] || (css[filePath] = filePath), _dependencies.push(css[filePath]);
-                            }) : _dependencies.push(css[files[i]]);
-                            for (var i = 0; i < _dependencies.length; i++) that.loadCSS(_dependencies[i]);
-                            return this;
-                        };
-                    }(this), fm.config = function(_) {
-                        return function(config) {
-                            that.extend(js, config.js), that.extend(css, config.css);
-                        };
-                    }(this);
-                    var instansiteController = function(controller, controllerNode) {
-                        controller.fn.apply(controller.scope, [ controller.scope, controllerNode ]);
-                        for (var factoryName in factories) {
-                            var factoryAttrName = _.dashCase(factoryName), nodes = controllerNode.querySelectorAll("[" + factoryAttrName + "]");
-                            _.each(nodes, function(node) {
-                                var id = node.getAttribute(factoryAttrName), config = controller.scope.config[id] || {};
-                                factories[factoryName](id, node, config);
-                            });
-                        }
-                    };
-                    return fm;
-                };
-            }(this), this.freezable = function(_, undefined) {
+            }, this.freezable = function(_, undefined) {
                 var o = {};
                 return o.freeze = function(key) {}, o.unfreeze = function(key) {}, function(constructor_obj) {};
             }(this), this.get = function() {
@@ -556,27 +370,6 @@
                     x: left,
                     y: top
                 };
-            }, this.getJSON = function(options, callback) {
-                var xhttp = this.getXHR();
-                options.url = options.url || location.href, options.data = options.data || null, 
-                callback = callback || function() {}, options.type = options.type || "json";
-                var url = options.url;
-                if ("jsonp" == options.type) {
-                    window.jsonCallback = callback;
-                    var $url = url.replace("callback=?", "callback=jsonCallback"), script = document.createElement("script");
-                    script.src = $url, document.body.appendChild(script);
-                }
-                xhttp.open("GET", options.url, !0), xhttp.send(options.data), xhttp.onreadystatechange = function() {
-                    200 == xhttp.status && 4 == xhttp.readyState && callback(xhttp.responseText);
-                };
-            }, this.getTransitionEvent = function() {
-                var fakeElement = document.createElement("div"), transition = {
-                    WebkitTransition: "webkitTransitionEnd",
-                    OTransition: "TranstionEnd",
-                    MozTransition: "transtionend",
-                    transition: "transtionend"
-                };
-                for (var i in transition) if (_.is.defined(fakeElement.style[i])) return transition[i];
             }, this.getValue = function(obj, path) {
                 if (DEBUG) {
                     if (!obj) return undefined;
@@ -586,9 +379,6 @@
                 path = path.split(".");
                 for (var i = 0, res = obj[path[i++]]; i < path.length; ) res = res[path[i++]];
                 return i == path.length ? res : null;
-            }, this.getXHR = function() {
-                var instance = new XMLHttpRequest();
-                return instance;
             }, this.groupBy = function(obj, prop, fn) {
                 fn = fn || this["return"];
                 var res = {};
@@ -756,33 +546,7 @@
                         return fn.apply(context, args);
                     };
                 };
-            }, this.loadCSS = function(_) {
-                var loadedFiles = {};
-                return function(path, callback) {
-                    if (!loadedFiles[path]) {
-                        var css = document.createElement("link");
-                        css.setAttribute("rel", "stylesheet"), css.setAttribute("href", "/" + path), document.getElementsByTagName("head")[0].appendChild(css);
-                    }
-                };
-            }(this), this.loadJS = function(_) {
-                var loadedFiles = {};
-                return function(path, callback) {
-                    if (loadedFiles[path]) loadedFiles[path].state ? setTimeout(function() {
-                        callback(path, path);
-                    }, 1) : loadedFiles[path].callbacks.push(callback); else {
-                        loadedFiles[path] = {
-                            state: !1,
-                            callbacks: []
-                        }, loadedFiles[path].callbacks.push(callback);
-                        var script = document.createElement("script");
-                        script.setAttribute("type", "text/javascript"), script.onload = function(e) {
-                            var n = e.srcElement || e.explicitOriginalTarget || e.path[0], filePath = n.getAttribute("src");
-                            filePath && (path = filePath.substring(1, filePath.length)), loadedFiles[path].state = !0;
-                            for (var fn, i = 0; fn = loadedFiles[path].callbacks[i]; i++) fn(path);
-                        }, script.setAttribute("src", "/" + path), document.getElementsByTagName("head")[0].appendChild(script);
-                    }
-                };
-            }(this), this.map = function(obj, iterator, context) {
+            }, this.map = function(obj, iterator, context) {
                 var results = [];
                 return _.each(obj, function(value, index, list) {
                     results.push(iterator.call(context, value, index, list));
@@ -971,12 +735,7 @@
                 }, this), res;
             }, this.random = function(min, max) {
                 return (max - min) * Math.random() + min;
-            }, this.ready = function() {
-                var repos = [];
-                return function(fn) {
-                    return repos.push(fn), "interactive" == document.readyState || "complete" == document.readyState ? void fn() : void document.addEventListener("DOMContentLoaded", fn, !0);
-                };
-            }(), this.recursive = function() {}, this.regex = function(_) {
+            }, this.recursive = function() {}, this.regex = function(_) {
                 var type = {
                     number: /\d+/g
                 }, fn = _.fn;
@@ -1057,15 +816,7 @@
                         }, 10);
                     }
                 }, Fn;
-            }(), this.select = function(selectorOrDom, parent) {
-                parent = parent || document.body;
-                var nodes = "";
-                return nodes = this.is.string(selectorOrDom) ? parent.querySelectorAll(selectorOrDom) : selectorOrDom, 
-                this.is.nodeList(nodes) ? nodes = this.argToArray(nodes) : this.is.HTMLCollection(nodes) ? nodes = this.argToArray(nodes) : this.is.array(nodes) || (nodes = [ nodes ]), 
-                nodes;
-            }, this.selectFirst = function(selectorOrDom, parent) {
-                return _.valueOf(_.select(selectorOrDom, parent), 0);
-            }, this.sortBy = function(obj, typeOrOperator, path) {
+            }(), this.sortBy = function(obj, typeOrOperator, path) {
                 return _.is["function"](typeOrOperator) ? obj.sort(typeOrOperator) : "string" == typeOrOperator ? obj.sort(function(a, b) {
                     var textA = _.getValue(a, path).toUpperCase(), textB = _.getValue(b, path).toUpperCase();
                     return textB > textA ? -1 : textA > textB ? 1 : 0;
