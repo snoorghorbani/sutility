@@ -7,8 +7,8 @@ _.enableBackup(obj);
 obj.backup('bk1');
 obj.a=2;
 obj.backup('bk2');
-obj.restore('bk1');
 
+obj.restore('bk1');
 console.log(obj.a);
 => 1
 
