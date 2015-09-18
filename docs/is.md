@@ -1,5 +1,3 @@
-[[Object|Checker#object]]
-[[Array|Checker#array]]
 ## Object
 ### is.object
 ``` javascript 
