@@ -1,3 +1,3 @@
-/*! sutility - v0.0.78 - 2015-09-13 */
+/*! sutility - v0.0.79 - 2015-09-18 */
 this.mediaHandler=function(a){var b={"in":{},out:{},only:{}},c={},d=function(a,b){var c=window.matchMedia(a);c.addListener(function(){c.matches&&b()})},e=function(a,b){var c=window.matchMedia(a);c.addListener(function(){c.matches||b()})};return b.init=function(f){c=f;for(var g in c)b["in"][g]=a.leftCurry(d)(c[g]),b.out[g]=a.leftCurry(e)(c[g]),b.only[g]=a.leftCurry(a.fn)(c[g])},b}(_);
 //# sourceMappingURL=mediaHandler.js.map

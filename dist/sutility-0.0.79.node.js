@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.78 - 2015-09-13
+ * sutility v0.0.79 - 2015-09-18
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -14,36 +14,6 @@ window.SUTILITY = (function () {
 var U = function () {
 var _ = this;
  var that = this;
-this.activate = function ( selector, classname, callback) {
-    classname = classname || 'active';
-    //var parents = _.select(parentOrSelector);
-    _.dispatcher(selector, 'click', function (e, el,itemsSelector) {
-        _.className.remove(itemsSelector, classname);
-        _.className.add(el, classname);
-        callback && callback(el, e);
-    });
-    //_.each(parents, function (parent) {
-    //    var nodes = _.select(selector, parent);
-    //    _.each(nodes, function (node) {
-    //    });
-//});
-};
-
-this.activated = function (parentOrSelector, selector, classname, callback) {
-    classname = classname || 'active';
-    var parents = _.select(parentOrSelector);
-    _.each(parents, function (parent) {
-        var nodes = _.select(selector, parent);
-        _.each(nodes, function (node) {
-            _.event(node, 'click', function (e) {
-                _.className.remove(nodes, classname);
-                _.className.add(node, classname);
-                callback && callback(this,e);
-            });
-        });
-    });
-};
-
 
 this.argToArray = function (arg) {
     return Array.prototype.slice.call(arg);
@@ -198,25 +168,6 @@ this.attr = (function (_, undefined) {
     return attr;
 })(this);
 
-this.availableDim = function () {
-    var inner = document.createElement('div');
-    
-    inner.style.position = 'fixed';
-    inner.style.top = '0px';
-    inner.style.right = '0px';
-    inner.style.bottom = '0px';
-    inner.style.left = '0px';
-    document.body.appendChild(inner);
-    
-    var height = inner.offsetHeight;
-    var width = inner.offsetWidth;
-    inner.parentNode.removeChild(inner);
-    return {
-        height: height,
-        width: width
-    };
-};
-
 this.bind = function (el, obj, decorator) {
     decorator = decorator || this.i;
 };
@@ -249,11 +200,10 @@ this.camelCase = function (str) {
     if (DEBUG) {
         if (!str) debugger;
     }
-    return str.replace(/-(.)/g, function (match, group1) {
-        return group1.toUpperCase();
+    return str.replace(/[\W|\_](.)/g, function (match, group) {
+        return group && group.toUpperCase();
     });
 };
-
 this.cancelBubble = function (e) {
     var evt = e ? e : window.event;
     if (evt.stopPropagation) evt.stopPropagation();
@@ -319,7 +269,7 @@ this.catchall = (function (_) {
         catchAlls = catchAlls.split('/');
         _.each(catchAlls, function (ca) {
             //if (ca.startsWith(name + '-')) {
-            if (_.strStartsWith(ca, name + '-')) {
+            if (_.is.startWith(ca, name + '-')) {
                 values[name] = _.assignIfNotDefined(values[name], []);
                 if (ca.length > name.length + 1) {
                     values[name].push(ca);
@@ -413,95 +363,6 @@ this.chain = function (fn, callback, context) {
     };
 };
 
-this.className = (function (_, undefined) {
-    var className = function (selectorOrDom, className) { };
-
-    className.add = function (selectorOrDom, className) {
-        var nodes = _.select(selectorOrDom);
-
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].classList) {
-                //ToDo
-                DOMTokenList.prototype.add.apply(nodes[i].classList, _.spliteAndTrim(className));
-                continue;
-            }
-            if (nodes[i].className.indexOf(className) === -1) {
-                nodes[i].className = nodes[i].className + ' ' + className;
-            }
-        }
-    };
-    className.remove = function (selectorOrDom, className) {
-        var nodes = _.select(selectorOrDom);
-        //#region shim for ie
-        if (_.is.ie()) {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].classList) {
-                    var classNames = _.spliteAndTrim(className)
-                    for (var j = 0; j < classNames.length; j++) {
-                        DOMTokenList.prototype.remove.call(nodes[i].classList, classNames[j]);
-                    }
-                }
-
-                var reg = new RegExp(className, 'g');
-                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-            }
-        }
-            //#endregion
-        else {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].classList) {
-                    DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
-                    continue;
-                }
-
-                var reg = new RegExp(className, 'g');
-                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-            }
-        }
-        var nodes = _.select(selectorOrDom);
-        //#region shim for ie
-        if (_.is.ie()) {
-            debugger;
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].classList) {
-                    var classNames = _.spliteAndTrim(className)
-                    for (var i = 0; i < classNames.length; i++) {
-                        DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
-                    }
-                }
-
-                var reg = new RegExp(className, 'g');
-                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-            }
-        };
-        //#endregion
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].classList) {
-                DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
-                continue;
-            }
-
-            var reg = new RegExp(className, 'g');
-            nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-        }
-    }
-    className.toggle = function () { };
-    className.change = function (selectorOrDom, className, replaceWith) {
-        var nodes = _.select(selectorOrDom);
-        _.className.remove(nodes, className);
-        _.className.add(nodes, replaceWith);
-    };
-    className.contains = function (selectorOrDom, className) {
-        var node = _.selectFirst(selectorOrDom);
-        return node.classList.contains(className);
-    };
-    className.if = function (selectorOrDom, className, fn) {
-        var nodes = _.select(selectorOrDom);
-        for (var i = 0; i < nodes.length; i++)
-            ((fn(nodes[i])) ? _.className.add : _.className.remove)(nodes[i], className);
-    };
-    return className;
-})(this);
 this.clone = function (arOrObj) {
     if (arOrObj.concat)
         return arOrObj.concat();
@@ -598,67 +459,15 @@ this.contain = function (obj, value) {
     return false;
 };
 
-this.cookie = (function (_) {
-                var Fn = function () { };
-
-                Fn.set = function (key, value, exdays) {
-                    if (_.is.object(value)) {
-                        value = JSON.stringify(value);
-                    }
-                    var d = new Date();
-                    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-                    var expires = "expires=" + d.toUTCString();
-
-                    document.cookie = _.compileString('{{key}}={{value}};{{expires}},', { key: key, value: value, expires: expires });
-                    return document.cookie;
-                };
-                Fn.get = function (key) {
-                    var name = key + "=";
-                    var ca = document.cookie.split(';');
-                    for (var i = 0; i < ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') c = c.substring(1);
-                        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-                    }
-                    return "";
-                };
-                Fn.remove = function (key) {
-                    Fn.set(key, '', 0);
-                };
-
-                return Fn;
-            })(this);
 this.countBy = function () { };
 
-
-this.css = (function (_) {
-    var toPX = function () { };
-    var toNumber = function () { };
-    var fn = function (selectorOrDom, style) {
-        var nodes = this.select(selectorOrDom);
-        for (var i = 0, node; node = nodes[i]; i++)
-            for (var k in style)
-                node.style[_.camelCase(k)] = style[k];
-    };
-    fn.computedValue = function (selectorOrDom, prop, numberOnly) {
-        if (window.getComputedStyle) {
-            var nodes = _.selectFirst(selectorOrDom);
-            var value = window.getComputedStyle(nodes, null).getPropertyValue(prop);
-            if (numberOnly)
-                value = _.regex.matchFirst(value);
-            return value;
-        }
-        _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
-    };
-    
-    return fn;
-})(this);
 this.dashCase = function (str) {
-    return str.replace(/([A-Z])/g, function (match, group1) {
-        return '-' + group1.toLowerCase();
+    return str.replace(/([A-Z])|([\W|\_])/g, function (match) {
+        return (/[\w]/.test(match)) ?
+            (match === '_') ? '-' : '-' + match.toLowerCase() :
+            '-';
     });
 };
-
 this.data = (function (_) {
             //_.scope = function () {
             //    var scope = function () { };
@@ -710,61 +519,6 @@ this.dictionary = (function (that, undefined) {
         },
         listen: function (fn) { },
     };
-})(this);
-this.dispatcher = (function (_) {
-    var eventList = {};
-
-    var fn = function (domOrSelector, state, fn) {
-        if (!eventList[state]) {
-            eventList[state] = [];
-            listener(state);
-        };
-        var tempHandler = {
-            fn: fn,
-            domOrSelector: domOrSelector
-        }
-        var isSet = false;
-        for (var i = 0, temp; temp = eventList[state][i]; i++) {
-            if (_.is.equal(tempHandler, temp)) {
-                isSet = true;
-            }
-        }
-        if (!isSet || true) {
-            eventList[state].push(tempHandler);
-        }
-    }
-
-    var listener = function (state) {
-        document.body.addEventListener(state, function (e) {
-            var done = false;
-            for (var i = 0, handler; handler = eventList[state][i]; i++) {
-                var el = e.target;
-                done = false;
-                if (_.is.element(handler.domOrSelector)) {
-                    do {
-                        if (_.is.same(el, handler.domOrSelector)) {
-                            handler.fn(e, el, handler.domOrSelector);
-                            done = true;
-                        } else {
-                            el = el.parentNode;
-                        }
-                    } while (!done && el.tagName.toLowerCase() != 'body');
-                } else if (_.is.string(handler.domOrSelector)) {
-                    do {
-                        if (_.is(el, handler.domOrSelector)) {
-                            handler.fn(e, el, handler.domOrSelector);
-                            done = true;
-                        } else {
-                            el = el.parentNode;
-                        }
-                    } while (!done && el.tagName.toLowerCase() != 'body');
-                }
-            }
-        });
-    };
-
-
-    return fn;
 })(this);
 this.each = function (obj, iterator, context, onProto) {
     onProto = this.assignIfNotDefined(onProto, false);
@@ -965,159 +719,6 @@ this.flyWeight = (function (_, undefined) {
 this.fn = function () {
     return function () { };
 };
-            this.framework = (function (_) {
-                return function (config) {
-                    config = config || {};
-                    config.version = config.version || 1;
-                    if (!config.run_env)
-                        _.fail('you must define application run_env function in app.js')
-                    window.RUN_ENV = config.run_env();
-
-                    var CONST = { controllerSelector: '[data-controller]' };
-                    var fm = function () { };
-                    var factories = {};
-                    var controllers = {};
-                    var js = {};
-                    var css = {};
-                    fm.factory = (function (fm) {
-                        return function (name, fn) {
-                            var camelCaseName = _.camelCase(name);
-                            window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
-                            window[camelCaseName + 's'] = {};
-                            var Constructor = fn();
-                            factories[camelCaseName] = function (id, node, config) {
-                                return window[camelCaseName + 's'][id] = new Constructor(id, node, config);
-                            };
-                            return Constructor;
-                        };
-                    })(this);
-                    fm.controller = (function (fm, undefined) {
-                        var repositoy = {};
-                        return function (name, fn) {
-                            controllers[name] = {};
-                            controllers[name].fn = fn;
-                            //controllers[name].scope = window.scope = _.scope();
-                            repositoy[name] = controllers[name].scope = _.scope();
-
-                            _.ready(function () {
-                                var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
-
-                                controllerNode && instansiteController(controllers[name], controllerNode);
-                            });
-                            return controllers[name].scope;
-                        };
-                    })(this);
-                    fm.loadJS = (function (fm) {
-                        var qeue = [];
-                        var dependenciesHistory = {};
-                        return function (files) {
-                            var thenFn = _.fn();
-                            var _dependencies = [];
-                            if (RUN_ENV == "development") {
-                                for (var i = 0; i < files.length; i++) {
-                                    if (_.is.array(js[files[i]])) {
-                                        _.each(js[files[i]], function (filePath) {
-                                            if (!js[filePath]) {
-                                                js[filePath] = filePath;
-                                            }
-                                            if (!dependenciesHistory[js[filePath]]) {
-                                                _dependencies.push(js[filePath]);
-                                                dependenciesHistory[js[filePath]] = false;
-                                            }
-                                        });
-                                    } else {
-                                        if (!dependenciesHistory[js[files[i]]]) {
-                                            _dependencies.push(js[files[i]]);
-                                            dependenciesHistory[js[files[i]]] = false;
-                                        }
-                                    }
-                                }
-                                for (var i = 0; i < _dependencies.length; i++) {
-                                    _dependencies[i] += '?version=' + config.version;
-                                }
-                                for (var i = 0, file; file = _dependencies[i]; i++) {
-                                    var path = file;
-                                    //TODO
-                                    _.loadJS(path, function (path) {
-                                        dependenciesHistory[path] = true;
-
-                                        for (var i = qeue.length - 1; i >= 0; i--) {
-                                            if (qeue[i].done)
-                                                continue;
-                                            qeue[i].depen = _.array.remove(qeue[i].depen, path);
-                                            if (qeue[i].depen.length === 0) {
-                                                qeue[i].done = true;
-                                                qeue[i].thenFn();
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                            return {
-                                then: function (fn) {
-                                    thenFn = fn;
-                                    if (_dependencies.length == 0) {
-                                        thenFn();
-                                    } else {
-                                        qeue.push({ depen: _dependencies, thenFn: fn });
-                                    }
-                                }
-                            };
-                        }
-                    })(this);
-                    fm.loadCSS = (function (fm) {
-                        return function (files) {
-                            var _dependencies = [];
-                            for (var i = 0; i < files.length; i++) {
-                                if (_.is.array(css[files[i]])) {
-                                    _.each(css[files[i]], function (filePath) {
-                                        if (!css[filePath]) {
-                                            css[filePath] = filePath;
-                                        }
-                                        _dependencies.push(css[filePath]);
-                                    });
-                                } else {
-                                    _dependencies.push(css[files[i]]);
-                                }
-                            }
-                            for (var i = 0; i < _dependencies.length; i++) {
-                                that.loadCSS(_dependencies[i]);
-                            }
-                            return this;
-                        };
-                    })(this);
-                    fm.config = (function (_) {
-                        return function (config) {
-                            that.extend(js, config.js);
-                            that.extend(css, config.css);
-                        }
-                    })(this);
-                    //_.ready(function () {
-                    //    for (var i = 0, controllerNode; controllerNode = controllerNodes[i]; i++) {
-                    //        var controllerName = controllerNode.dataset.controller;
-                    //        var controller = controllers[controllerName];
-                    //        if (controller) {
-                    //            instansiteController(controller, controllerNode);
-                    //        }
-                    //    }
-                    //});
-                    var instansiteController = function (controller, controllerNode) {
-                        controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
-
-                        for (var factoryName in factories) {
-                            var factoryAttrName = _.dashCase(factoryName);
-                            var nodes = controllerNode.querySelectorAll('[' + factoryAttrName + ']');
-                            _.each(nodes, function (node) {
-                                var id = node.getAttribute(factoryAttrName);
-                                var config = controller.scope.config[id] || {};
-                                factories[factoryName](id, node, config);
-                            });
-                        }
-                    };
-
-                    return fm;
-                }
-            })(this);
 this.freezable = (function (_, undefined) {
     var o = {};
     
@@ -1150,42 +751,6 @@ this.getCumulativeOffset = function (obj) {
         y: top
     };
 };
-this.getJSON = function (options, callback) {
-    var xhttp = this.getXHR();
-    options.url = options.url || location.href;
-    options.data = options.data || null;
-    callback = callback || function () { };
-    
-    options.type = options.type || 'json';
-    var url = options.url;
-    if (options.type == 'jsonp') {
-        window.jsonCallback = callback;
-        var $url = url.replace('callback=?', 'callback=jsonCallback');
-        var script = document.createElement('script');
-        script.src = $url;
-        document.body.appendChild(script);
-    }
-    xhttp.open('GET', options.url, true);
-    xhttp.send(options.data);
-    xhttp.onreadystatechange = function () {
-        if (xhttp.status == 200 && xhttp.readyState == 4) {
-            callback(xhttp.responseText);
-        }
-    };
-};
-
-this.getTransitionEvent = function () {
-            var fakeElement = document.createElement('div');
-            var transition = {
-                WebkitTransition: 'webkitTransitionEnd',
-                OTransition: 'TranstionEnd',
-                MozTransition: 'transtionend',
-                transition: 'transtionend',
-            };
-            for (var i in transition) {
-                if (_.is.defined(fakeElement.style[i])) return transition[i];
-            }
-        };
 this.getValue = function (obj, path) {
     if (DEBUG) {
         if (!obj) return undefined;
@@ -1203,10 +768,6 @@ this.getValue = function (obj, path) {
     return (i == path.length) ? res : null;
 };
 
-this.getXHR = function () {
-    var instance = new XMLHttpRequest();
-    return instance;
-};
 this.groupBy = function (obj, prop, fn) {
     fn = fn || this.return;
     var res = {};
@@ -1336,6 +897,10 @@ this.is = (function (_, undefined) {
     is.nodeList = function (obj) {
         return Object.prototype.toString.call(obj) === '[object NodeList]';
     };
+    is.element = function (obj) {
+        return Object.prototype.toString.call(obj).search('Element') > -1;
+        //return !!Object.prototype.toString.call(_var).toLowerCase().search('element');;
+    };
     is.HTMLCollection = function (obj) {
         return Object.prototype.toString.call(obj) === '[object HTMLCollection]';
     };
@@ -1363,7 +928,9 @@ this.is = (function (_, undefined) {
     is.json = function () { };
     is.error = function () { };
     
-    is.startWith = function () { };
+    is.startWith = function () {
+        return str.indexOf(prefix) === 0;
+    };
     is.endWith = function () { };
     
     is.value = function (_var) {
@@ -1414,11 +981,11 @@ this.is = (function (_, undefined) {
                     return window.navigator.userAgent.indexOf("Trident") > 0;
                 };
 	is.same = function (fv, sv) {
-				//if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-				//if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+	    //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+	    //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
 
-				return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
-			};		
+	    return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
+	};
 				
     var not = {};
     var i;
@@ -1429,6 +996,7 @@ this.is = (function (_, undefined) {
     })(i);
     is.not = not;
     
+    //TODO : impelement
     var all = {};
     for (i in is) (function (i) {
         if (is.hasOwnProperty(i)) all[i] = function (o) {
@@ -1507,56 +1075,6 @@ this.leftCurry = function (fn, context) {
         };
     };
 };
-this.loadCSS = (function (_) {
-    var loadedFiles = {};
-    return function (path, callback) {
-        if (loadedFiles[path])
-            return;
-        var css = document.createElement('link')
-        css.setAttribute("rel", "stylesheet")
-        css.setAttribute("href", '/' + path);
-        document.getElementsByTagName("head")[0].appendChild(css);
-    }
-})(this);
-
-this.loadJS = (function (_) {
-    var loadedFiles = {};
-    return function (path, callback) {
-        if (loadedFiles[path]) {
-            if (loadedFiles[path].state) {
-                setTimeout(function () {
-                    callback(path, path);
-                }, 1);
-            } else {
-                loadedFiles[path].callbacks.push(callback);
-            }
-        } else {
-            loadedFiles[path] = {
-                state: false,
-                callbacks: []
-            };
-            loadedFiles[path].callbacks.push(callback);
-            
-            var script = document.createElement('script')
-            script.setAttribute("type", "text/javascript")
-            script.onload = function (e) {
-                            var n = e.srcElement || e.explicitOriginalTarget || e.path[0];
-                var filePath = n.getAttribute('src');
-                if (filePath) {
-                    path = filePath.substring(1, filePath.length);
-                }
-                
-                loadedFiles[path].state = true;
-                for (var i = 0, fn; fn = loadedFiles[path].callbacks[i]; i++) {
-                    fn(path);
-                }
-            };
-            script.setAttribute("src", '/' + path);
-            document.getElementsByTagName("head")[0].appendChild(script);
-        }
-    };
-})(this);
-
 this.map = function (obj, iterator, context) {
     var results = [];
     
@@ -1813,9 +1331,9 @@ this.pascalCase = function (str) {
     if (DEBUG) {
         if (!str) debugger;
     }
+    str = _.camelCase(str);
     return str[0].toUpperCase() + str.substr(1, str.lenght);
 };
-
 this.pipe = (function(_){
     var pipes = {};
     return function (id, delay) {
@@ -1951,18 +1469,6 @@ this.randString = function (len) {
 this.random = function (min, max) {
     return ((max - min) * Math.random()) + min;
 };
-
-this.ready = (function () {
-    var repos = [];
-    return function (fn) {
-        repos.push(fn);
-        if (document.readyState == "interactive" || document.readyState == "complete") {
-            fn();
-            return;
-        }
-        document.addEventListener('DOMContentLoaded', fn, true);
-    };
-})();
 
 this.recursive = function () { };
 
@@ -2122,24 +1628,6 @@ this.scroll = (function () {
     return Fn;
 }());
 
-//todo : move to DOM namespace
-this.select = function (selectorOrDom, parent) {
-    parent = parent || document.body;
-    var nodes = '';
-    if (this.is.string(selectorOrDom))
-        nodes = parent.querySelectorAll(selectorOrDom);
-    else
-        nodes = selectorOrDom;
-    if (this.is.nodeList(nodes)) nodes = this.argToArray(nodes);
-    else if (this.is.HTMLCollection(nodes)) nodes = this.argToArray(nodes);
-    else if (!this.is.array(nodes)) nodes = [nodes];
-    
-    return nodes;
-};
-this.selectFirst = function (selectorOrDom, parent) {
-    return _.valueOf(_.select(selectorOrDom, parent), 0);
-};
-
 
 this.sortBy = function (obj, typeOrOperator, path) {
     if (_.is.function(typeOrOperator))
@@ -2193,12 +1681,9 @@ this.sortBy = function (obj, typeOrOperator, path) {
 //return (is.object) ? this.arrToObj(res, '__key', true) : res;
 
 this.spliteAndTrim = function (str) {
-    return str.split(/[\s,]+/);
+    return _.trim(str).split(/[\s,]+/);
 };
 
-this.strStartsWith = function (str, prefix) {
-    return str.indexOf(prefix) === 0;
-};
 this.subSet = function (fo, so) {
 
 };
@@ -2212,7 +1697,7 @@ this.subSet = function (fo, so) {
             el.addEventListener(t, _fn);
         };
 this.trim = function (str) {
-    return str.replace(/^\\s*(\\S*(\\s+\\S+)*)\\s*$/, "$1");
+    return str.replace(/^\s+|\s+$/g, "");
 }
 this.update = function (toObj, fromObj, copyPrototype) {
     if (_.is.object(fromObj)) {

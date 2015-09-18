@@ -1,3 +1,3 @@
 ﻿this.spliteAndTrim = function (str) {
-    return str.split(/[\s,]+/);
+    return _.trim(str).split(/[\s,]+/);
 };

@@ -15,7 +15,8 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'public/lib/chai/chai.js',
-            'dist/sutility-0.0.7.browser.js',
+            'dist/sutility-0.0.78.browser.js',
+            'test/installSutilityForKarmaTest.js',
             'test/modules/*.js',
         ],
         

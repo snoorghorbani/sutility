@@ -12,6 +12,10 @@
     is.nodeList = function (obj) {
         return Object.prototype.toString.call(obj) === '[object NodeList]';
     };
+    is.element = function (obj) {
+        return Object.prototype.toString.call(obj).search('Element') > -1;
+        //return !!Object.prototype.toString.call(_var).toLowerCase().search('element');;
+    };
     is.HTMLCollection = function (obj) {
         return Object.prototype.toString.call(obj) === '[object HTMLCollection]';
     };
@@ -39,7 +43,9 @@
     is.json = function () { };
     is.error = function () { };
     
-    is.startWith = function () { };
+    is.startWith = function () {
+        return str.indexOf(prefix) === 0;
+    };
     is.endWith = function () { };
     
     is.value = function (_var) {
@@ -90,11 +96,11 @@
                     return window.navigator.userAgent.indexOf("Trident") > 0;
                 };
 	is.same = function (fv, sv) {
-				//if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-				//if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+	    //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+	    //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
 
-				return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
-			};		
+	    return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
+	};
 				
     var not = {};
     var i;
@@ -105,6 +111,7 @@
     })(i);
     is.not = not;
     
+    //TODO : impelement
     var all = {};
     for (i in is) (function (i) {
         if (is.hasOwnProperty(i)) all[i] = function (o) {

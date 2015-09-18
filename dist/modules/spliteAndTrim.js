@@ -1,3 +1,3 @@
-/*! sutility - v0.0.78 - 2015-09-13 */
-this.spliteAndTrim=function(a){return a.split(/[\s,]+/)};
+/*! sutility - v0.0.79 - 2015-09-18 */
+this.spliteAndTrim=function(a){return _.trim(a).split(/[\s,]+/)};
 //# sourceMappingURL=spliteAndTrim.js.map

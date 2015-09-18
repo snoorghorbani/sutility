@@ -1,5 +1,7 @@
 ﻿this.dashCase = function (str) {
-    return str.replace(/([A-Z])/g, function (match, group1) {
-        return '-' + group1.toLowerCase();
+    return str.replace(/([A-Z])|([\W|\_])/g, function (match) {
+        return (/[\w]/.test(match)) ?
+            (match === '_') ? '-' : '-' + match.toLowerCase() :
+            '-';
     });
 };

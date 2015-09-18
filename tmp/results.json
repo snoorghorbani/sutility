@@ -1,6 +1,6 @@
 {
-	"numResults": 241,
-	"creationDate": "2015-09-13 03:58:14",
+	"numResults": 243,
+	"creationDate": "2015-09-18 15:03:57",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -157,7 +157,7 @@
 			},
 			{
 				"line": 26,
-				"match": "_.strStartsWith"
+				"match": "_.is"
 			},
 			{
 				"line": 27,
@@ -640,19 +640,15 @@
 		],
 		"src/modules/is.js": [
 			{
-				"line": 49,
+				"line": 55,
 				"match": "_.is"
 			},
 			{
-				"line": 53,
+				"line": 59,
 				"match": "_.is"
 			},
 			{
-				"line": 73,
-				"match": "_.is"
-			},
-			{
-				"line": 74,
+				"line": 79,
 				"match": "_.is"
 			},
 			{
@@ -660,27 +656,31 @@
 				"match": "_.is"
 			},
 			{
-				"line": 80,
+				"line": 86,
+				"match": "_.is"
+			},
+			{
+				"line": 86,
 				"match": "_.partial"
 			},
 			{
-				"line": 80,
+				"line": 86,
 				"match": "_.report"
 			},
 			{
-				"line": 83,
+				"line": 89,
 				"match": "_.is"
 			},
 			{
-				"line": 130,
+				"line": 137,
 				"match": "_.is"
 			},
 			{
-				"line": 133,
+				"line": 140,
 				"match": "_.is"
 			},
 			{
-				"line": 138,
+				"line": 145,
 				"match": "_.is"
 			}
 		],
@@ -814,6 +814,12 @@
 			{
 				"line": 23,
 				"match": "_.partial"
+			}
+		],
+		"src/modules/pascalCase.js": [
+			{
+				"line": 5,
+				"match": "_.camelCase"
 			}
 		],
 		"src/modules/propByPrefix.js": [
@@ -990,6 +996,12 @@
 			{
 				"line": 13,
 				"match": "_.getValue"
+			}
+		],
+		"src/modules/spliteAndTrim.js": [
+			{
+				"line": 2,
+				"match": "_.trim"
 			}
 		],
 		"src/modules/update.js": [
