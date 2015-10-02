@@ -1,6 +1,6 @@
 {
-	"numResults": 243,
-	"creationDate": "2015-09-18 15:03:57",
+	"numResults": 246,
+	"creationDate": "2015-10-02 08:27:19",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -132,6 +132,16 @@
 			{
 				"line": 95,
 				"match": "_.each"
+			}
+		],
+		"src/modules/callWhen.js": [
+			{
+				"line": 3,
+				"match": "_.is"
+			},
+			{
+				"line": 5,
+				"match": "_.valueOf"
 			}
 		],
 		"src/modules/catchall.js": [
@@ -946,6 +956,10 @@
 		],
 		"src/modules/rightCurry.js": [
 			{
+				"line": 4,
+				"match": "_.argToArray"
+			},
+			{
 				"line": 6,
 				"match": "_.array"
 			}
@@ -1026,19 +1040,19 @@
 		],
 		"src/modules/valueOf.js": [
 			{
-				"line": 4,
+				"line": 9,
 				"match": "_.is"
 			},
 			{
-				"line": 11,
+				"line": 15,
 				"match": "_.warn"
 			},
 			{
-				"line": 14,
+				"line": 16,
 				"match": "_.is"
 			},
 			{
-				"line": 18,
+				"line": 20,
 				"match": "_.getValue2"
 			}
 		],

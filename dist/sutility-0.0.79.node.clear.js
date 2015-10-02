@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-09-18
+ * sutility v0.0.79 - 2015-10-02
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -81,7 +81,14 @@
                 return attr;
             }(this), this.bind = function(el, obj, decorator) {
                 decorator = decorator || this.i;
-            }, this.callConstantly = function(_) {
+            }, this.callBox = function(_) {
+                return function(fn, boxTime, context) {
+                    var lastDate = null;
+                    return function() {
+                        return !lastDate || Date.now() - lastDate > boxTime ? (lastDate = Date.now(), fn.apply(context, arguments)) : void 0;
+                    };
+                };
+            }(this), this.callConstantly = function(_) {
                 return function(fn, count, context) {
                     return function() {
                         --count;
@@ -90,12 +97,31 @@
                         res;
                     };
                 };
+            }(this), this.callIgnore = function(_) {
+                return function(fn, counter, context) {
+                    return function() {
+                        return 0 == --counter ? fn.apply(context, arguments) : void 0;
+                    };
+                };
             }(this), this.callVoucher = function(_) {
                 return function(fn, millisecond, context) {
                     return setTimeout(function() {
                         fn = null;
                     }, millisecond), function() {
                         return fn ? fn.apply(context || {}, arguments) : void 0;
+                    };
+                };
+            }(this), this.callWhen = function(nameOrFnCondition, callback, infiniteCall, checkTime) {
+                checkTime = checkTime || 20;
+                var conditionType = _.is["function"](nameOrFnCondition) ? "fn" : "string", intervalId = setInterval(function() {
+                    ("string" != conditionType || _.valueOf(nameOrFnCondition)) && ("fn" != conditionType || nameOrFnCondition()) && (!infiniteCall && clearInterval(intervalId), 
+                    callback());
+                }, checkTime);
+            }, this.callWithDelay = function(_) {
+                return function(fn, delay, context) {
+                    var initializedDate = Date.now();
+                    return function() {
+                        return Date.now() - initializedDate > delay ? fn.apply(context, arguments) : void 0;
                     };
                 };
             }(this), this.camelCase = function(str) {
@@ -284,7 +310,7 @@
                 return o.__repository = {}, o.backup = function(key) {
                     return key = _.assignIfNotDefined(key, "last"), this.__repository[key] = JSON.stringify(this), 
                     this.__repository[key];
-                }, o.resotre = function(key) {
+                }, o.restore = function(key) {
                     if (key = _.assignIfNotDefined(key, "last"), !_.is.not.defined(this.__repository[key])) {
                         var json = JSON.parse(this.__repository[key]);
                         return _.update(this, json);
@@ -787,10 +813,10 @@
             }(this), this.rightCurry = function(_) {
                 return function(fn) {
                     return function() {
-                        var rightArgs = that.argToArray(arguments);
+                        var rightArgs = _.argToArray(arguments);
                         return function() {
                             var args = _.array.concat(that.argToArray(arguments), rightArgs);
-                            return fn.apply(that, args);
+                            return fn.apply(_, args);
                         };
                     };
                 };
@@ -848,12 +874,12 @@
                 });
                 newItem && container.push(item);
             }, this.valueOf = function(objOrArr, pathOrIndex) {
+                1 == arguments.length && (pathOrIndex = objOrArr, objOrArr = window);
                 var tempobjOrArr;
                 if (_.is.array(objOrArr)) return objOrArr[pathOrIndex];
                 tempobjOrArr = objOrArr;
                 for (var route, routes = pathOrIndex.split("."), i = 0; route = routes[i]; i++) {
-                    if (!tempobjOrArr[route]) return _.warn([ "dont have ", route, "property" ].join(" ")), 
-                    null;
+                    if (!tempobjOrArr[route]) return void _.warn([ "dont have ", route, "property" ].join(" "));
                     if (_.is.array(tempobjOrArr[route])) {
                         for (var item, res = {}, partialRoutes = routes.splice(i + 1), j = 0; item = tempobjOrArr[route][j]; j++) res[j] = _.getValue2(item, partialRoutes.join("."));
                         return res;

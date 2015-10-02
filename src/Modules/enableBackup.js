@@ -12,7 +12,7 @@ this.enableBackup = (function (_, undefined) {
         this.__repository[key] = JSON.stringify(this);
         return this.__repository[key];
     };
-    o.resotre = function (key) {
+    o.restore = function (key) {
         key = _.assignIfNotDefined(key, 'last');
         if (_.is.not.defined(this.__repository[key])) return;
         

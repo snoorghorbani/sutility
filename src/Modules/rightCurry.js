@@ -1,10 +1,10 @@
 ﻿this.rightCurry = (function (_) {
     return function (fn) {
         return function (/*right args*/) {
-            var rightArgs = that.argToArray(arguments);
+            var rightArgs = _.argToArray(arguments);
             return function (/*left args*/) {
                 var args = _.array.concat(that.argToArray(arguments), rightArgs);
-                return fn.apply(that, args);
+                return fn.apply(_, args);
             };
         };
     };

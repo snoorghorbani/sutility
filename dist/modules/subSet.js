@@ -1,3 +1,3 @@
-/*! sutility - v0.0.79 - 2015-09-18 */
+/*! sutility - v0.0.79 - 2015-10-02 */
 this.subSet=function(a,b){};
 //# sourceMappingURL=subSet.js.map

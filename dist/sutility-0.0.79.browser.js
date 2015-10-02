@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-09-18
+ * sutility v0.0.79 - 2015-10-02
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -221,6 +221,17 @@ this.bind = function (el, obj, decorator) {
     decorator = decorator || this.i;
 };
 
+this.callBox = (function (_) {
+    return function (fn, boxTime, context) {
+        var lastDate = null;
+        return function () {
+            if (!lastDate || Date.now() - lastDate > boxTime) {
+                lastDate = Date.now();
+                return fn.apply(context, arguments);
+            }
+        };
+    };
+})(this);
 this.callConstantly = (function (_) {
     return function (fn , count, context) {
         return function () {
@@ -234,6 +245,14 @@ this.callConstantly = (function (_) {
         };
     };
 })(this);
+this.callIgnore = (function (_) {
+    return function (fn, counter, context) {
+        return function () {
+            if (--counter == 0)
+                return fn.apply(context, arguments);
+        };
+    };
+})(this);
 this.callVoucher = (function (_) {
     return function (fn , millisecond, context) {
         setTimeout(function () {
@@ -242,6 +261,26 @@ this.callVoucher = (function (_) {
         return function () {
             if (fn)
                 return fn.apply(context || {} , arguments);
+        };
+    };
+})(this);
+this.callWhen = function (nameOrFnCondition, callback, infiniteCall, checkTime) {
+    checkTime = checkTime || 20;
+    var conditionType = (_.is.function(nameOrFnCondition)) ? "fn" : "string";
+    var intervalId = setInterval(function () {
+        if (conditionType == "string" && !_.valueOf(nameOrFnCondition)) return;
+        else if (conditionType == "fn" && !nameOrFnCondition()) return;
+
+        !infiniteCall && clearInterval(intervalId);
+        callback();
+    }, checkTime);
+};
+this.callWithDelay = (function (_) {
+    return function (fn, delay, context) {
+        var initializedDate = Date.now();
+        return function () {
+            if (Date.now() - initializedDate > delay)
+                return fn.apply(context, arguments);
         };
     };
 })(this);
@@ -799,7 +838,7 @@ this.enableBackup = (function (_, undefined) {
         this.__repository[key] = JSON.stringify(this);
         return this.__repository[key];
     };
-    o.resotre = function (key) {
+    o.restore = function (key) {
         key = _.assignIfNotDefined(key, 'last');
         if (_.is.not.defined(this.__repository[key])) return;
         
@@ -2065,10 +2104,10 @@ this.replaceInArray = function (array, from, replaceBy) {
 this.rightCurry = (function (_) {
     return function (fn) {
         return function (/*right args*/) {
-            var rightArgs = that.argToArray(arguments);
+            var rightArgs = _.argToArray(arguments);
             return function (/*left args*/) {
                 var args = _.array.concat(that.argToArray(arguments), rightArgs);
-                return fn.apply(that, args);
+                return fn.apply(_, args);
             };
         };
     };
@@ -2242,30 +2281,29 @@ this.upsert = function (container, item, indicator, updateAll) {
     }
 };
 this.valueOf = function (objOrArr, pathOrIndex) {
+    if (arguments.length == 1) {
+        pathOrIndex = objOrArr;
+        objOrArr = window;
+    }
+
     var tempobjOrArr;
-    
-    if (_.is.array(objOrArr)) {
-        return objOrArr[pathOrIndex];
-    } else {
+
+    if (_.is.array(objOrArr)) return objOrArr[pathOrIndex];
+    else {
         tempobjOrArr = objOrArr;
         var routes = pathOrIndex.split('.');
         for (var i = 0, route; route = routes[i]; i++) {
-            if (!tempobjOrArr[route]) {
-                _.warn(['dont have ', route, 'property'].join(' '));
-                return null;
-            }
+            if (!tempobjOrArr[route])
+                return void _.warn(['dont have ', route, 'property'].join(' '));
             if (_.is.array(tempobjOrArr[route])) {
                 var res = {};
                 var partialRoutes = routes.splice(i + 1);
-                for (var j = 0, item; item = tempobjOrArr[route][j]; j++) {
+                for (var j = 0, item; item = tempobjOrArr[route][j]; j++)
                     res[j] = _.getValue2(item, partialRoutes.join('.'));
-                }
                 return res;
-            } else {
+            } else
                 tempobjOrArr = tempobjOrArr[route];
-            }
         }
-
     }
     return tempobjOrArr;
 };

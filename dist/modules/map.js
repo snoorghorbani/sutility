@@ -1,3 +1,3 @@
-/*! sutility - v0.0.79 - 2015-09-18 */
+/*! sutility - v0.0.79 - 2015-10-02 */
 this.map=function(a,b,c){var d=[];return _.each(a,function(a,e,f){d.push(b.call(c,a,e,f))}),d};
 //# sourceMappingURL=map.js.map
