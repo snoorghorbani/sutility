@@ -1,5 +1,5 @@
 # callBox
-> ##### ``` [Function] _.callBox( [Function] , [TimeBox:Number] ,*[Context:Object] )```
+> ##### ``` [Function] _.callBox( [Function] , timeBox[Number] , *context[Object] )```
 
 در هر بازه زمانی مشخص شده تنها یک بار اجازه فراخوانی دارد.
 
