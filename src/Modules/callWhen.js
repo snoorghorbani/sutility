@@ -1,4 +1,4 @@
-this.callWhen = function (nameOrFnCondition, callback, infiniteCall, checkTime) {
+this.callWhen = function (callback, nameOrFnCondition, infiniteCall, checkTime) {
     var conditionType = (_.is.function(nameOrFnCondition)) ? "fn" : "string";
     var intervalId = setInterval(function () {
         if (conditionType == "string" && !_.valueOf(nameOrFnCondition)) return;
