@@ -65,3 +65,6 @@ catchAll.partial();
 catchAll.build();
 => "{{window.location.origin}}/filter/pageno-1/price-2000-3000"
 ```
+
+----------------------------------------------------
+- [ ] get keys array in config parameter
