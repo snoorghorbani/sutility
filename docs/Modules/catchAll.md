@@ -13,7 +13,6 @@ var catchall = _.catchall({
 ```
 
 ##Methods
-----------------------------------------
 
 ###define key
 > ##### ``` [Undefined] instance.key( name[String ] , *config[Object] )```
@@ -57,12 +56,12 @@ catchAll.reset.price();
 
 ``` javascript
 catchAll.partial();
-=> "http://94.182.143.114/filter/filterresult/pageno-1/price-2000-3000"
+=> "{{window.location.origin}}/filter/filterresult/pageno-1/price-2000-3000"
 ```
 ###getUrl
 > ##### ``` routePath[String] instance.getUrl()```
 
 ``` javascript
 catchAll.build();
-=> "http://94.182.143.114/filter/pageno-1/price-2000-3000"
+=> "{{window.location.origin}}/filter/pageno-1/price-2000-3000"
 ```
