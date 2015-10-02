@@ -67,4 +67,4 @@ catchAll.build();
 ```
 
 ----------------------------------------------------
-- [ ] get keys array in config parameter
+- [ ] get array of keys in config
