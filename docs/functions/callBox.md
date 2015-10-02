@@ -1,6 +1,6 @@
 # callBox
 > ##### ``` [Function] _.callBox( [Function] , (TimeBox)[Number] ,*(Context)[Object] )```
-
+در هر بازه زمانی مشخص شده تنها یک بار اجازه فراخوانی دارد.
 ####Example
 ``` javascript
 var fn = _.callBox(function(){ return "executed code" },1000);
