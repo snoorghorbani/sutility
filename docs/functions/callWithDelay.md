@@ -6,9 +6,9 @@
 var obj = { msg: "executed code" }
 var fn = _.callWithDelay(function (str) { return this.msg + str }, 1000 , obj);
 
-var fn(" !");
-var fn(" ! nice");
-var fn(" ! nice :-)");
+fn(" !");
+fn(" ! nice");
+fn(" ! nice :-)");
 
 
 //after 1000 millisecond of last called
