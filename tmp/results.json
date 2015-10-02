@@ -1,6 +1,6 @@
 {
 	"numResults": 246,
-	"creationDate": "2015-10-02 11:20:36",
+	"creationDate": "2015-10-02 13:06:59",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -136,11 +136,11 @@
 		],
 		"src/modules/callWhen.js": [
 			{
-				"line": 3,
+				"line": 2,
 				"match": "_.is"
 			},
 			{
-				"line": 5,
+				"line": 4,
 				"match": "_.valueOf"
 			}
 		],

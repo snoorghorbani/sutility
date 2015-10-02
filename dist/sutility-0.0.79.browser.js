@@ -257,36 +257,46 @@ this.callIgnore = (function (_) {
     };
 })(this);
 this.callVoucher = (function (_) {
-    return function (fn , millisecond, context) {
+    return function (fn , time, context) {
         setTimeout(function () {
             fn = null;
-        }, millisecond);
+        }, time);
         return function () {
-            if (fn)
-                return fn.apply(context || {} , arguments);
+            return (fn)? fn.apply(context || {} , arguments):undefined;
         };
     };
 })(this);
-this.callWhen = function (nameOrFnCondition, callback, infiniteCall, checkTime) {
-    checkTime = checkTime || 20;
+this.callWhen = function (callback, nameOrFnCondition, infiniteCall, checkTime) {
     var conditionType = (_.is.function(nameOrFnCondition)) ? "fn" : "string";
     var intervalId = setInterval(function () {
         if (conditionType == "string" && !_.valueOf(nameOrFnCondition)) return;
         else if (conditionType == "fn" && !nameOrFnCondition()) return;
-
+        
         !infiniteCall && clearInterval(intervalId);
         callback();
-    }, checkTime);
+    }, checkTime || 20);
 };
-this.callWithDelay = (function (_) {
+this.callWithDelay = (function (_ , undefined) {
     return function (fn, delay, context) {
-        var initializedDate = Date.now();
+        var checker, args;
+        var lastCalledTime = Date.now();
         return function () {
-            if (Date.now() - initializedDate > delay)
-                return fn.apply(context, arguments);
-        };
+            args = arguments || [];
+            lastCalledTime = Date.now();
+            checker = (checker)?checker : setInterval(function () {
+                if (Date.now() - lastCalledTime > delay) {
+                    clearInterval(checker);
+                    checker = undefined;
+                    return fn.apply(context || _, args);
+                }
+            }, delay);
+        }
     };
 })(this);
+
+//arguments
+// pefromance
+
 this.camelCase = function (str) {
     if (DEBUG) {
         if (!str) debugger;

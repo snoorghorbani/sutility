@@ -1,9 +1,17 @@
-this.callWithDelay = (function (_) {
+this.callWithDelay = (function (_ , undefined) {
     return function (fn, delay, context) {
-        var initializedDate = Date.now();
+        var checker, args;
+        var lastCalledTime = Date.now();
         return function () {
-            if (Date.now() - initializedDate > delay)
-                return fn.apply(context, arguments);
+            args = arguments;
+            lastCalledTime = Date.now();
+            checker = (checker) ? checker : setInterval(function () {
+                if (Date.now() - lastCalledTime < delay) return;
+
+                clearInterval(checker);
+                checker = undefined;
+                return fn.apply(context || _, args || []);
+            }, delay);
         };
     };
 })(this);

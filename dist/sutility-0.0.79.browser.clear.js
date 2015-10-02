@@ -129,24 +129,26 @@
                     };
                 };
             }(this), this.callVoucher = function(_) {
-                return function(fn, millisecond, context) {
+                return function(fn, time, context) {
                     return setTimeout(function() {
                         fn = null;
-                    }, millisecond), function() {
-                        return fn ? fn.apply(context || {}, arguments) : void 0;
+                    }, time), function() {
+                        return fn ? fn.apply(context || {}, arguments) : undefined;
                     };
                 };
-            }(this), this.callWhen = function(nameOrFnCondition, callback, infiniteCall, checkTime) {
-                checkTime = checkTime || 20;
+            }(this), this.callWhen = function(callback, nameOrFnCondition, infiniteCall, checkTime) {
                 var conditionType = _.is["function"](nameOrFnCondition) ? "fn" : "string", intervalId = setInterval(function() {
                     ("string" != conditionType || _.valueOf(nameOrFnCondition)) && ("fn" != conditionType || nameOrFnCondition()) && (!infiniteCall && clearInterval(intervalId), 
                     callback());
-                }, checkTime);
-            }, this.callWithDelay = function(_) {
+                }, checkTime || 20);
+            }, this.callWithDelay = function(_, undefined) {
                 return function(fn, delay, context) {
-                    var initializedDate = Date.now();
+                    var checker, args, lastCalledTime = Date.now();
                     return function() {
-                        return Date.now() - initializedDate > delay ? fn.apply(context, arguments) : void 0;
+                        args = arguments || [], lastCalledTime = Date.now(), checker = checker ? checker : setInterval(function() {
+                            return Date.now() - lastCalledTime > delay ? (clearInterval(checker), checker = undefined, 
+                            fn.apply(context || _, args)) : void 0;
+                        }, delay);
                     };
                 };
             }(this), this.camelCase = function(str) {
