@@ -1,14 +1,18 @@
 # catchAll
 > ##### ``` instance[singleton Object] _.catchAll(*config[Object])```
-
-##API
-###init
+####config object
+| name | default | description |
+|----|-------|-----------|
+|urlPrefix|/filter||
+|routePrefix|/filter/filterresult||
 ```javascript
 var catchall = _.catchall({
     prefix: '/filter',
     partialPrefix: '/filter/filterresult'
 });
 ```
+##Methods
+
 ###define key
 > ##### ``` [Undefined] instance.key( name[String ] , *config[Object] )```
 ####config object
@@ -46,15 +50,15 @@ catchAll.reset.pageno();
 catchAll.reset.feature();
 catchAll.reset.price();
 ```
-###patial
-> ##### ``` [Undefined] instance.partial( value[Number|String] , *anotherValue[Number|String] )```
+###getRoute
+> ##### ``` url[String] instance.getRoute( )```
 
 ``` javascript
 catchAll.partial();
 =>
 ```
-###build
-> ##### ``` [Undefined] instance.build( value[Number|String] , *anotherValue[Number|String] )```
+###getUrl
+> ##### ``` routePath[String] instance.getUrl(  )```
 
 ``` javascript
 catchAll.build();
