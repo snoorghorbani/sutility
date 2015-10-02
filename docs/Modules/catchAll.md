@@ -11,11 +11,10 @@ var catchall = _.catchall({
 ```
 ###add
 > ##### ``` [Undefined] instance.key( name[String ] , *config[Object] )```
-
-
-|name|default|description|
-|----|-------|-----------"
-|multi|false|sdf|
+####config object
+| name | default | description |
+|----|-------|-----------|
+|multi|false||
 ``` javascript
 catchAll.key('pageno', { multi: false })
 catchAll.key('feature', { multi: true });
