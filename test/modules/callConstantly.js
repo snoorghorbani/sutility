@@ -9,7 +9,9 @@ describe('callConstantly', function () {
     
     describe('test result', function () {
         it('error in callConstantly', function () {
-            var fn = _.callConstantly(function () { return "executed code" }, 3);
+            var obj = { msg: "executed code" }
+            var fn = _.callConstantly(function () { return this.msg }, 3 , obj);
+            
             assert.equal(fn(), "executed code");
             assert.equal(fn(), "executed code");
             assert.equal(fn(), "executed code");

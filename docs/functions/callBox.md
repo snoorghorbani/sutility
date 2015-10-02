@@ -3,7 +3,8 @@
 
 ####Example
 ``` javascript
-var fn = _.callBox(function(){ return "executed code" },1000);
+var obj = {msg:"executed code"}
+var fn = _.callConstantly(function () { return this.msg }, 1000 , obj);
 
 //first time of call fn after init
 

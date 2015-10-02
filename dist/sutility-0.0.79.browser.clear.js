@@ -122,9 +122,10 @@
                     };
                 };
             }(this), this.callIgnore = function(_) {
-                return function(fn, counter, context) {
+                return function(fn, counter, context, reset) {
+                    var _counter = counter;
                     return function() {
-                        return 0 == --counter ? fn.apply(context, arguments) : void 0;
+                        return 0 == counter-- ? (counter = reset ? _counter : counter, fn.apply(context, arguments)) : void 0;
                     };
                 };
             }(this), this.callVoucher = function(_) {
