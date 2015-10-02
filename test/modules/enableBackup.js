@@ -10,7 +10,7 @@ describe('enableBackup', function () {
     describe('test result', function () {
         it('error in enableBackup', function () {
             //var obj = { a : 1 };
-            var obj  = _.enableBackup();
+            //_.enableBackup(obj);
             
             //obj.backup('bk1');
             //obj.a = 2;
@@ -20,7 +20,7 @@ describe('enableBackup', function () {
             //assert.equal(obj.a, 1);
 
             //obj.restore('bk2');
-            ////assert.is(obj.a, 2);
+            //assert.equal(obj.a, 2);
         });
     });
 });
