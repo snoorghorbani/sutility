@@ -1,11 +1,10 @@
 ﻿this.callVoucher = (function (_) {
-    return function (fn , millisecond, context) {
+    return function (fn , time, context) {
         setTimeout(function () {
             fn = null;
-        }, millisecond);
+        }, time);
         return function () {
-            if (fn)
-                return fn.apply(context || {} , arguments);
+            return (fn)? fn.apply(context || {} , arguments):undefined;
         };
     };
 })(this);
