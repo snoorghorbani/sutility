@@ -9,13 +9,14 @@ var catchall = _.catchall({
     partialPrefix: '/filter/filterresult'
 });
 ```
-###add
+###define key
 > ##### ``` [Undefined] instance.key( name[String ] , *config[Object] )```
 ####config object
 | name | default | description |
 |----|-------|-----------|
 |multi|false||
+
 ``` javascript
-catchAll.key('pageno', { multi: false })
-catchAll.key('feature', { multi: true });
+catchall.key('pageno', { multi: false })
+catchall.key('feature', { multi: true });
 ```
