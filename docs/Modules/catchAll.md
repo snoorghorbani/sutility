@@ -51,16 +51,16 @@ catchAll.reset.feature();
 catchAll.reset.price();
 ```
 ###getRoute
-> ##### ``` url[String] instance.getRoute( )```
+> ##### ``` url[String] instance.getRoute()```
 
 ``` javascript
 catchAll.partial();
-=>
+=> "http://94.182.143.114/filter/filterresult/pageno-1/price-2000-3000"
 ```
 ###getUrl
-> ##### ``` routePath[String] instance.getUrl(  )```
+> ##### ``` routePath[String] instance.getUrl()```
 
 ``` javascript
 catchAll.build();
-=>
+=> "http://94.182.143.114/filter/pageno-1/price-2000-3000"
 ```
