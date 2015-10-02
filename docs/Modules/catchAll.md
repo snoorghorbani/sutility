@@ -11,7 +11,9 @@ var catchall = _.catchall({
     partialPrefix: '/filter/filterresult'
 });
 ```
+
 ##Methods
+----------------------------------------
 
 ###define key
 > ##### ``` [Undefined] instance.key( name[String ] , *config[Object] )```
