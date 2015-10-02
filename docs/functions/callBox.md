@@ -1,6 +1,7 @@
 # callBox
 > ##### ``` [Function] _.callBox( [Function] , (TimeBox)[Number] ,*(Context)[Object] )```
 
+##Example
 ``` javascript
 var fn = _.callBox(function(){ return "executed code" },1000);
 
