@@ -1,5 +1,5 @@
 # catchAll
-> ##### ``` instance[Object] _.catchAll(*config[Object])```
+> ##### ``` instance[singleton Object] _.catchAll(*config[Object])```
 
 ##API
 ###init
@@ -15,9 +15,10 @@ var catchall = _.catchall({
 | name | default | description |
 |----|-------|-----------|
 |multi|false||
+|default|null||
 
 ``` javascript
-catchall.key('pageno', { multi: false })
+catchall.key('pageno', { multi: false,default:1 })
 catchall.key('feature', { multi: true });
 catchall.key('price', { multi: true });
 ```
@@ -44,4 +45,18 @@ catchAll.remove.price(2000,3000);
 catchAll.reset.pageno();
 catchAll.reset.feature();
 catchAll.reset.price();
+```
+###patial
+> ##### ``` [Undefined] instance.partial( value[Number|String] , *anotherValue[Number|String] )```
+
+``` javascript
+catchAll.partial();
+=>
+```
+###build
+> ##### ``` [Undefined] instance.build( value[Number|String] , *anotherValue[Number|String] )```
+
+``` javascript
+catchAll.build();
+=>
 ```
