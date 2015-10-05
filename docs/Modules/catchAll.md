@@ -24,7 +24,7 @@ var catchall = _.catchall({
 
 ``` javascript
 catchall.key('pageno', { multi: false,default:1 })
-catchall.key('feature', { multi: true });
+catchall.key('feature', { multi: true ,default: [2 ,3]});
 catchall.key('price', { multi: true });
 ```
 ###add catchall's instance key value
