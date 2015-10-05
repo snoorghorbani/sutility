@@ -3,9 +3,8 @@
     var keys = {};
     var values = {};
     var defaultCatchAllConfig = {
-        prefix: '/defaultPrefix',
-        partialPrefix: '/defaultPrefix/defaultFilterresult',
-        replace: ['/filter/', '/filter/filterresult/'],
+        urlPrefix: '/filter',
+        routePrefix: '/filter/filterresult'
     };
     var defaultKeyConfig = {
         multi: false,
@@ -18,8 +17,25 @@
     
     Fn.prototype.key = function (name, config) {
         keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+        keys[name].default = (config.default)
+                    ?(_.is.array(config.default)?config.default:[config.default])
+                    :[];
+        
+        values[name] = values[name] || [];
+        _.each(keys[name].default, function (defaultValue) {
+            var a = (_.is.array(defaultValue))? defaultValue[0] : defaultValue;
+            var b = (_.is.array(defaultValue))? defaultValue[1] : undefined;
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+            
+            if (keys[name].multi) {
+                values[name].push(valueStr);
+            } else {
+                values[name] = [valueStr];
+            }
+        });
+
         var pathName = decodeURIComponent(window.location.pathname);
-        var catchAlls = pathName.replace(this.config.prefix, '');
+        var catchAlls = pathName.replace(this.config.urlPrefix, '');
         catchAlls = catchAlls.split('/');
         _.each(catchAlls, function (ca) {
             //if (ca.startsWith(name + '-')) {
@@ -48,16 +64,25 @@
             var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
             values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
         };
+        
         Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
         Fn.prototype.reset[name] = function () {
-            var defaultValue = keys[name].default;
-            var initByType = '';
-            initByType = _.if.is.equal(keys[name].multi, 'multi', function () { return []; });
-            values[name] = (defaultValue) ? defaultValue : initByType;
+            values[name] = [];
+            _.each(keys[name].default, function (defaultValue) {
+                var a = (_.is.array(defaultValue))? defaultValue[0] : defaultValue;
+                var b = (_.is.array(defaultValue))? defaultValue[1] : undefined;
+                var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+                
+                if (keys[name].multi) {
+                    values[name].push(valueStr);
+                } else {
+                    values[name] = [valueStr];
+                }
+            });
         };
     };
-    Fn.prototype.partial = function () {
-        var url = window.location.origin + this.config.partialPrefix;
+    Fn.prototype.getRoute = function () {
+        var url = window.location.origin || "fortest" + this.config.routePrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
@@ -68,8 +93,8 @@
         });
         return decodeURIComponent(url.toLowerCase());
     };
-    Fn.prototype.build = function (f) {
-        var url = window.location.origin + this.config.prefix;
+    Fn.prototype.getUrl = function (f) {
+        var url = window.location.origin || "fortest" + this.config.urlPrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });

@@ -43,10 +43,10 @@
     is.json = function () { };
     is.error = function () { };
     
-    is.startWith = function () {
+    is.startWith = function (str, prefix) {
         return str.indexOf(prefix) === 0;
     };
-    is.endWith = function () { };
+    is.endWith = function (str) { };
     
     is.value = function (_var) {
         return (_var) ? true : false;

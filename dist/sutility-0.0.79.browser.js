@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-10-02
+ * sutility v0.0.79 - 2015-10-05
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -281,22 +281,18 @@ this.callWithDelay = (function (_ , undefined) {
         var checker, args;
         var lastCalledTime = Date.now();
         return function () {
-            args = arguments || [];
+            args = arguments;
             lastCalledTime = Date.now();
-            checker = (checker)?checker : setInterval(function () {
-                if (Date.now() - lastCalledTime > delay) {
-                    clearInterval(checker);
-                    checker = undefined;
-                    return fn.apply(context || _, args);
-                }
+            checker = (checker) ? checker : setInterval(function () {
+                if (Date.now() - lastCalledTime < delay) return;
+
+                clearInterval(checker);
+                checker = undefined;
+                return fn.apply(context || _, args || []);
             }, delay);
-        }
+        };
     };
 })(this);
-
-//arguments
-// pefromance
-
 this.camelCase = function (str) {
     if (DEBUG) {
         if (!str) debugger;
@@ -350,9 +346,8 @@ this.catchall = (function (_) {
     var keys = {};
     var values = {};
     var defaultCatchAllConfig = {
-        prefix: '/defaultPrefix',
-        partialPrefix: '/defaultPrefix/defaultFilterresult',
-        replace: ['/filter/', '/filter/filterresult/'],
+        urlPrefix: '/filter',
+        routePrefix: '/filter/filterresult'
     };
     var defaultKeyConfig = {
         multi: false,
@@ -365,8 +360,25 @@ this.catchall = (function (_) {
     
     Fn.prototype.key = function (name, config) {
         keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+        keys[name].default = (config.default)
+                    ?(_.is.array(config.default)?config.default:[config.default])
+                    :[];
+        
+        values[name] = values[name] || [];
+        _.each(keys[name].default, function (defaultValue) {
+            var a = (_.is.array(defaultValue))? defaultValue[0] : defaultValue;
+            var b = (_.is.array(defaultValue))? defaultValue[1] : undefined;
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+            
+            if (keys[name].multi) {
+                values[name].push(valueStr);
+            } else {
+                values[name] = [valueStr];
+            }
+        });
+
         var pathName = decodeURIComponent(window.location.pathname);
-        var catchAlls = pathName.replace(this.config.prefix, '');
+        var catchAlls = pathName.replace(this.config.urlPrefix, '');
         catchAlls = catchAlls.split('/');
         _.each(catchAlls, function (ca) {
             //if (ca.startsWith(name + '-')) {
@@ -395,16 +407,25 @@ this.catchall = (function (_) {
             var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
             values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
         };
+        
         Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
         Fn.prototype.reset[name] = function () {
-            var defaultValue = keys[name].default;
-            var initByType = '';
-            initByType = _.if.is.equal(keys[name].multi, 'multi', function () { return []; });
-            values[name] = (defaultValue) ? defaultValue : initByType;
+            values[name] = [];
+            _.each(keys[name].default, function (defaultValue) {
+                var a = (_.is.array(defaultValue))? defaultValue[0] : defaultValue;
+                var b = (_.is.array(defaultValue))? defaultValue[1] : undefined;
+                var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+                
+                if (keys[name].multi) {
+                    values[name].push(valueStr);
+                } else {
+                    values[name] = [valueStr];
+                }
+            });
         };
     };
-    Fn.prototype.partial = function () {
-        var url = window.location.origin + this.config.partialPrefix;
+    Fn.prototype.getRoute = function () {
+        var url = window.location.origin || "fortest" + this.config.routePrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
@@ -415,8 +436,8 @@ this.catchall = (function (_) {
         });
         return decodeURIComponent(url.toLowerCase());
     };
-    Fn.prototype.build = function (f) {
-        var url = window.location.origin + this.config.prefix;
+    Fn.prototype.getUrl = function (f) {
+        var url = window.location.origin || "fortest" + this.config.urlPrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
@@ -1419,10 +1440,10 @@ this.is = (function (_, undefined) {
     is.json = function () { };
     is.error = function () { };
     
-    is.startWith = function () {
+    is.startWith = function (str, prefix) {
         return str.indexOf(prefix) === 0;
     };
-    is.endWith = function () { };
+    is.endWith = function (str) { };
     
     is.value = function (_var) {
         return (_var) ? true : false;

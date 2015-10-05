@@ -1,6 +1,6 @@
 {
-	"numResults": 246,
-	"creationDate": "2015-10-02 13:06:59",
+	"numResults": 252,
+	"creationDate": "2015-10-05 11:52:21",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -146,23 +146,27 @@
 		],
 		"src/modules/catchall.js": [
 			{
-				"line": 15,
+				"line": 14,
 				"match": "_.update"
 			},
 			{
-				"line": 15,
+				"line": 14,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 20,
+				"line": 19,
 				"match": "_.update"
 			},
 			{
-				"line": 20,
+				"line": 19,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 24,
+				"line": 21,
+				"match": "_.is"
+			},
+			{
+				"line": 25,
 				"match": "_.each"
 			},
 			{
@@ -171,58 +175,78 @@
 			},
 			{
 				"line": 27,
-				"match": "_.assignIfNotDefined"
+				"match": "_.is"
 			},
 			{
-				"line": 34,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 46,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 49,
-				"match": "_.filter"
-			},
-			{
-				"line": 51,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 55,
-				"match": "_.if"
-			},
-			{
-				"line": 61,
+				"line": 40,
 				"match": "_.each"
+			},
+			{
+				"line": 42,
+				"match": "_.is"
+			},
+			{
+				"line": 43,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 50,
+				"match": "_.assignIfNotDefined"
 			},
 			{
 				"line": 62,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 65,
+				"match": "_.filter"
+			},
+			{
+				"line": 68,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 71,
 				"match": "_.each"
 			},
 			{
-				"line": 63,
-				"match": "_.fine"
-			},
-			{
-				"line": 63,
+				"line": 72,
 				"match": "_.is"
 			},
 			{
 				"line": 73,
+				"match": "_.is"
+			},
+			{
+				"line": 86,
 				"match": "_.each"
 			},
 			{
-				"line": 74,
+				"line": 87,
 				"match": "_.each"
 			},
 			{
-				"line": 75,
+				"line": 88,
 				"match": "_.fine"
 			},
 			{
-				"line": 75,
+				"line": 88,
+				"match": "_.is"
+			},
+			{
+				"line": 98,
+				"match": "_.each"
+			},
+			{
+				"line": 99,
+				"match": "_.each"
+			},
+			{
+				"line": 100,
+				"match": "_.fine"
+			},
+			{
+				"line": 100,
 				"match": "_.is"
 			}
 		],

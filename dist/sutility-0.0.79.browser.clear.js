@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-10-02
+ * sutility v0.0.79 - 2015-10-05
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -145,9 +145,9 @@
                 return function(fn, delay, context) {
                     var checker, args, lastCalledTime = Date.now();
                     return function() {
-                        args = arguments || [], lastCalledTime = Date.now(), checker = checker ? checker : setInterval(function() {
-                            return Date.now() - lastCalledTime > delay ? (clearInterval(checker), checker = undefined, 
-                            fn.apply(context || _, args)) : void 0;
+                        args = arguments, lastCalledTime = Date.now(), checker = checker ? checker : setInterval(function() {
+                            return Date.now() - lastCalledTime < delay ? void 0 : (clearInterval(checker), checker = undefined, 
+                            fn.apply(context || _, args || []));
                         }, delay);
                     };
                 };
@@ -173,9 +173,8 @@
                 }, Fn;
             }(this), this.catchall = function(_) {
                 var instatiate = null, keys = {}, values = {}, defaultCatchAllConfig = {
-                    prefix: "/defaultPrefix",
-                    partialPrefix: "/defaultPrefix/defaultFilterresult",
-                    replace: [ "/filter/", "/filter/filterresult/" ]
+                    urlPrefix: "/filter",
+                    routePrefix: "/filter/filterresult"
                 }, defaultKeyConfig = {
                     multi: !1,
                     "default": null
@@ -183,8 +182,12 @@
                     return this.config = _.update(_.cloneObj(defaultCatchAllConfig), config), this;
                 };
                 return Fn.prototype.key = function(name, config) {
-                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.prefix, "");
+                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config), keys[name]["default"] = config["default"] ? _.is.array(config["default"]) ? config["default"] : [ config["default"] ] : [], 
+                    values[name] = values[name] || [], _.each(keys[name]["default"], function(defaultValue) {
+                        var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
+                        keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
+                    });
+                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.urlPrefix, "");
                     catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
                         _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
@@ -197,13 +200,13 @@
                             return a.toLowerCase() !== valueStr.toLowerCase();
                         });
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
-                        var defaultValue = keys[name]["default"], initByType = "";
-                        initByType = _["if"].is.equal(keys[name].multi, "multi", function() {
-                            return [];
-                        }), values[name] = defaultValue ? defaultValue : initByType;
+                        values[name] = [], _.each(keys[name]["default"], function(defaultValue) {
+                            var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
+                            keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
+                        });
                     };
-                }, Fn.prototype.partial = function() {
-                    var url = window.location.origin + this.config.partialPrefix;
+                }, Fn.prototype.getRoute = function() {
+                    var url = window.location.origin || "fortest" + this.config.routePrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -212,8 +215,8 @@
                             fine && (url += "/" + str);
                         });
                     }), decodeURIComponent(url.toLowerCase());
-                }, Fn.prototype.build = function(f) {
-                    var url = window.location.origin + this.config.prefix;
+                }, Fn.prototype.getUrl = function(f) {
+                    var url = window.location.origin || "fortest" + this.config.urlPrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -689,9 +692,9 @@
                     return !!Object.prototype.toString.call(_var).toLowerCase().search("event");
                 }, is.defined = function(_var) {
                     return "[object Undefined]" !== Object.prototype.toString.call(_var) && "[object Null]" !== Object.prototype.toString.call(_var) && "" !== Object;
-                }, is.json = function() {}, is.error = function() {}, is.startWith = function() {
+                }, is.json = function() {}, is.error = function() {}, is.startWith = function(str, prefix) {
                     return 0 === str.indexOf(prefix);
-                }, is.endWith = function() {}, is.value = function(_var) {
+                }, is.endWith = function(str) {}, is.value = function(_var) {
                     return _var ? !0 : !1;
                 }, is.empty = function(o) {
                     if (_.is.object(0)) for (var i in o) if (o.hasOwnProperty(i)) return !1;
