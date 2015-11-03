@@ -23,7 +23,7 @@
                     catchAlls = catchAlls.split('/');
                     _.each(catchAlls, function (ca) {
                         //if (ca.startsWith(name + '-')) {
-                        if (_.is.strStartsWith(ca, name + '-')) {
+                        if (_.is.startWith(ca, name + '-')) {
                             values[name] = _.assignIfNotDefined(values[name], []);
                             if (ca.length > name.length + 1) {
                                 values[name].push(ca);
