@@ -33,3 +33,6 @@ dic.reset('keyName');
 dic.data();
 =>  { 'keyName': 'keyValue' ,'anotherKey', "value"}
 ```
+
+----------------------------------------------------
+- [ ] impelement remove function
