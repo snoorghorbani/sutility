@@ -1,10 +1,6 @@
 # dictionary
 > ##### ``` instance[singleton Object] _.dictionary.new(*default[Object])```
-####config object
-| name | default | description |
-|----|-------|-----------|
-|urlPrefix|/filter||
-|routePrefix|/filter/filterresult||
+
 ```javascript
 var dic = _.dictionary.new();
 =>{}
@@ -22,7 +18,7 @@ dic.add('anotherKey', "value");
 => dic= { 'keyName': 'keyValue' ,'anotherKey', "value"}
 ```
 ###add reset value
-> ##### ``` [Undefined] instance.reset( key[object] )```
+> ##### ``` [Undefined] instance.reset( key[string] )```
 
 ``` javascript
 dic.add('keyName', "anotherValue");
