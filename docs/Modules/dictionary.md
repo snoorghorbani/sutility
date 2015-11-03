@@ -35,4 +35,3 @@ dic.data();
 ```
 ----------------------------------------------------
 - [ ] impelement remove function
->>>>>>> origin/master
