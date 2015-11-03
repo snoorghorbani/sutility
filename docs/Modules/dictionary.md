@@ -1,5 +1,5 @@
 # dictionary
-> ##### ``` instance[singleton Object] _.dictionary.new(*default[Object])```
+> ##### ``` instance[Object] _.dictionary.new(*default[Object])```
 
 ```javascript
 var dic = _.dictionary.new();
@@ -11,7 +11,7 @@ var dic = _.dictionary.new({ 'keyName': 'keyValue' });
 ##Methods
 
 ###add key
-> ##### ``` [Undefined] instance.add( name[String ] , value[object] )```
+> ##### ``` [Undefined] instance.add( name[String] , value[object] )```
 
 ``` javascript
 dic.add('anotherKey', "value");
