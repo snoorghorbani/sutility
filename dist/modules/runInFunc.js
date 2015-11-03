@@ -1,3 +1,3 @@
-/*! sutility - v0.0.80 - 2015-11-03 */
+/*! sutility - v0.0.81 - 2015-11-03 */
 this.runInFunc=function(a){return this.is.not["function"](a)&&this.warn(a+"is not function"),function(){a()}};
 //# sourceMappingURL=runInFunc.js.map

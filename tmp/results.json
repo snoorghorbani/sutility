@@ -1,6 +1,6 @@
 {
 	"numResults": 267,
-	"creationDate": "2015-11-03 17:19:19",
+	"creationDate": "2015-11-03 19:57:42",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -15,7 +15,7 @@
 			},
 			{
 				"line": 4,
-				"match": "_.dispatcher"
+				"match": "_.attach"
 			},
 			{
 				"line": 5,
@@ -144,6 +144,28 @@
 			{
 				"line": 95,
 				"match": "_.each"
+			}
+		],
+		"src/modules/attach.js": [
+			{
+				"line": 14,
+				"match": "_.is"
+			},
+			{
+				"line": 28,
+				"match": "_.is"
+			},
+			{
+				"line": 30,
+				"match": "_.is"
+			},
+			{
+				"line": 37,
+				"match": "_.is"
+			},
+			{
+				"line": 39,
+				"match": "_.is"
 			}
 		],
 		"src/modules/callWhen.js": [
@@ -374,28 +396,6 @@
 			{
 				"line": 18,
 				"match": "_.cloneObj"
-			}
-		],
-		"src/modules/dispatcher.js": [
-			{
-				"line": 15,
-				"match": "_.is"
-			},
-			{
-				"line": 30,
-				"match": "_.is"
-			},
-			{
-				"line": 32,
-				"match": "_.is"
-			},
-			{
-				"line": 39,
-				"match": "_.is"
-			},
-			{
-				"line": 41,
-				"match": "_.is"
 			}
 		],
 		"src/modules/enableBackup.js": [

@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.80 - 2015-11-03
+ * sutility v0.0.81 - 2015-11-03
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>

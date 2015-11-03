@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.80 - 2015-11-03
+ * sutility v0.0.81 - 2015-11-03
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -31,19 +31,19 @@ var _ = this;
 
 // // pass in the target node, as well as the observer options
 // observer.observe(target, config);
-this.activate = function ( selector, classname, callback) {
+this.activate = function (selector, classname, callback) {
     classname = classname || 'active';
     //var parents = _.select(parentOrSelector);
-    _.dispatcher(selector, 'click', function (e, el,itemsSelector) {
+    _.attach(selector, 'click', function (e, el, itemsSelector) {
         _.className.remove(itemsSelector, classname);
         _.className.add(el, classname);
-        callback && callback(el, e);
+        callback && callback(e, el);
     });
     //_.each(parents, function (parent) {
     //    var nodes = _.select(selector, parent);
     //    _.each(nodes, function (node) {
     //    });
-//});
+    //});
 };
 
 this.activated = function (parentOrSelector, selector, classname, callback) {
@@ -232,6 +232,58 @@ this.assignIfNotDefined = function (varible, fnOrObj) {
     //TODO : handel fn
     return (varible === undefined) ? fnOrObj : varible;
 };
+this.attach = (function (_) {
+    var eventList = {};
+
+    var fn = function (domOrSelector, state, fn) {
+        if (!eventList[state]) {
+            eventList[state] = [];
+            listener(state);
+        };
+        var temp = {
+            fn: fn,
+            domOrSelector: domOrSelector
+        }
+        for (var i = 0, item; item = eventList[state][i]; i++)
+            if (_.is.equal(temp, item))
+                return i;
+                
+        eventList[state].push(temp);
+
+        return eventList[state].length - 1;
+    }
+
+    var listener = function (state) {
+        document.body.addEventListener(state, function (e) {
+            var done = false;
+            for (var i = 0, handler; handler = eventList[state][i]; i++) {
+                var el = e.target;
+                done = false;
+                if (_.is.element(handler.domOrSelector)) {
+                    do {
+                        if (_.is.same(el, handler.domOrSelector)) {
+                            handler.fn(e, el, handler.domOrSelector);
+                            done = true;
+                        } else {
+                            el = el.parentNode;
+                        }
+                    } while (!done && el.tagName.toLowerCase() != 'body');
+                } else if (_.is.string(handler.domOrSelector)) {
+                    do {
+                        if (_.is(el, handler.domOrSelector)) {
+                            handler.fn(e, el, handler.domOrSelector);
+                            done = true;
+                        } else {
+                            el = el.parentNode;
+                        }
+                    } while (!done && el.tagName.toLowerCase() != 'body');
+                }
+            }
+        });
+    };
+
+    return fn;
+})(this);
 this.attr = (function (_, undefined) {
     var attr = function () { };
     
@@ -802,61 +854,6 @@ this.dictionary = (function (that, undefined) {
         },
         listen: function (fn) { },
     };
-})(this);
-this.dispatcher = (function (_) {
-    var eventList = {};
-
-    var fn = function (domOrSelector, state, fn) {
-        if (!eventList[state]) {
-            eventList[state] = [];
-            listener(state);
-        };
-        var tempHandler = {
-            fn: fn,
-            domOrSelector: domOrSelector
-        }
-        var isSet = false;
-        for (var i = 0, temp; temp = eventList[state][i]; i++) {
-            if (_.is.equal(tempHandler, temp)) {
-                isSet = true;
-            }
-        }
-        if (!isSet || true) {
-            eventList[state].push(tempHandler);
-        }
-    }
-
-    var listener = function (state) {
-        document.body.addEventListener(state, function (e) {
-            var done = false;
-            for (var i = 0, handler; handler = eventList[state][i]; i++) {
-                var el = e.target;
-                done = false;
-                if (_.is.element(handler.domOrSelector)) {
-                    do {
-                        if (_.is.same(el, handler.domOrSelector)) {
-                            handler.fn(e, el, handler.domOrSelector);
-                            done = true;
-                        } else {
-                            el = el.parentNode;
-                        }
-                    } while (!done && el.tagName.toLowerCase() != 'body');
-                } else if (_.is.string(handler.domOrSelector)) {
-                    do {
-                        if (_.is(el, handler.domOrSelector)) {
-                            handler.fn(e, el, handler.domOrSelector);
-                            done = true;
-                        } else {
-                            el = el.parentNode;
-                        }
-                    } while (!done && el.tagName.toLowerCase() != 'body');
-                }
-            }
-        });
-    };
-
-
-    return fn;
 })(this);
 this.each = function (obj, iterator, context, onProto) {
     onProto = this.assignIfNotDefined(onProto, false);
