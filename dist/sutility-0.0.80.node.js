@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-10-05
+ * sutility v0.0.80 - 2015-11-03
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -14,36 +14,6 @@ window.SUTILITY = (function () {
 var U = function () {
 var _ = this;
  var that = this;
-this.activate = function ( selector, classname, callback) {
-    classname = classname || 'active';
-    //var parents = _.select(parentOrSelector);
-    _.dispatcher(selector, 'click', function (e, el,itemsSelector) {
-        _.className.remove(itemsSelector, classname);
-        _.className.add(el, classname);
-        callback && callback(el, e);
-    });
-    //_.each(parents, function (parent) {
-    //    var nodes = _.select(selector, parent);
-    //    _.each(nodes, function (node) {
-    //    });
-//});
-};
-
-this.activated = function (parentOrSelector, selector, classname, callback) {
-    classname = classname || 'active';
-    var parents = _.select(parentOrSelector);
-    _.each(parents, function (parent) {
-        var nodes = _.select(selector, parent);
-        _.each(nodes, function (node) {
-            _.event(node, 'click', function (e) {
-                _.className.remove(nodes, classname);
-                _.className.add(node, classname);
-                callback && callback(this,e);
-            });
-        });
-    });
-};
-
 
 this.argToArray = function (arg) {
     return Array.prototype.slice.call(arg);
@@ -198,25 +168,6 @@ this.attr = (function (_, undefined) {
     return attr;
 })(this);
 
-this.availableDim = function () {
-    var inner = document.createElement('div');
-    
-    inner.style.position = 'fixed';
-    inner.style.top = '0px';
-    inner.style.right = '0px';
-    inner.style.bottom = '0px';
-    inner.style.left = '0px';
-    document.body.appendChild(inner);
-    
-    var height = inner.offsetHeight;
-    var width = inner.offsetWidth;
-    inner.parentNode.removeChild(inner);
-    return {
-        height: height,
-        width: width
-    };
-};
-
 this.bind = function (el, obj, decorator) {
     decorator = decorator || this.i;
 };
@@ -341,118 +292,97 @@ this.canvas = (function (_) {
     return Fn;
 })(this)
 
-this.catchall = (function (_) {
-    var instatiate = null;
-    var keys = {};
-    var values = {};
-    var defaultCatchAllConfig = {
-        urlPrefix: '/filter',
-        routePrefix: '/filter/filterresult'
-    };
-    var defaultKeyConfig = {
-        multi: false,
-        'default': null
-    };
-    var Fn = function (config) {
-        this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
-        return this;
-    };
-    
-    Fn.prototype.key = function (name, config) {
-        keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-        keys[name].default = (config.default)
-                    ?(_.is.array(config.default)?config.default:[config.default])
-                    :[];
-        
-        values[name] = values[name] || [];
-        _.each(keys[name].default, function (defaultValue) {
-            var a = (_.is.array(defaultValue))? defaultValue[0] : defaultValue;
-            var b = (_.is.array(defaultValue))? defaultValue[1] : undefined;
-            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-            
-            if (keys[name].multi) {
-                values[name].push(valueStr);
-            } else {
-                values[name] = [valueStr];
-            }
-        });
+            this.catchall = (function (_) {
+                var instatiate = null;
+                var keys = {};
+                var values = {};
+                var defaultCatchAllConfig = {
+                    prefix: '/defaultPrefix',
+                    partialPrefix: '/defaultPrefix/defaultFilterresult',
+                    replace: ['/filter/', '/filter/filterresult/'],
+                };
+                var defaultKeyConfig = {
+                    multi: false,
+                    'default': null
+                };
+                var Fn = function (config) {
+                    this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
+                    return this;
+                };
 
-        var pathName = decodeURIComponent(window.location.pathname);
-        var catchAlls = pathName.replace(this.config.urlPrefix, '');
-        catchAlls = catchAlls.split('/');
-        _.each(catchAlls, function (ca) {
-            //if (ca.startsWith(name + '-')) {
-            if (_.is.startWith(ca, name + '-')) {
-                values[name] = _.assignIfNotDefined(values[name], []);
-                if (ca.length > name.length + 1) {
-                    values[name].push(ca);
-                }
-            }
-        });
-        
-        Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
-        Fn.prototype.add[name] = function (a, b) {
-            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-            
-            if (keys[name].multi) {
-                values[name] = values[name] || [];
-                values[name].push(valueStr);
-            } else {
-                values[name] = [valueStr];
-            }
-        };
-        
-        Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
-        Fn.prototype.remove[name] = function (a, b) {
-            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-            values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
-        };
-        
-        Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
-        Fn.prototype.reset[name] = function () {
-            values[name] = [];
-            _.each(keys[name].default, function (defaultValue) {
-                var a = (_.is.array(defaultValue))? defaultValue[0] : defaultValue;
-                var b = (_.is.array(defaultValue))? defaultValue[1] : undefined;
-                var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-                
-                if (keys[name].multi) {
-                    values[name].push(valueStr);
-                } else {
-                    values[name] = [valueStr];
-                }
-            });
-        };
-    };
-    Fn.prototype.getRoute = function () {
-        var url = window.location.origin || "fortest" + this.config.routePrefix;
-        _.each(values, function (value, key) {
-            _.each(value, function (str) {
-                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
-                if (fine) {
-                    url += '/' + str;
-                }
-            });
-        });
-        return decodeURIComponent(url.toLowerCase());
-    };
-    Fn.prototype.getUrl = function (f) {
-        var url = window.location.origin || "fortest" + this.config.urlPrefix;
-        _.each(values, function (value, key) {
-            _.each(value, function (str) {
-                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
-                if (fine) {
-                    url += '/' + str;
-                }
-            });
-        });
-        return decodeURIComponent(url.toLowerCase());
-    };
-    
-    return function (config) {
-        return (instatiate) ? instatiate : instatiate = new Fn(config);
-    };
-})(this);
+                Fn.prototype.key = function (name, config) {
+                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+                    var pathName = decodeURIComponent(window.location.pathname);
+                    var catchAlls = pathName.replace(this.config.prefix, '');
+                    catchAlls = catchAlls.split('/');
+                    _.each(catchAlls, function (ca) {
+                        //if (ca.startsWith(name + '-')) {
+                        if (_.strStartsWith(ca, name + '-')) {
+                            values[name] = _.assignIfNotDefined(values[name], []);
+                            if (ca.length > name.length + 1) {
+                                values[name].push(ca);
+                            }
+                        }
+                    });
+
+                    Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
+                    Fn.prototype.add[name] = function (a, b) {
+                        var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+
+                        if (keys[name].multi) {
+                            values[name] = values[name] || [];
+                            values[name].push(valueStr);
+                        } else {
+                            values[name] = [valueStr];
+                        }
+                    };
+
+                    Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
+                    Fn.prototype.remove[name] = function (a, b) {
+                        var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+                        values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
+                    };
+                    Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
+                    Fn.prototype.reset[name] = function () {
+                        var defaultValue = keys[name].default;
+                        var initByType = '';
+                        initByType = _.if.is.equal(keys[name].multi, 'multi', function () { return []; });
+                        values[name] = (defaultValue) ? defaultValue : initByType;
+                    };
+                    Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {});
+                    Fn.prototype.get[name] = function () {
+                        return values[name];
+                    };
+                };
+                Fn.prototype.partial = function () {
+                    var url = window.location.origin + this.config.partialPrefix;
+                    _.each(values, function (value, key) {
+                        _.each(value, function (str) {
+                            var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+                            if (fine) {
+                                url += '/' + str;
+                            }
+                        });
+                    });
+                    return decodeURIComponent(url.toLowerCase());
+                };
+                Fn.prototype.build = function (f) {
+                    var url = window.location.origin + this.config.prefix;
+                    _.each(values, function (value, key) {
+                        _.each(value, function (str) {
+                            var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+                            if (fine) {
+                                url += '/' + str;
+                            }
+                        });
+                    });
+                    return decodeURIComponent(url.toLowerCase());
+                };
+
+                return function (config) {
+                    return (instatiate) ? instatiate : instatiate = new Fn(config);
+                };
+            })(this);
 this.categorize = function (obj, key) {
     var res = {};
     _.each(obj, function (item) {
@@ -485,95 +415,6 @@ this.chain = function (fn, callback, context) {
     };
 };
 
-this.className = (function (_, undefined) {
-    var className = function (selectorOrDom, className) { };
-
-    className.add = function (selectorOrDom, className) {
-        var nodes = _.select(selectorOrDom);
-
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].classList) {
-                //ToDo
-                DOMTokenList.prototype.add.apply(nodes[i].classList, _.spliteAndTrim(className));
-                continue;
-            }
-            if (nodes[i].className.indexOf(className) === -1) {
-                nodes[i].className = nodes[i].className + ' ' + className;
-            }
-        }
-    };
-    className.remove = function (selectorOrDom, className) {
-        var nodes = _.select(selectorOrDom);
-        //#region shim for ie
-        if (_.is.ie()) {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].classList) {
-                    var classNames = _.spliteAndTrim(className)
-                    for (var j = 0; j < classNames.length; j++) {
-                        DOMTokenList.prototype.remove.call(nodes[i].classList, classNames[j]);
-                    }
-                }
-
-                var reg = new RegExp(className, 'g');
-                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-            }
-        }
-            //#endregion
-        else {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].classList) {
-                    DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
-                    continue;
-                }
-
-                var reg = new RegExp(className, 'g');
-                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-            }
-        }
-        var nodes = _.select(selectorOrDom);
-        //#region shim for ie
-        if (_.is.ie()) {
-            debugger;
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].classList) {
-                    var classNames = _.spliteAndTrim(className)
-                    for (var i = 0; i < classNames.length; i++) {
-                        DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
-                    }
-                }
-
-                var reg = new RegExp(className, 'g');
-                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-            }
-        };
-        //#endregion
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].classList) {
-                DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
-                continue;
-            }
-
-            var reg = new RegExp(className, 'g');
-            nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
-        }
-    }
-    className.toggle = function () { };
-    className.change = function (selectorOrDom, className, replaceWith) {
-        var nodes = _.select(selectorOrDom);
-        _.className.remove(nodes, className);
-        _.className.add(nodes, replaceWith);
-    };
-    className.contains = function (selectorOrDom, className) {
-        var node = _.selectFirst(selectorOrDom);
-        return node.classList.contains(className);
-    };
-    className.if = function (selectorOrDom, className, fn) {
-        var nodes = _.select(selectorOrDom);
-        for (var i = 0; i < nodes.length; i++)
-            ((fn(nodes[i])) ? _.className.add : _.className.remove)(nodes[i], className);
-    };
-    return className;
-})(this);
 this.clone = function (arOrObj) {
     if (arOrObj.concat)
         return arOrObj.concat();
@@ -670,61 +511,8 @@ this.contain = function (obj, value) {
     return false;
 };
 
-this.cookie = (function (_) {
-                var Fn = function () { };
-
-                Fn.set = function (key, value, exdays) {
-                    if (_.is.object(value)) {
-                        value = JSON.stringify(value);
-                    }
-                    var d = new Date();
-                    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-                    var expires = "expires=" + d.toUTCString();
-
-                    document.cookie = _.compileString('{{key}}={{value}};{{expires}},', { key: key, value: value, expires: expires });
-                    return document.cookie;
-                };
-                Fn.get = function (key) {
-                    var name = key + "=";
-                    var ca = document.cookie.split(';');
-                    for (var i = 0; i < ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') c = c.substring(1);
-                        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-                    }
-                    return "";
-                };
-                Fn.remove = function (key) {
-                    Fn.set(key, '', 0);
-                };
-
-                return Fn;
-            })(this);
 this.countBy = function () { };
 
-
-this.css = (function (_) {
-    var toPX = function () { };
-    var toNumber = function () { };
-    var fn = function (selectorOrDom, style) {
-        var nodes = this.select(selectorOrDom);
-        for (var i = 0, node; node = nodes[i]; i++)
-            for (var k in style)
-                node.style[_.camelCase(k)] = style[k];
-    };
-    fn.computedValue = function (selectorOrDom, prop, numberOnly) {
-        if (window.getComputedStyle) {
-            var nodes = _.selectFirst(selectorOrDom);
-            var value = window.getComputedStyle(nodes, null).getPropertyValue(prop);
-            if (numberOnly)
-                value = _.regex.matchFirst(value);
-            return value;
-        }
-        _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
-    };
-    
-    return fn;
-})(this);
 this.dashCase = function (str) {
     return str.replace(/([A-Z])|([\W|\_])/g, function (match) {
         return (/[\w]/.test(match)) ?
@@ -783,61 +571,6 @@ this.dictionary = (function (that, undefined) {
         },
         listen: function (fn) { },
     };
-})(this);
-this.dispatcher = (function (_) {
-    var eventList = {};
-
-    var fn = function (domOrSelector, state, fn) {
-        if (!eventList[state]) {
-            eventList[state] = [];
-            listener(state);
-        };
-        var tempHandler = {
-            fn: fn,
-            domOrSelector: domOrSelector
-        }
-        var isSet = false;
-        for (var i = 0, temp; temp = eventList[state][i]; i++) {
-            if (_.is.equal(tempHandler, temp)) {
-                isSet = true;
-            }
-        }
-        if (!isSet || true) {
-            eventList[state].push(tempHandler);
-        }
-    }
-
-    var listener = function (state) {
-        document.body.addEventListener(state, function (e) {
-            var done = false;
-            for (var i = 0, handler; handler = eventList[state][i]; i++) {
-                var el = e.target;
-                done = false;
-                if (_.is.element(handler.domOrSelector)) {
-                    do {
-                        if (_.is.same(el, handler.domOrSelector)) {
-                            handler.fn(e, el, handler.domOrSelector);
-                            done = true;
-                        } else {
-                            el = el.parentNode;
-                        }
-                    } while (!done && el.tagName.toLowerCase() != 'body');
-                } else if (_.is.string(handler.domOrSelector)) {
-                    do {
-                        if (_.is(el, handler.domOrSelector)) {
-                            handler.fn(e, el, handler.domOrSelector);
-                            done = true;
-                        } else {
-                            el = el.parentNode;
-                        }
-                    } while (!done && el.tagName.toLowerCase() != 'body');
-                }
-            }
-        });
-    };
-
-
-    return fn;
 })(this);
 this.each = function (obj, iterator, context, onProto) {
     onProto = this.assignIfNotDefined(onProto, false);
@@ -1038,159 +771,6 @@ this.flyWeight = (function (_, undefined) {
 this.fn = function () {
     return function () { };
 };
-            this.framework = (function (_) {
-                return function (config) {
-                    config = config || {};
-                    config.version = config.version || 1;
-                    if (!config.run_env)
-                        _.fail('you must define application run_env function in app.js')
-                    window.RUN_ENV = config.run_env();
-
-                    var CONST = { controllerSelector: '[data-controller]' };
-                    var fm = function () { };
-                    var factories = {};
-                    var controllers = {};
-                    var js = {};
-                    var css = {};
-                    fm.factory = (function (fm) {
-                        return function (name, fn) {
-                            var camelCaseName = _.camelCase(name);
-                            window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
-                            window[camelCaseName + 's'] = {};
-                            var Constructor = fn();
-                            factories[camelCaseName] = function (id, node, config) {
-                                return window[camelCaseName + 's'][id] = new Constructor(id, node, config);
-                            };
-                            return Constructor;
-                        };
-                    })(this);
-                    fm.controller = (function (fm, undefined) {
-                        var repositoy = {};
-                        return function (name, fn) {
-                            controllers[name] = {};
-                            controllers[name].fn = fn;
-                            //controllers[name].scope = window.scope = _.scope();
-                            repositoy[name] = controllers[name].scope = _.scope();
-
-                            _.ready(function () {
-                                var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
-
-                                controllerNode && instansiteController(controllers[name], controllerNode);
-                            });
-                            return controllers[name].scope;
-                        };
-                    })(this);
-                    fm.loadJS = (function (fm) {
-                        var qeue = [];
-                        var dependenciesHistory = {};
-                        return function (files) {
-                            var thenFn = _.fn();
-                            var _dependencies = [];
-                            if (RUN_ENV == "development") {
-                                for (var i = 0; i < files.length; i++) {
-                                    if (_.is.array(js[files[i]])) {
-                                        _.each(js[files[i]], function (filePath) {
-                                            if (!js[filePath]) {
-                                                js[filePath] = filePath;
-                                            }
-                                            if (!dependenciesHistory[js[filePath]]) {
-                                                _dependencies.push(js[filePath]);
-                                                dependenciesHistory[js[filePath]] = false;
-                                            }
-                                        });
-                                    } else {
-                                        if (!dependenciesHistory[js[files[i]]]) {
-                                            _dependencies.push(js[files[i]]);
-                                            dependenciesHistory[js[files[i]]] = false;
-                                        }
-                                    }
-                                }
-                                for (var i = 0; i < _dependencies.length; i++) {
-                                    _dependencies[i] += '?version=' + config.version;
-                                }
-                                for (var i = 0, file; file = _dependencies[i]; i++) {
-                                    var path = file;
-                                    //TODO
-                                    _.loadJS(path, function (path) {
-                                        dependenciesHistory[path] = true;
-
-                                        for (var i = qeue.length - 1; i >= 0; i--) {
-                                            if (qeue[i].done)
-                                                continue;
-                                            qeue[i].depen = _.array.remove(qeue[i].depen, path);
-                                            if (qeue[i].depen.length === 0) {
-                                                qeue[i].done = true;
-                                                qeue[i].thenFn();
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                            return {
-                                then: function (fn) {
-                                    thenFn = fn;
-                                    if (_dependencies.length == 0) {
-                                        thenFn();
-                                    } else {
-                                        qeue.push({ depen: _dependencies, thenFn: fn });
-                                    }
-                                }
-                            };
-                        }
-                    })(this);
-                    fm.loadCSS = (function (fm) {
-                        return function (files) {
-                            var _dependencies = [];
-                            for (var i = 0; i < files.length; i++) {
-                                if (_.is.array(css[files[i]])) {
-                                    _.each(css[files[i]], function (filePath) {
-                                        if (!css[filePath]) {
-                                            css[filePath] = filePath;
-                                        }
-                                        _dependencies.push(css[filePath]);
-                                    });
-                                } else {
-                                    _dependencies.push(css[files[i]]);
-                                }
-                            }
-                            for (var i = 0; i < _dependencies.length; i++) {
-                                that.loadCSS(_dependencies[i]);
-                            }
-                            return this;
-                        };
-                    })(this);
-                    fm.config = (function (_) {
-                        return function (config) {
-                            that.extend(js, config.js);
-                            that.extend(css, config.css);
-                        }
-                    })(this);
-                    //_.ready(function () {
-                    //    for (var i = 0, controllerNode; controllerNode = controllerNodes[i]; i++) {
-                    //        var controllerName = controllerNode.dataset.controller;
-                    //        var controller = controllers[controllerName];
-                    //        if (controller) {
-                    //            instansiteController(controller, controllerNode);
-                    //        }
-                    //    }
-                    //});
-                    var instansiteController = function (controller, controllerNode) {
-                        controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
-
-                        for (var factoryName in factories) {
-                            var factoryAttrName = _.dashCase(factoryName);
-                            var nodes = controllerNode.querySelectorAll('[' + factoryAttrName + ']');
-                            _.each(nodes, function (node) {
-                                var id = node.getAttribute(factoryAttrName);
-                                var config = controller.scope.config[id] || {};
-                                factories[factoryName](id, node, config);
-                            });
-                        }
-                    };
-
-                    return fm;
-                }
-            })(this);
 this.freezable = (function (_, undefined) {
     var o = {};
     
@@ -1223,42 +803,6 @@ this.getCumulativeOffset = function (obj) {
         y: top
     };
 };
-this.getJSON = function (options, callback) {
-    var xhttp = this.getXHR();
-    options.url = options.url || location.href;
-    options.data = options.data || null;
-    callback = callback || function () { };
-    
-    options.type = options.type || 'json';
-    var url = options.url;
-    if (options.type == 'jsonp') {
-        window.jsonCallback = callback;
-        var $url = url.replace('callback=?', 'callback=jsonCallback');
-        var script = document.createElement('script');
-        script.src = $url;
-        document.body.appendChild(script);
-    }
-    xhttp.open('GET', options.url, true);
-    xhttp.send(options.data);
-    xhttp.onreadystatechange = function () {
-        if (xhttp.status == 200 && xhttp.readyState == 4) {
-            callback(xhttp.responseText);
-        }
-    };
-};
-
-this.getTransitionEvent = function () {
-            var fakeElement = document.createElement('div');
-            var transition = {
-                WebkitTransition: 'webkitTransitionEnd',
-                OTransition: 'TranstionEnd',
-                MozTransition: 'transtionend',
-                transition: 'transtionend',
-            };
-            for (var i in transition) {
-                if (_.is.defined(fakeElement.style[i])) return transition[i];
-            }
-        };
 this.getValue = function (obj, path) {
     if (DEBUG) {
         if (!obj) return undefined;
@@ -1276,15 +820,11 @@ this.getValue = function (obj, path) {
     return (i == path.length) ? res : null;
 };
 
-this.getXHR = function () {
-    var instance = new XMLHttpRequest();
-    return instance;
-};
 this.groupBy = function (obj, prop, fn) {
-    fn = fn || this.return;
+    fn = fn || _.i;
     var res = {};
     _.each(obj, function (item) {
-        var flag = item.data[prop];
+        var flag = item[prop];
         res[flag] = res[flag] || [];
         res[flag].push(fn(item));
     });
@@ -1432,7 +972,7 @@ this.is = (function (_, undefined) {
         return Object.prototype.toString.call(_var) === '[object Undefined]';
     };
     is.event = function (_var) {
-                          return !!Object.prototype.toString.call(_var).toLowerCase().search('event');
+                          return Object.prototype.toString.call(_var).toLowerCase().search('event')>-1;
     };
     is.defined = function (_var) {
         return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
@@ -1587,56 +1127,6 @@ this.leftCurry = function (fn, context) {
         };
     };
 };
-this.loadCSS = (function (_) {
-    var loadedFiles = {};
-    return function (path, callback) {
-        if (loadedFiles[path])
-            return;
-        var css = document.createElement('link')
-        css.setAttribute("rel", "stylesheet")
-        css.setAttribute("href", '/' + path);
-        document.getElementsByTagName("head")[0].appendChild(css);
-    }
-})(this);
-
-this.loadJS = (function (_) {
-    var loadedFiles = {};
-    return function (path, callback) {
-        if (loadedFiles[path]) {
-            if (loadedFiles[path].state) {
-                setTimeout(function () {
-                    callback(path, path);
-                }, 1);
-            } else {
-                loadedFiles[path].callbacks.push(callback);
-            }
-        } else {
-            loadedFiles[path] = {
-                state: false,
-                callbacks: []
-            };
-            loadedFiles[path].callbacks.push(callback);
-            
-            var script = document.createElement('script')
-            script.setAttribute("type", "text/javascript")
-            script.onload = function (e) {
-                            var n = e.srcElement || e.explicitOriginalTarget || e.path[0];
-                var filePath = n.getAttribute('src');
-                if (filePath) {
-                    path = filePath.substring(1, filePath.length);
-                }
-                
-                loadedFiles[path].state = true;
-                for (var i = 0, fn; fn = loadedFiles[path].callbacks[i]; i++) {
-                    fn(path);
-                }
-            };
-            script.setAttribute("src", '/' + path);
-            document.getElementsByTagName("head")[0].appendChild(script);
-        }
-    };
-})(this);
-
 this.map = function (obj, iterator, context) {
     var results = [];
     
@@ -1726,6 +1216,14 @@ this.multiply = function (fn, ln) {
     return fn * ln;
 };
 
+ this.nextTick = function (/*fn, context*/) {
+                var args = _.argToArray(arguments);
+                var fn = args.shift();
+                var context = args.shift();
+                setTimeout(function () {
+                    fn.apply(context, args);
+                }, 0);
+            };
 this.note = function (text) {
     console.log(['NOTE : ', text].join(' '));
 };
@@ -1896,20 +1394,27 @@ this.pascalCase = function (str) {
     str = _.camelCase(str);
     return str[0].toUpperCase() + str.substr(1, str.lenght);
 };
-this.pipe = (function(_){
-    var pipes = {};
-    return function (id, delay) {
-        var id = id;
-        pipes[id] = pipes[id] || [];
-        return function (fn) {
-            pipes[id].push(fn);
-            setInterval(function () {
-                var fn = pipes[id].shift();
-                fn && fn();
-            }, delay || 1);
-        };
-    }
-}(this));
+            this.pipe = (function (_) {
+                var pipes = {};
+                var timers = {};
+                var getTimer = function (id, delay) {
+                    if (timers[i]) return;
+
+                    setInterval(function () {
+                        var fn = pipes[id].shift();
+                        if (!fn) clearInterval(timers[id] = null);
+                        fn();
+                    }, delay || 1);
+                }
+                return function (id, delay) {
+                    var id = id;
+                    pipes[id] = pipes[id] || [];
+                    return function (fn) {
+                        pipes[id].push(fn);
+                    };
+                }
+            }(this));
+
 
 this.preventEvent = function (e) {
     var eve = e || window.event;
@@ -1970,6 +1475,11 @@ this.publisher = (function (that, undefined) {
         this.visitSubscribers('publish', publication, type);
     };
     o.visitSubscribers = function (action, arg, type) {
+        if (!subscribers) {
+            console.log(type + " topic dont have subscriber!");
+            return;
+        }
+
         var pubType = type || 'any',
             subscribers = this.subscribers[pubType],
             max = subscribers.length;
@@ -2031,18 +1541,6 @@ this.randString = function (len) {
 this.random = function (min, max) {
     return ((max - min) * Math.random()) + min;
 };
-
-this.ready = (function () {
-    var repos = [];
-    return function (fn) {
-        repos.push(fn);
-        if (document.readyState == "interactive" || document.readyState == "complete") {
-            fn();
-            return;
-        }
-        document.addEventListener('DOMContentLoaded', fn, true);
-    };
-})();
 
 this.recursive = function () { };
 
@@ -2170,18 +1668,18 @@ this.safeClear = function (objOrArr) {
     }
 };
 this.scope = function () {
+    var prototypeCreator = function () { };
     var Scope = function () {
-        this.fn = {};
-        this.data = {};
-        this.config = {};
-        this.option = {};
-        this.event = {};
-        this.module = {};
-        this.const = {};
+        this.fn = new (function () { });
+        this.data = new (function () { });
+        this.config = new (function () { });
+        this.option = new (function () { });
+        this.event = new (function () { });
+        this.module = new (function () { });
+        this.const = new (function () { });
     };
     return new Scope();
 };
-
 this.scroll = (function () {
     var Fn = function () { };
     Fn.to = function (selectorOrDom, to, duration) {
@@ -2201,24 +1699,6 @@ this.scroll = (function () {
     
     return Fn;
 }());
-
-//todo : move to DOM namespace
-this.select = function (selectorOrDom, parent) {
-    parent = parent || document.body;
-    var nodes = '';
-    if (this.is.string(selectorOrDom))
-        nodes = parent.querySelectorAll(selectorOrDom);
-    else
-        nodes = selectorOrDom;
-    if (this.is.nodeList(nodes)) nodes = this.argToArray(nodes);
-    else if (this.is.HTMLCollection(nodes)) nodes = this.argToArray(nodes);
-    else if (!this.is.array(nodes)) nodes = [nodes];
-    
-    return nodes;
-};
-this.selectFirst = function (selectorOrDom, parent) {
-    return _.valueOf(_.select(selectorOrDom, parent), 0);
-};
 
 
 this.sortBy = function (obj, typeOrOperator, path) {

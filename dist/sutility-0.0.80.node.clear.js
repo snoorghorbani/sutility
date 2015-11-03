@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-10-05
+ * sutility v0.0.80 - 2015-11-03
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -149,8 +149,9 @@
                 }, Fn;
             }(this), this.catchall = function(_) {
                 var instatiate = null, keys = {}, values = {}, defaultCatchAllConfig = {
-                    urlPrefix: "/filter",
-                    routePrefix: "/filter/filterresult"
+                    prefix: "/defaultPrefix",
+                    partialPrefix: "/defaultPrefix/defaultFilterresult",
+                    replace: [ "/filter/", "/filter/filterresult/" ]
                 }, defaultKeyConfig = {
                     multi: !1,
                     "default": null
@@ -158,14 +159,10 @@
                     return this.config = _.update(_.cloneObj(defaultCatchAllConfig), config), this;
                 };
                 return Fn.prototype.key = function(name, config) {
-                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config), keys[name]["default"] = config["default"] ? _.is.array(config["default"]) ? config["default"] : [ config["default"] ] : [], 
-                    values[name] = values[name] || [], _.each(keys[name]["default"], function(defaultValue) {
-                        var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
-                        keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
-                    });
-                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.urlPrefix, "");
+                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.prefix, "");
                     catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
-                        _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
+                        _.strStartsWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
                     }), Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {}), Fn.prototype.add[name] = function(a, b) {
                         var valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
@@ -176,13 +173,15 @@
                             return a.toLowerCase() !== valueStr.toLowerCase();
                         });
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
-                        values[name] = [], _.each(keys[name]["default"], function(defaultValue) {
-                            var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
-                            keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
-                        });
+                        var defaultValue = keys[name]["default"], initByType = "";
+                        initByType = _["if"].is.equal(keys[name].multi, "multi", function() {
+                            return [];
+                        }), values[name] = defaultValue ? defaultValue : initByType;
+                    }, Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {}), Fn.prototype.get[name] = function() {
+                        return values[name];
                     };
-                }, Fn.prototype.getRoute = function() {
-                    var url = window.location.origin || "fortest" + this.config.routePrefix;
+                }, Fn.prototype.partial = function() {
+                    var url = window.location.origin + this.config.partialPrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -191,8 +190,8 @@
                             fine && (url += "/" + str);
                         });
                     }), decodeURIComponent(url.toLowerCase());
-                }, Fn.prototype.getUrl = function(f) {
-                    var url = window.location.origin || "fortest" + this.config.urlPrefix;
+                }, Fn.prototype.build = function(f) {
+                    var url = window.location.origin + this.config.prefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -413,10 +412,10 @@
                 for (var i = 0, res = obj[path[i++]]; i < path.length; ) res = res[path[i++]];
                 return i == path.length ? res : null;
             }, this.groupBy = function(obj, prop, fn) {
-                fn = fn || this["return"];
+                fn = fn || _.i;
                 var res = {};
                 return _.each(obj, function(item) {
-                    var flag = item.data[prop];
+                    var flag = item[prop];
                     res[flag] = res[flag] || [], res[flag].push(fn(item));
                 }), res;
             }, this.groupByFlatMode = function() {
@@ -479,7 +478,7 @@
                 }, is.undefined = function(_var) {
                     return "[object Undefined]" === Object.prototype.toString.call(_var);
                 }, is.event = function(_var) {
-                    return !!Object.prototype.toString.call(_var).toLowerCase().search("event");
+                    return Object.prototype.toString.call(_var).toLowerCase().search("event") > -1;
                 }, is.defined = function(_var) {
                     return "[object Undefined]" !== Object.prototype.toString.call(_var) && "[object Null]" !== Object.prototype.toString.call(_var) && "" !== Object;
                 }, is.json = function() {}, is.error = function() {}, is.startWith = function(str, prefix) {
@@ -623,6 +622,11 @@
                 }), temp;
             }, this.multiply = function(fn, ln) {
                 return fn * ln;
+            }, this.nextTick = function() {
+                var args = _.argToArray(arguments), fn = args.shift(), context = args.shift();
+                setTimeout(function() {
+                    fn.apply(context, args);
+                }, 0);
             }, this.note = function(text) {}, this.objToTwoDimArray = function() {
                 var args = _.argToArray(arguments), obj = args[0], res = [];
                 return _.each(obj, function(itemValue, itemKey) {
@@ -705,10 +709,7 @@
                 return function(id, delay) {
                     var id = id;
                     return pipes[id] = pipes[id] || [], function(fn) {
-                        pipes[id].push(fn), setInterval(function() {
-                            var fn = pipes[id].shift();
-                            fn && fn();
-                        }, delay || 1);
+                        pipes[id].push(fn);
                     };
                 };
             }(this), this.preventEvent = function(e) {
@@ -743,7 +744,7 @@
                 }, o.publish = function(type, publication) {
                     publication = _.assignIfNotDefined(publication, {}), this.visitSubscribers("publish", publication, type);
                 }, o.visitSubscribers = function(action, arg, type) {
-                    for (var sub, pubType = type || "any", subscribers = this.subscribers[pubType], i = (subscribers.length, 
+                    if (subscribers) for (var sub, pubType = type || "any", subscribers = this.subscribers[pubType], i = (subscribers.length, 
                     0); sub = subscribers[i]; i++) "publish" === action ? sub(arg) : "unsubscribe" === action && sub == arg && subscribers.splice(i, 1);
                 }, function(obj) {
                     obj = obj || {};
@@ -836,8 +837,9 @@
                 if (_.is.array(objOrArr)) Array.prototype.splice.apply(objOrArr, [ 0, objOrArr.length ].concat([])); else for (var i in objOrArr) objOrArr.hasOwnProperty(i) && delete objOrArr[i];
             }, this.scope = function() {
                 var Scope = function() {
-                    this.fn = {}, this.data = {}, this.config = {}, this.option = {}, this.event = {}, 
-                    this.module = {}, this["const"] = {};
+                    this.fn = new function() {}(), this.data = new function() {}(), this.config = new function() {}(), 
+                    this.option = new function() {}(), this.event = new function() {}(), this.module = new function() {}(), 
+                    this["const"] = new function() {}();
                 };
                 return new Scope();
             }, this.scroll = function() {

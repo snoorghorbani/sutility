@@ -1,3 +1,3 @@
-/*! sutility - v0.0.79 - 2015-10-05 */
+/*! sutility - v0.0.80 - 2015-11-03 */
 this.randString=function(a){var b="",c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";return _.repeat(a,function(){b+=c[_.random(0,c.length).toFixed()]},this),b};
 //# sourceMappingURL=randString.js.map

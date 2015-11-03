@@ -1,3 +1,3 @@
-/*! sutility - v0.0.79 - 2015-10-05 */
+/*! sutility - v0.0.80 - 2015-11-03 */
 this.update=function(a,b,c){return _.is.object(b)&&_.each(a,function(c,d){void 0!==b[d]&&(a[d]=b[d])}),a};
 //# sourceMappingURL=update.js.map

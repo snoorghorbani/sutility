@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.79 - 2015-10-05
+ * sutility v0.0.80 - 2015-11-03
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -26,6 +26,19 @@
                         });
                     });
                 });
+            }, this.ajax = function(options, callback) {
+                var xhttp = this.getXHR();
+                options.url = options.url || location.href, options.data = options.data || null, 
+                callback = callback || _.fn(), options.type = options.type || "json";
+                var url = options.url;
+                if ("jsonp" == options.type) {
+                    window.jsonCallback = callback;
+                    var $url = url.replace("callback=?", "callback=jsonCallback"), script = document.createElement("script");
+                    script.src = $url, document.body.appendChild(script);
+                }
+                xhttp.open("GET", options.url, !0), xhttp.send(options.data), xhttp.onreadystatechange = function() {
+                    200 == xhttp.status && 4 == xhttp.readyState && callback(xhttp.responseText);
+                };
             }, this.argToArray = function(arg) {
                 return Array.prototype.slice.call(arg);
             }, this.arrToObj = function() {
@@ -173,8 +186,9 @@
                 }, Fn;
             }(this), this.catchall = function(_) {
                 var instatiate = null, keys = {}, values = {}, defaultCatchAllConfig = {
-                    urlPrefix: "/filter",
-                    routePrefix: "/filter/filterresult"
+                    prefix: "/defaultPrefix",
+                    partialPrefix: "/defaultPrefix/defaultFilterresult",
+                    replace: [ "/filter/", "/filter/filterresult/" ]
                 }, defaultKeyConfig = {
                     multi: !1,
                     "default": null
@@ -182,14 +196,10 @@
                     return this.config = _.update(_.cloneObj(defaultCatchAllConfig), config), this;
                 };
                 return Fn.prototype.key = function(name, config) {
-                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config), keys[name]["default"] = config["default"] ? _.is.array(config["default"]) ? config["default"] : [ config["default"] ] : [], 
-                    values[name] = values[name] || [], _.each(keys[name]["default"], function(defaultValue) {
-                        var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
-                        keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
-                    });
-                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.urlPrefix, "");
+                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.prefix, "");
                     catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
-                        _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
+                        _.strStartsWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
                     }), Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {}), Fn.prototype.add[name] = function(a, b) {
                         var valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
@@ -200,13 +210,15 @@
                             return a.toLowerCase() !== valueStr.toLowerCase();
                         });
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
-                        values[name] = [], _.each(keys[name]["default"], function(defaultValue) {
-                            var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
-                            keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
-                        });
+                        var defaultValue = keys[name]["default"], initByType = "";
+                        initByType = _["if"].is.equal(keys[name].multi, "multi", function() {
+                            return [];
+                        }), values[name] = defaultValue ? defaultValue : initByType;
+                    }, Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {}), Fn.prototype.get[name] = function() {
+                        return values[name];
                     };
-                }, Fn.prototype.getRoute = function() {
-                    var url = window.location.origin || "fortest" + this.config.routePrefix;
+                }, Fn.prototype.partial = function() {
+                    var url = window.location.origin + this.config.partialPrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -215,8 +227,8 @@
                             fine && (url += "/" + str);
                         });
                     }), decodeURIComponent(url.toLowerCase());
-                }, Fn.prototype.getUrl = function(f) {
-                    var url = window.location.origin || "fortest" + this.config.urlPrefix;
+                }, Fn.prototype.build = function(f) {
+                    var url = window.location.origin + this.config.prefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -500,26 +512,49 @@
                 return function() {};
             }, this.framework = function(_) {
                 return function(config) {
-                    config = config || {}, config.version = config.version || 1, config.run_env || _.fail("you must define application run_env function in app.js"), 
+                    config = config || {}, config.version = config.version || 1, config.controllerHolder = config.controllerHolder || window, 
+                    config.run_env || _.fail("you must define application run_env function in app.js"), 
                     window.RUN_ENV = config.run_env();
-                    var fm = function() {}, factories = {}, controllers = {}, js = {}, css = {};
-                    fm.factory = function(fm) {
+                    var fm = function() {}, factories = {}, controllers = {}, controllersRepository = {}, compileTimeFunctions = [], neededControllers = [], js = {}, css = {};
+                    fm.compile = function(selectroOrNode) {
+                        var node = _.selectFirst(selectroOrNode), newControllers = _.select("[data-controller]", node);
+                        _.each(newControllers, function(newController) {
+                            controllerInitializeQualifie(controllers[newController.dataset.controller]), _.each(controllers, function(controller, key) {
+                                var ctrlNode = _.selectFirst('[data-controller="' + key + '"]');
+                                ctrlNode || (controllers[key].active = !1);
+                            });
+                        }), _.each(compileTimeFunctions, function(compileTimeFunction) {
+                            compileTimeFunction(node);
+                        });
+                    }, fm.registerOnCompileTime = function(fn) {
+                        compileTimeFunctions.push(fn);
+                    }, fm.factory = function(fm) {
                         return function(name, fn) {
                             var camelCaseName = _.camelCase(name);
                             window[camelCaseName + "s"] && _.fail(camelCaseName + "s exists"), window[camelCaseName + "s"] = {};
                             var Constructor = fn();
                             return factories[camelCaseName] = function(id, node, config) {
-                                return window[camelCaseName + "s"][id] = new Constructor(id, node, config);
+                                return window[camelCaseName + "s"][id] ? window[camelCaseName + "s"][id] : window[camelCaseName + "s"][id] = new Constructor(id, node, config);
                             }, Constructor;
                         };
-                    }(this), fm.controller = function(fm, undefined) {
+                    }(this);
+                    var controllerInitializeQualifie = function(controller) {
+                        var parentCtrl, parentCtrlName, controllerNode = _.selectFirst('[data-controller="' + controller.name + '"]'), parentNode = controllerNode;
+                        if (controllerNode) {
+                            do parentNode = parentNode.parentNode, parentCtrlName = parentNode.dataset.controller, 
+                            parentCtrlName && (parentCtrl = controllerInitializeQualifie(controllers[parentCtrlName])); while (parentNode && "HTML" != parentNode.tagName && !parentCtrlName);
+                            parentCtrlName && (controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn, 
+                            controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event, controller.scope["const"].__proto__ = controllers[parentCtrlName].scope["const"], 
+                            controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module), instansiteController(controller, controllerNode);
+                        }
+                        return controllerNode;
+                    };
+                    fm.controller = function(fm, undefined) {
                         var repositoy = {};
                         return function(name, fn) {
-                            return controllers[name] = {}, controllers[name].fn = fn, repositoy[name] = controllers[name].scope = _.scope(), 
-                            _.ready(function() {
-                                var controllerNode = _.selectFirst('[data-controller="' + name + '"]');
-                                controllerNode && instansiteController(controllers[name], controllerNode);
-                            }), controllers[name].scope;
+                            return controllersRepository[name] = fn, controllers[name] = {}, controllers[name].active = !1, 
+                            controllers[name].name = name, controllers[name].fn = fn, repositoy[name] = controllers[name].scope = _.scope(), 
+                            config.controllerHolder[name] = controllers[name].scope;
                         };
                     }(this), fm.loadJS = function(fm) {
                         var qeue = [], dependenciesHistory = {};
@@ -563,16 +598,34 @@
                         };
                     }(this);
                     var instansiteController = function(controller, controllerNode) {
-                        controller.fn.apply(controller.scope, [ controller.scope, controllerNode ]);
-                        for (var factoryName in factories) {
-                            var factoryAttrName = _.dashCase(factoryName), nodes = controllerNode.querySelectorAll("[" + factoryAttrName + "]");
-                            _.each(nodes, function(node) {
-                                var id = node.getAttribute(factoryAttrName), config = controller.scope.config[id] || {};
-                                factories[factoryName](id, node, config);
-                            });
+                        if (!controller.active) {
+                            controller.fn.apply(controller.scope, [ controller.scope, controllerNode ]);
+                            for (var factoryName in factories) {
+                                var factoryAttrName = _.dashCase(factoryName), nodes = _.argToArray(controllerNode.querySelectorAll("[" + factoryAttrName + "]"));
+                                _.each(nodes, function(node) {
+                                    var id = node.getAttribute(factoryAttrName), config = controller.scope.config[id] || {};
+                                    factories[factoryName](id, node, config);
+                                }), nodes = _.argToArray(controllerNode.querySelectorAll("[data-" + factoryAttrName + "]")), 
+                                _.each(nodes, function(node) {
+                                    var id = node.getAttribute("data-" + factoryAttrName), config = controller.scope.config[id] || {};
+                                    factories[factoryName](id, node, config);
+                                });
+                            }
+                            controller.active = !0;
                         }
                     };
-                    return fm;
+                    return _.ready(function() {
+                        neededControllers = _.lexer("data-controller"), _.each(neededControllers, function(neededController) {
+                            _.callWhen(function() {
+                                var res = !0;
+                                return _.each(neededController.parentIds, function(parentId) {
+                                    controllersRepository[parentId] || (res = !1);
+                                }), res;
+                            }, function() {
+                                controllerInitializeQualifie(controllers[neededController.id]);
+                            });
+                        });
+                    }), fm;
                 };
             }(this), this.freezable = function(_, undefined) {
                 var o = {};
@@ -623,10 +676,10 @@
                 var instance = new XMLHttpRequest();
                 return instance;
             }, this.groupBy = function(obj, prop, fn) {
-                fn = fn || this["return"];
+                fn = fn || _.i;
                 var res = {};
                 return _.each(obj, function(item) {
-                    var flag = item.data[prop];
+                    var flag = item[prop];
                     res[flag] = res[flag] || [], res[flag].push(fn(item));
                 }), res;
             }, this.groupByFlatMode = function() {
@@ -689,7 +742,7 @@
                 }, is.undefined = function(_var) {
                     return "[object Undefined]" === Object.prototype.toString.call(_var);
                 }, is.event = function(_var) {
-                    return !!Object.prototype.toString.call(_var).toLowerCase().search("event");
+                    return Object.prototype.toString.call(_var).toLowerCase().search("event") > -1;
                 }, is.defined = function(_var) {
                     return "[object Undefined]" !== Object.prototype.toString.call(_var) && "[object Null]" !== Object.prototype.toString.call(_var) && "" !== Object;
                 }, is.json = function() {}, is.error = function() {}, is.startWith = function(str, prefix) {
@@ -792,7 +845,23 @@
                         return fn.apply(context, args);
                     };
                 };
-            }, this.loadCSS = function(_) {
+            }, this.lexer = function(_) {
+                var lexed = {};
+                return function(selector, el, idx, parentIds) {
+                    var atrrSelector = "[" + selector + "]";
+                    idx = idx || 0, el = el || document, parentIds = parentIds || [];
+                    var id = el.getAttribute ? el.getAttribute(selector) : null, res = {
+                        el: el,
+                        idx: idx,
+                        parentId: parentIds,
+                        id: id
+                    }, childs = _.select(atrrSelector, el);
+                    return el.getAttribute && (lexed[id] ? lexed[id].idx < res.idx && (lexed[id] = res) : lexed[id] = res), 
+                    _.each(childs, function(node, i) {
+                        _.lexer(selector, node, idx + 1, id ? parentIds.concat(id) : parentIds);
+                    }), lexed;
+                };
+            }(this), this.loadCSS = function(_) {
                 var loadedFiles = {};
                 return function(path, callback) {
                     if (!loadedFiles[path]) {
@@ -859,6 +928,11 @@
                 }), temp;
             }, this.multiply = function(fn, ln) {
                 return fn * ln;
+            }, this.nextTick = function() {
+                var args = _.argToArray(arguments), fn = args.shift(), context = args.shift();
+                setTimeout(function() {
+                    fn.apply(context, args);
+                }, 0);
             }, this.note = function(text) {}, this.objToTwoDimArray = function() {
                 var args = _.argToArray(arguments), obj = args[0], res = [];
                 return _.each(obj, function(itemValue, itemKey) {
@@ -941,10 +1015,7 @@
                 return function(id, delay) {
                     var id = id;
                     return pipes[id] = pipes[id] || [], function(fn) {
-                        pipes[id].push(fn), setInterval(function() {
-                            var fn = pipes[id].shift();
-                            fn && fn();
-                        }, delay || 1);
+                        pipes[id].push(fn);
                     };
                 };
             }(this), this.preventEvent = function(e) {
@@ -979,7 +1050,7 @@
                 }, o.publish = function(type, publication) {
                     publication = _.assignIfNotDefined(publication, {}), this.visitSubscribers("publish", publication, type);
                 }, o.visitSubscribers = function(action, arg, type) {
-                    for (var sub, pubType = type || "any", subscribers = this.subscribers[pubType], i = (subscribers.length, 
+                    if (subscribers) for (var sub, pubType = type || "any", subscribers = this.subscribers[pubType], i = (subscribers.length, 
                     0); sub = subscribers[i]; i++) "publish" === action ? sub(arg) : "unsubscribe" === action && sub == arg && subscribers.splice(i, 1);
                 }, function(obj) {
                     obj = obj || {};
@@ -1077,8 +1148,9 @@
                 if (_.is.array(objOrArr)) Array.prototype.splice.apply(objOrArr, [ 0, objOrArr.length ].concat([])); else for (var i in objOrArr) objOrArr.hasOwnProperty(i) && delete objOrArr[i];
             }, this.scope = function() {
                 var Scope = function() {
-                    this.fn = {}, this.data = {}, this.config = {}, this.option = {}, this.event = {}, 
-                    this.module = {}, this["const"] = {};
+                    this.fn = new function() {}(), this.data = new function() {}(), this.config = new function() {}(), 
+                    this.option = new function() {}(), this.event = new function() {}(), this.module = new function() {}(), 
+                    this["const"] = new function() {}();
                 };
                 return new Scope();
             }, this.scroll = function() {
@@ -1094,7 +1166,7 @@
                     }
                 }, Fn;
             }(), this.select = function(selectorOrDom, parent) {
-                parent = parent || document.body;
+                parent = parent || document;
                 var nodes = "";
                 return nodes = this.is.string(selectorOrDom) ? parent.querySelectorAll(selectorOrDom) : selectorOrDom, 
                 this.is.nodeList(nodes) ? nodes = this.argToArray(nodes) : this.is.HTMLCollection(nodes) ? nodes = this.argToArray(nodes) : this.is.array(nodes) || (nodes = [ nodes ]), 

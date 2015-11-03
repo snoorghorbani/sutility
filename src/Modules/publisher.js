@@ -22,6 +22,11 @@
         this.visitSubscribers('publish', publication, type);
     };
     o.visitSubscribers = function (action, arg, type) {
+        if (!subscribers) {
+            console.log(type + " topic dont have subscriber!");
+            return;
+        }
+
         var pubType = type || 'any',
             subscribers = this.subscribers[pubType],
             max = subscribers.length;

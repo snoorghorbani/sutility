@@ -1,3 +1,3 @@
-/*! sutility - v0.0.79 - 2015-10-05 */
+/*! sutility - v0.0.80 - 2015-11-03 */
 this.freezable=function(a,b){var c={};return c.freeze=function(a){},c.unfreeze=function(a){},function(a){}}(this);
 //# sourceMappingURL=freezable.js.map

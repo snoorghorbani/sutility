@@ -35,7 +35,7 @@
         return Object.prototype.toString.call(_var) === '[object Undefined]';
     };
     is.event = function (_var) {
-                          return !!Object.prototype.toString.call(_var).toLowerCase().search('event');
+                          return Object.prototype.toString.call(_var).toLowerCase().search('event')>-1;
     };
     is.defined = function (_var) {
         return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';

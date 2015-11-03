@@ -1,6 +1,6 @@
 ﻿//todo : move to DOM namespace
 this.select = function (selectorOrDom, parent) {
-    parent = parent || document.body;
+    parent = parent || document;
     var nodes = '';
     if (this.is.string(selectorOrDom))
         nodes = parent.querySelectorAll(selectorOrDom);

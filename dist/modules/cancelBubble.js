@@ -1,3 +1,3 @@
-/*! sutility - v0.0.79 - 2015-10-05 */
+/*! sutility - v0.0.80 - 2015-11-03 */
 this.cancelBubble=function(a){var b=a?a:window.event;b.stopPropagation&&b.stopPropagation(),null!==b.cancelBubble&&(b.cancelBubble=!0)};
 //# sourceMappingURL=cancelBubble.js.map

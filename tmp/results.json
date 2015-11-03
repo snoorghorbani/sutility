@@ -1,7 +1,13 @@
 {
-	"numResults": 252,
-	"creationDate": "2015-10-05 11:52:21",
+	"numResults": 267,
+	"creationDate": "2015-11-03 17:19:19",
 	"results": {
+		"src/modules/MutationObserver.js": [
+			{
+				"line": 7,
+				"match": "_.each"
+			}
+		],
 		"src/modules/activate.js": [
 			{
 				"line": 3,
@@ -60,6 +66,12 @@
 			{
 				"line": 9,
 				"match": "_.className"
+			}
+		],
+		"src/modules/ajax.js": [
+			{
+				"line": 5,
+				"match": "_.fn"
 			}
 		],
 		"src/modules/arrToObj.js": [
@@ -146,107 +158,87 @@
 		],
 		"src/modules/catchall.js": [
 			{
-				"line": 14,
+				"line": 15,
 				"match": "_.update"
 			},
 			{
-				"line": 14,
+				"line": 15,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 19,
+				"line": 20,
 				"match": "_.update"
 			},
 			{
-				"line": 19,
+				"line": 20,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 21,
-				"match": "_.is"
-			},
-			{
-				"line": 25,
+				"line": 24,
 				"match": "_.each"
 			},
 			{
 				"line": 26,
-				"match": "_.is"
+				"match": "_.strStartsWith"
 			},
 			{
 				"line": 27,
-				"match": "_.is"
-			},
-			{
-				"line": 40,
-				"match": "_.each"
-			},
-			{
-				"line": 42,
-				"match": "_.is"
-			},
-			{
-				"line": 43,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 50,
+				"line": 34,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 62,
+				"line": 46,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 49,
+				"match": "_.filter"
+			},
+			{
+				"line": 51,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 55,
+				"match": "_.if"
+			},
+			{
+				"line": 58,
 				"match": "_.assignIfNotDefined"
 			},
 			{
 				"line": 65,
-				"match": "_.filter"
-			},
-			{
-				"line": 68,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 71,
 				"match": "_.each"
 			},
 			{
-				"line": 72,
-				"match": "_.is"
-			},
-			{
-				"line": 73,
-				"match": "_.is"
-			},
-			{
-				"line": 86,
+				"line": 66,
 				"match": "_.each"
 			},
 			{
-				"line": 87,
-				"match": "_.each"
-			},
-			{
-				"line": 88,
+				"line": 67,
 				"match": "_.fine"
 			},
 			{
-				"line": 88,
+				"line": 67,
 				"match": "_.is"
 			},
 			{
-				"line": 98,
+				"line": 77,
 				"match": "_.each"
 			},
 			{
-				"line": 99,
+				"line": 78,
 				"match": "_.each"
 			},
 			{
-				"line": 100,
+				"line": 79,
 				"match": "_.fine"
 			},
 			{
-				"line": 100,
+				"line": 79,
 				"match": "_.is"
 			}
 		],
@@ -548,71 +540,127 @@
 		],
 		"src/modules/framework.js": [
 			{
-				"line": 6,
+				"line": 7,
 				"match": "_.fail"
 			},
 			{
-				"line": 17,
-				"match": "_.camelCase"
-			},
-			{
-				"line": 18,
-				"match": "_.fail"
-			},
-			{
-				"line": 32,
-				"match": "_.scope"
-			},
-			{
-				"line": 33,
-				"match": "_.scope"
-			},
-			{
-				"line": 35,
-				"match": "_.ready"
-			},
-			{
-				"line": 36,
+				"line": 21,
 				"match": "_.selectFirst"
 			},
 			{
-				"line": 47,
-				"match": "_.fn"
+				"line": 22,
+				"match": "_.select"
 			},
 			{
-				"line": 51,
-				"match": "_.is"
-			},
-			{
-				"line": 52,
+				"line": 23,
 				"match": "_.each"
 			},
 			{
-				"line": 74,
-				"match": "_.loadJS"
-			},
-			{
-				"line": 80,
-				"match": "_.array"
-			},
-			{
-				"line": 105,
-				"match": "_.is"
-			},
-			{
-				"line": 106,
+				"line": 25,
 				"match": "_.each"
 			},
 			{
-				"line": 128,
+				"line": 26,
+				"match": "_.selectFirst"
+			},
+			{
+				"line": 31,
+				"match": "_.each"
+			},
+			{
+				"line": 40,
+				"match": "_.camelCase"
+			},
+			{
+				"line": 41,
+				"match": "_.fail"
+			},
+			{
+				"line": 54,
+				"match": "_.selectFirst"
+			},
+			{
+				"line": 87,
+				"match": "_.scope"
+			},
+			{
+				"line": 88,
+				"match": "_.scope"
+			},
+			{
+				"line": 90,
 				"match": "_.ready"
 			},
 			{
-				"line": 141,
+				"line": 100,
+				"match": "_.fn"
+			},
+			{
+				"line": 104,
+				"match": "_.is"
+			},
+			{
+				"line": 105,
+				"match": "_.each"
+			},
+			{
+				"line": 127,
+				"match": "_.loadJS"
+			},
+			{
+				"line": 133,
+				"match": "_.array"
+			},
+			{
+				"line": 158,
+				"match": "_.is"
+			},
+			{
+				"line": 159,
+				"match": "_.each"
+			},
+			{
+				"line": 181,
+				"match": "_.ready"
+			},
+			{
+				"line": 195,
 				"match": "_.dashCase"
 			},
 			{
-				"line": 143,
+				"line": 197,
+				"match": "_.argToArray"
+			},
+			{
+				"line": 198,
+				"match": "_.each"
+			},
+			{
+				"line": 207,
+				"match": "_.argToArray"
+			},
+			{
+				"line": 208,
+				"match": "_.each"
+			},
+			{
+				"line": 221,
+				"match": "_.ready"
+			},
+			{
+				"line": 222,
+				"match": "_.lexer"
+			},
+			{
+				"line": 224,
+				"match": "_.each"
+			},
+			{
+				"line": 225,
+				"match": "_.callWhen"
+			},
+			{
+				"line": 227,
 				"match": "_.each"
 			}
 		],
@@ -742,6 +790,20 @@
 				"match": "_.argToArray"
 			}
 		],
+		"src/modules/lexer.js": [
+			{
+				"line": 17,
+				"match": "_.select"
+			},
+			{
+				"line": 27,
+				"match": "_.each"
+			},
+			{
+				"line": 28,
+				"match": "_.lexer"
+			}
+		],
 		"src/modules/map.js": [
 			{
 				"line": 4,
@@ -786,6 +848,12 @@
 			{
 				"line": 8,
 				"match": "_.each"
+			}
+		],
+		"src/modules/nexTick.js": [
+			{
+				"line": 2,
+				"match": "_.argToArray"
 			}
 		],
 		"src/modules/objToTwoDimArray.js": [
@@ -890,7 +958,7 @@
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 42,
+				"line": 47,
 				"match": "_.is"
 			}
 		],

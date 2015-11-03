@@ -1,0 +1,1 @@
+{"version":3,"file":"nexTick.js","sources":["../../src/modules/nexTick.js"],"names":["this","nextTick","args","_","argToArray","arguments","fn","shift","context","setTimeout","apply"],"mappings":";AAACA,KAAKC,SAAW,WACD,GAAIC,GAAOC,EAAEC,WAAWC,WACpBC,EAAKJ,EAAKK,QACVC,EAAUN,EAAKK,OACnBE,YAAW,WACPH,EAAGI,MAAMF,EAASN,IACnB"}
