@@ -2,10 +2,8 @@
 > ##### ``` id[Number] _.attach(domOrSelector[String || Element], state[String], fn[Function])```
 
 ```javascript
-var dic = _.dictionary.new();
-=>{}
-var dic = _.dictionary.new({ 'keyName': 'keyValue' });
-=>{ 'keyName': 'keyValue' }
+var id = _.attach('.menu > .item', 'click' , function( event[Event] , el[Element] ){});
+var id = _.attach(document.body.querySelectorAll('.menu > .item'), 'click' , function( event[Event] , el[Element] ){});
 ```
 ----------------------------------------------------
-- [ ] impelement remove function
+- [ ] impelement detach function
