@@ -18,7 +18,7 @@ dic.add('anotherKey', "value");
 => dic= { 'keyName': 'keyValue' ,'anotherKey', "value"}
 ```
 ###add reset value
-> ##### ``` [Undefined] instance.reset( key[string] )```
+> ##### ``` [Undefined] instance.reset( key[String] )```
 
 ``` javascript
 dic.add('keyName', "anotherValue");
