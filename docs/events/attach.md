@@ -1,7 +1,11 @@
 # attach
 > ##### ``` id[Number] _.attach(selector[String || Element], state[String], fn[Function])```
-> #### state[String] :
+> ###### state[String] :
 - click
+- mouseenter
+- mouseleave
+- mouseover
+- ...
 
 ```javascript
 var id = _.attach('.menu > .item', 'click' , function( event[Event] , el[Element] ){});
