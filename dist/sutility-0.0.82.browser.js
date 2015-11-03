@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.81 - 2015-11-03
+ * sutility v0.0.82 - 2015-11-03
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -458,7 +458,7 @@ this.canvas = (function (_) {
                     catchAlls = catchAlls.split('/');
                     _.each(catchAlls, function (ca) {
                         //if (ca.startsWith(name + '-')) {
-                        if (_.strStartsWith(ca, name + '-')) {
+                        if (_.is.strStartsWith(ca, name + '-')) {
                             values[name] = _.assignIfNotDefined(values[name], []);
                             if (ca.length > name.length + 1) {
                                 values[name].push(ca);
@@ -1788,47 +1788,84 @@ this.mediaHandler = (function (_) {
     var handler = {
         "in": {},
         "out": {},
-        "only": {}
+        "only": {},
+        "is": {},
+        "if": {
+            "is": {
+                "not": {}
+            }
+        }
     };
+    var mediasState = {};
     var medias = {};
-    var subscibeOnMediaIn = function (media, fn) {
-        var mq = window.matchMedia(media);
+    var matchMedias = {};
+    var callOnChangeFnFns = [];
+    var subscibeOnMediaIn = function (media, fn, falseFn) {
+        var mq = window.matchMedia(media.selector);
         mq.addListener(function () {
-            if (mq.matches) fn();
-        });;
+            (mq.matches ? fn : falseFn || _.fn())();
+        });
+        (mq.matches ? fn : falseFn || _.fn())();
     }
     var subscibeOnMediaOut = function (media, fn) {
         var mq = window.matchMedia(media);
         mq.addListener(function () {
-            if (!mq.matches) fn();
+            !mq.matches && fn();
         });;
+    }
+    var isInTheMedia = function (media, fn) {
+        return (fn && mediasState[media.name]) ? fn() : matchMedias[media.name].matches;
+    };
+    // var isOutOfMedia = function (media, fn) {
+    //     return (fn && !mediasState[media.name]) ? fn() : !matchMedias[media.name].matches;
+    // };
+    var subscribeChangeEvent = function (media) {
+        var mq = window.matchMedia(media.selector);
+        matchMedias[media.name] = mq;
+        mq.addListener(function () {
+            if (mq.matches) {
+                callOnChangeFn([media]);
+            } else {
+            };
+        });
     }
     handler.init = function (config) {
         medias = config;
         for (var i in medias) {
-            handler.in[i] = _.leftCurry(subscibeOnMediaIn)(medias[i]);
-            handler.out[i] = _.leftCurry(subscibeOnMediaOut)(medias[i]);
-            handler.only[i] = _.leftCurry(_.fn)(medias[i]);
+            subscribeChangeEvent({ name: i, selector: medias[i] });
+
+            handler.in[i] = _.leftCurry(subscibeOnMediaIn)({ name: i, selector: medias[i] });
+            handler.out[i] = _.leftCurry(subscibeOnMediaOut)({ name: i, selector: medias[i] });
+            handler.only[i] = _.leftCurry(_.fn)({ name: i, selector: medias[i] });
+            handler.is[i] = _.leftCurry(isInTheMedia)({ name: i, selector: medias[i] });
+            //handler.if.is[i] = _.leftCurry(ifIsInMedia)({ name: i, selector: medias[i] });
+            //handler.if.is.not[i] = _.leftCurry(ifIsOutOfMedia)({ name: i, selector: medias[i] });
         }
     };
+    var callOnChangeFn = function (currentMedias, fn) {
+        if (fn)
+            fn(currentMedias);
+        else
+            for (var i = 0, fn; fn = callOnChangeFnFns[i]; i++) fn(currentMedias);
+    };
+    //var medaChange = _.callConstantly(callOnChangeFn, 1);
+    handler.onChange = function (fn) {
+        callOnChangeFnFns.push(fn);
+        var currentMedias = [];
+        for (var i in matchMedias) {
+            if (matchMedias[i].matches) currentMedias.push({ name: i, selector: medias[i] });
+        }
+        callOnChangeFn(currentMedias, fn);
+    }
+    handler.getMatchesMedia = function () {
+        var res = [];
+        for (var i in matchMedias) {
+            if (matchMedias[i].matches) res.push({ name: i, selector: matchMedias[i].media });
+        }
+        return res;
+    }
     return handler;
-}(_));
-
-//mediaHandler.init({
-//    mobile: 'screen and (min-width: 300px) and (max-width: 600px)',
-//    tablet: 'screen and (min-width: 600px) and (max-width: 900px)',
-//    wide: 'screen and (min-width: 900px) and (max-width: 1200px)',
-//    large: 'screen and (min-width: 900px)'
-//})
-
-//mediaHandler.in.mobile(function () { console.log("in mobile : " + app.values.medias.mobile) });
-//mediaHandler.in.tablet(function () { console.log("in tablet : " + app.values.medias.tablet) });
-//mediaHandler.in.wide(function () { console.log("in wide : " + app.values.medias.wide) });
-//mediaHandler.in.large(function () { console.log("in large : " + app.values.medias.large) });
-//mediaHandler.out.mobile(function () { console.log("out mobile : " + app.values.medias.mobile) });
-//mediaHandler.out.tablet(function () { console.log("out tablet : " + app.values.medias.tablet) });
-//mediaHandler.out.wide(function () { console.log("out wide : " + app.values.medias.wide) });
-//mediaHandler.out.large(function () { console.log("out large : " + app.values.medias.large) });
+} (this));
 this.memoize = function (fn) {
     fn.cache || (fn.cache = {});
     return function () {
@@ -2107,7 +2144,7 @@ this.publisher = (function (that, undefined) {
     o.subscribe = function (fn, types) {
         types = types || 'any';
         var typesList = _.spliteAndTrim(types);
-        
+
         for (var i = 0, type; type = typesList[i]; i++) {
             if (_.is.not.defined(this.subscribers[type]))
                 this.subscribers[type] = [];
@@ -2123,14 +2160,14 @@ this.publisher = (function (that, undefined) {
         this.visitSubscribers('publish', publication, type);
     };
     o.visitSubscribers = function (action, arg, type) {
-        if (!subscribers) {
+        if (!this.subscribers[type]) {
             console.log(type + " topic dont have subscriber!");
             return;
         }
 
         var pubType = type || 'any',
-            subscribers = this.subscribers[pubType],
-            max = subscribers.length;
+            subscribers = this.subscribers[pubType];
+        // var max = subscribers.length;
         for (var i = 0, sub; sub = subscribers[i]; i++) {
             if (action === 'publish') {
                 sub(arg);
@@ -2351,7 +2388,7 @@ this.scroll = (function () {
         setTimeout(function () {
             var y = window.pageYOffset + perTick;
             
-            window.scrollTo(0, y)
+            window.scrollTo(0, y);
             if (node.scrollTop === to) return;
             _.scroll.to(node, to, duration - 10);
         }, 10);

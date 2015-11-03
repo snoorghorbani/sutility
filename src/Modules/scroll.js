@@ -9,7 +9,7 @@
         setTimeout(function () {
             var y = window.pageYOffset + perTick;
             
-            window.scrollTo(0, y)
+            window.scrollTo(0, y);
             if (node.scrollTop === to) return;
             _.scroll.to(node, to, duration - 10);
         }, 10);

@@ -2,44 +2,81 @@
     var handler = {
         "in": {},
         "out": {},
-        "only": {}
+        "only": {},
+        "is": {},
+        "if": {
+            "is": {
+                "not": {}
+            }
+        }
     };
+    var mediasState = {};
     var medias = {};
-    var subscibeOnMediaIn = function (media, fn) {
-        var mq = window.matchMedia(media);
+    var matchMedias = {};
+    var callOnChangeFnFns = [];
+    var subscibeOnMediaIn = function (media, fn, falseFn) {
+        var mq = window.matchMedia(media.selector);
         mq.addListener(function () {
-            if (mq.matches) fn();
-        });;
+            (mq.matches ? fn : falseFn || _.fn())();
+        });
+        (mq.matches ? fn : falseFn || _.fn())();
     }
     var subscibeOnMediaOut = function (media, fn) {
         var mq = window.matchMedia(media);
         mq.addListener(function () {
-            if (!mq.matches) fn();
+            !mq.matches && fn();
         });;
+    }
+    var isInTheMedia = function (media, fn) {
+        return (fn && mediasState[media.name]) ? fn() : matchMedias[media.name].matches;
+    };
+    // var isOutOfMedia = function (media, fn) {
+    //     return (fn && !mediasState[media.name]) ? fn() : !matchMedias[media.name].matches;
+    // };
+    var subscribeChangeEvent = function (media) {
+        var mq = window.matchMedia(media.selector);
+        matchMedias[media.name] = mq;
+        mq.addListener(function () {
+            if (mq.matches) {
+                callOnChangeFn([media]);
+            } else {
+            };
+        });
     }
     handler.init = function (config) {
         medias = config;
         for (var i in medias) {
-            handler.in[i] = _.leftCurry(subscibeOnMediaIn)(medias[i]);
-            handler.out[i] = _.leftCurry(subscibeOnMediaOut)(medias[i]);
-            handler.only[i] = _.leftCurry(_.fn)(medias[i]);
+            subscribeChangeEvent({ name: i, selector: medias[i] });
+
+            handler.in[i] = _.leftCurry(subscibeOnMediaIn)({ name: i, selector: medias[i] });
+            handler.out[i] = _.leftCurry(subscibeOnMediaOut)({ name: i, selector: medias[i] });
+            handler.only[i] = _.leftCurry(_.fn)({ name: i, selector: medias[i] });
+            handler.is[i] = _.leftCurry(isInTheMedia)({ name: i, selector: medias[i] });
+            //handler.if.is[i] = _.leftCurry(ifIsInMedia)({ name: i, selector: medias[i] });
+            //handler.if.is.not[i] = _.leftCurry(ifIsOutOfMedia)({ name: i, selector: medias[i] });
         }
     };
+    var callOnChangeFn = function (currentMedias, fn) {
+        if (fn)
+            fn(currentMedias);
+        else
+            for (var i = 0, fn; fn = callOnChangeFnFns[i]; i++) fn(currentMedias);
+    };
+    //var medaChange = _.callConstantly(callOnChangeFn, 1);
+    handler.onChange = function (fn) {
+        callOnChangeFnFns.push(fn);
+        var currentMedias = [];
+        for (var i in matchMedias) {
+            if (matchMedias[i].matches) currentMedias.push({ name: i, selector: medias[i] });
+        }
+        callOnChangeFn(currentMedias, fn);
+    }
+    handler.getMatchesMedia = function () {
+        var res = [];
+        for (var i in matchMedias) {
+            if (matchMedias[i].matches) res.push({ name: i, selector: matchMedias[i].media });
+        }
+        return res;
+    }
     return handler;
-}(_));
-
-//mediaHandler.init({
-//    mobile: 'screen and (min-width: 300px) and (max-width: 600px)',
-//    tablet: 'screen and (min-width: 600px) and (max-width: 900px)',
-//    wide: 'screen and (min-width: 900px) and (max-width: 1200px)',
-//    large: 'screen and (min-width: 900px)'
-//})
-
-//mediaHandler.in.mobile(function () { console.log("in mobile : " + app.values.medias.mobile) });
-//mediaHandler.in.tablet(function () { console.log("in tablet : " + app.values.medias.tablet) });
-//mediaHandler.in.wide(function () { console.log("in wide : " + app.values.medias.wide) });
-//mediaHandler.in.large(function () { console.log("in large : " + app.values.medias.large) });
-//mediaHandler.out.mobile(function () { console.log("out mobile : " + app.values.medias.mobile) });
-//mediaHandler.out.tablet(function () { console.log("out tablet : " + app.values.medias.tablet) });
-//mediaHandler.out.wide(function () { console.log("out wide : " + app.values.medias.wide) });
-//mediaHandler.out.large(function () { console.log("out large : " + app.values.medias.large) });
+} (this));

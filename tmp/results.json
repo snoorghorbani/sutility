@@ -1,6 +1,6 @@
 {
-	"numResults": 267,
-	"creationDate": "2015-11-03 19:57:42",
+	"numResults": 273,
+	"creationDate": "2015-11-03 20:24:08",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -201,7 +201,7 @@
 			},
 			{
 				"line": 26,
-				"match": "_.strStartsWith"
+				"match": "_.is"
 			},
 			{
 				"line": 27,
@@ -812,20 +812,44 @@
 		],
 		"src/modules/mediaHandler.js": [
 			{
-				"line": 23,
-				"match": "_.leftCurry"
-			},
-			{
-				"line": 24,
-				"match": "_.leftCurry"
-			},
-			{
-				"line": 25,
-				"match": "_.leftCurry"
-			},
-			{
-				"line": 25,
+				"line": 20,
 				"match": "_.fn"
+			},
+			{
+				"line": 22,
+				"match": "_.fn"
+			},
+			{
+				"line": 51,
+				"match": "_.leftCurry"
+			},
+			{
+				"line": 52,
+				"match": "_.leftCurry"
+			},
+			{
+				"line": 53,
+				"match": "_.leftCurry"
+			},
+			{
+				"line": 53,
+				"match": "_.fn"
+			},
+			{
+				"line": 54,
+				"match": "_.leftCurry"
+			},
+			{
+				"line": 55,
+				"match": "_.leftCurry"
+			},
+			{
+				"line": 56,
+				"match": "_.leftCurry"
+			},
+			{
+				"line": 65,
+				"match": "_.callConstantly"
 			}
 		],
 		"src/modules/merge.js": [
