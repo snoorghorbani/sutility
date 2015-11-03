@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.82 - 2015-11-03
+ * sutility v0.0.82 - 2015-11-04
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -162,7 +162,7 @@
                     keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
                     var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.prefix, "");
                     catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
-                        _.is.strStartsWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
+                        _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
                     }), Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {}), Fn.prototype.add[name] = function(a, b) {
                         var valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");

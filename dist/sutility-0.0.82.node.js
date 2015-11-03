@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.82 - 2015-11-03
+ * sutility v0.0.82 - 2015-11-04
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -317,7 +317,7 @@ this.canvas = (function (_) {
                     catchAlls = catchAlls.split('/');
                     _.each(catchAlls, function (ca) {
                         //if (ca.startsWith(name + '-')) {
-                        if (_.is.strStartsWith(ca, name + '-')) {
+                        if (_.is.startWith(ca, name + '-')) {
                             values[name] = _.assignIfNotDefined(values[name], []);
                             if (ca.length > name.length + 1) {
                                 values[name].push(ca);

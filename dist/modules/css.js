@@ -1,3 +1,3 @@
-/*! sutility - v0.0.82 - 2015-11-03 */
+/*! sutility - v0.0.82 - 2015-11-04 */
 this.css=function(a){var b=function(b,c){for(var d,e=this.select(b),f=0;d=e[f];f++)for(var g in c)d.style[a.camelCase(g)]=c[g]};return b.computedValue=function(b,c,d){if(window.getComputedStyle){var e=a.selectFirst(b),f=window.getComputedStyle(e,null).getPropertyValue(c);return d&&(f=a.regex.matchFirst(f)),f}a.fail('add shim for "window.getComputedStyle" in _.css.computedValue')},b}(this);
 //# sourceMappingURL=css.js.map
