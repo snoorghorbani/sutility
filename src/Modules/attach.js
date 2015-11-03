@@ -1,4 +1,4 @@
-﻿this.dispatcher = (function (_) {
+﻿this.attach = (function (_) {
     var eventList = {};
 
     var fn = function (domOrSelector, state, fn) {
@@ -6,19 +6,17 @@
             eventList[state] = [];
             listener(state);
         };
-        var tempHandler = {
+        var temp = {
             fn: fn,
             domOrSelector: domOrSelector
         }
-        var isSet = false;
-        for (var i = 0, temp; temp = eventList[state][i]; i++) {
-            if (_.is.equal(tempHandler, temp)) {
-                isSet = true;
-            }
-        }
-        if (!isSet || true) {
-            eventList[state].push(tempHandler);
-        }
+        for (var i = 0, item; item = eventList[state][i]; i++)
+            if (_.is.equal(temp, item))
+                return i;
+                
+        eventList[state].push(temp);
+
+        return eventList[state].length - 1;
     }
 
     var listener = function (state) {
@@ -49,7 +47,6 @@
             }
         });
     };
-
 
     return fn;
 })(this);
