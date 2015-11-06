@@ -1,3 +1,3 @@
-/*! sutility - v0.0.82 - 2015-11-04 */
+/*! sutility - v0.0.82 - 2015-11-06 */
 this.dashCase=function(a){return a.replace(/([A-Z])|([\W|\_])/g,function(a){return/[\w]/.test(a)?"_"===a?"-":"-"+a.toLowerCase():"-"})};
 //# sourceMappingURL=dashCase.js.map

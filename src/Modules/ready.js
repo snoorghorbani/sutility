@@ -1,11 +1,8 @@
-﻿this.ready = (function () {
-    var repos = [];
+﻿this.ready = (function (_) {
     return function (fn) {
-        repos.push(fn);
-        if (document.readyState == "interactive" || document.readyState == "complete") {
+        if (document.readyState == "interactive" || document.readyState == "complete")
             fn();
-            return;
-        }
-        document.addEventListener('DOMContentLoaded', fn, true);
+        else
+			document.addEventListener('DOMContentLoaded', fn, true);
     };
-})();
+})(this);

@@ -1,3 +1,3 @@
-/*! sutility - v0.0.82 - 2015-11-04 */
-this.ready=function(){var a=[];return function(b){return a.push(b),"interactive"==document.readyState||"complete"==document.readyState?void b():void document.addEventListener("DOMContentLoaded",b,!0)}}();
+/*! sutility - v0.0.82 - 2015-11-06 */
+this.ready=function(a){return function(a){"interactive"==document.readyState||"complete"==document.readyState?a():document.addEventListener("DOMContentLoaded",a,!0)}}(this);
 //# sourceMappingURL=ready.js.map

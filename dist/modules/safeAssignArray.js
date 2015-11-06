@@ -1,3 +1,3 @@
-/*! sutility - v0.0.82 - 2015-11-04 */
+/*! sutility - v0.0.82 - 2015-11-06 */
 this.safeAssignArray=function(a,b){this.replaceInArray(a,0,b)};
 //# sourceMappingURL=safeAssignArray.js.map

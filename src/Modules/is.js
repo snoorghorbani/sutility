@@ -136,15 +136,15 @@ this.if = (function (_) {
     _if.is.not = {};
     for (var i in _.is) (function (i) {
         if (i != 'not') {
-            _if.is[i] = function (obj, fn) {
-                if (_.is[i](obj)) {
+            _if.is[i] = function (obj, fn,elseFn) {
+                if (_.is[i](obj))
                     return fn();
-                }
+                else return elseFn && elseFn();
             };
-            _if.is.not[i] = function (obj, fn) {
-                if (_.is.not[i](obj)) {
+            _if.is.not[i] = function (obj, fn,falseFn) {
+                if (_.is.not[i](obj))
                     return fn();
-                }
+                else return falseFn && falseFn();
             };
         }
     })(i);

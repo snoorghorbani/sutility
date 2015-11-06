@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.82 - 2015-11-04
+ * sutility v0.0.82 - 2015-11-06
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -44,21 +44,6 @@ this.activate = function (selector, classname, callback) {
     //    _.each(nodes, function (node) {
     //    });
     //});
-};
-
-this.activated = function (parentOrSelector, selector, classname, callback) {
-    classname = classname || 'active';
-    var parents = _.select(parentOrSelector);
-    _.each(parents, function (parent) {
-        var nodes = _.select(selector, parent);
-        _.each(nodes, function (node) {
-            _.event(node, 'click', function (e) {
-                _.className.remove(nodes, classname);
-                _.className.add(node, classname);
-                callback && callback(this,e);
-            });
-        });
-    });
 };
 
 this.ajax = function (options, callback) {
@@ -433,97 +418,118 @@ this.canvas = (function (_) {
     return Fn;
 })(this)
 
-            this.catchall = (function (_) {
-                var instatiate = null;
-                var keys = {};
-                var values = {};
-                var defaultCatchAllConfig = {
-                    prefix: '/defaultPrefix',
-                    partialPrefix: '/defaultPrefix/defaultFilterresult',
-                    replace: ['/filter/', '/filter/filterresult/'],
-                };
-                var defaultKeyConfig = {
-                    multi: false,
-                    'default': null
-                };
-                var Fn = function (config) {
-                    this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
-                    return this;
-                };
+this.catchall = (function (_) {
+    var instatiate = null;
+    var keys = {};
+    var values = {};
+    var defaultCatchAllConfig = {
+        urlPrefix: '/filter',
+        routePrefix: '/filter/filterresult'
+    };
+    var defaultKeyConfig = {
+        multi: false,
+        'default': null
+    };
+    var Fn = function (config) {
+        this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
+        return this;
+    };
 
-                Fn.prototype.key = function (name, config) {
-                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-                    var pathName = decodeURIComponent(window.location.pathname);
-                    var catchAlls = pathName.replace(this.config.prefix, '');
-                    catchAlls = catchAlls.split('/');
-                    _.each(catchAlls, function (ca) {
-                        //if (ca.startsWith(name + '-')) {
-                        if (_.is.startWith(ca, name + '-')) {
-                            values[name] = _.assignIfNotDefined(values[name], []);
-                            if (ca.length > name.length + 1) {
-                                values[name].push(ca);
-                            }
-                        }
-                    });
+    Fn.prototype.key = function (name, config) {
+        keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+        keys[name].default = (config.default)
+                    ? (_.is.array(config.default) ? config.default : [config.default])
+                    : [];
 
-                    Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
-                    Fn.prototype.add[name] = function (a, b) {
-                        var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+        values[name] = values[name] || [];
+        _.each(keys[name].default, function (defaultValue) {
+            var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
+            var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
 
-                        if (keys[name].multi) {
-                            values[name] = values[name] || [];
-                            values[name].push(valueStr);
-                        } else {
-                            values[name] = [valueStr];
-                        }
-                    };
+            if (keys[name].multi) {
+                values[name].push(valueStr);
+            } else {
+                values[name] = [valueStr];
+            }
+        });
 
-                    Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
-                    Fn.prototype.remove[name] = function (a, b) {
-                        var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-                        values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
-                    };
-                    Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
-                    Fn.prototype.reset[name] = function () {
-                        var defaultValue = keys[name].default;
-                        var initByType = '';
-                        initByType = _.if.is.equal(keys[name].multi, 'multi', function () { return []; });
-                        values[name] = (defaultValue) ? defaultValue : initByType;
-                    };
-                    Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {});
-                    Fn.prototype.get[name] = function () {
-                        return values[name];
-                    };
-                };
-                Fn.prototype.partial = function () {
-                    var url = window.location.origin + this.config.partialPrefix;
-                    _.each(values, function (value, key) {
-                        _.each(value, function (str) {
-                            var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
-                            if (fine) {
-                                url += '/' + str;
-                            }
-                        });
-                    });
-                    return decodeURIComponent(url.toLowerCase());
-                };
-                Fn.prototype.build = function (f) {
-                    var url = window.location.origin + this.config.prefix;
-                    _.each(values, function (value, key) {
-                        _.each(value, function (str) {
-                            var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
-                            if (fine) {
-                                url += '/' + str;
-                            }
-                        });
-                    });
-                    return decodeURIComponent(url.toLowerCase());
-                };
+        var pathName = decodeURIComponent(window.location.pathname);
+        var catchAlls = pathName.replace(this.config.urlPrefix, '');
+        catchAlls = catchAlls.split('/');
+        _.each(catchAlls, function (ca) {
+            //if (ca.startsWith(name + '-')) {
+            if (_.is.startWith(ca, name + '-')) {
+                values[name] = _.assignIfNotDefined(values[name], []);
+                if (ca.length > name.length + 1) {
+                    values[name].push(ca);
+                }
+            }
+        });
 
-                return function (config) {
-                    return (instatiate) ? instatiate : instatiate = new Fn(config);
-                };
-            })(this);
+        Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
+        Fn.prototype.add[name] = function (a, b) {
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+
+            if (keys[name].multi) {
+                values[name] = values[name] || [];
+                values[name].push(valueStr);
+            } else {
+                values[name] = [valueStr];
+            }
+        };
+
+        Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
+        Fn.prototype.remove[name] = function (a, b) {
+            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+            values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
+        };
+
+        Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
+        Fn.prototype.reset[name] = function () {
+            values[name] = [];
+            _.each(keys[name].default, function (defaultValue) {
+                var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
+                var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
+                var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+
+                if (keys[name].multi) {
+                    values[name].push(valueStr);
+                } else {
+                    values[name] = [valueStr];
+                }
+            });
+        };
+    };
+    Fn.prototype.getRoute = function () {
+        var url = window.location.origin || "fortest" + this.config.routePrefix;
+        _.each(values, function (value, key) {
+            _.each(value, function (str) {
+                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+                if (fine) {
+                    url += '/' + str;
+                }
+            });
+        });
+        return decodeURIComponent(url.toLowerCase());
+    };
+    Fn.prototype.getUrl = function (f) {
+        var url = window.location.origin || "fortest" + this.config.urlPrefix;
+        _.each(values, function (value, key) {
+            _.each(value, function (str) {
+                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+                if (fine) {
+                    url += '/' + str;
+                }
+            });
+        });
+        return decodeURIComponent(url.toLowerCase());
+    };
+
+    return function (config) {
+        return (instatiate) ? instatiate : instatiate = new Fn(config);
+    };
+})(this);
 this.categorize = function (obj, key) {
     var res = {};
     _.each(obj, function (item) {
@@ -1638,15 +1644,15 @@ this.if = (function (_) {
     _if.is.not = {};
     for (var i in _.is) (function (i) {
         if (i != 'not') {
-            _if.is[i] = function (obj, fn) {
-                if (_.is[i](obj)) {
+            _if.is[i] = function (obj, fn,elseFn) {
+                if (_.is[i](obj))
                     return fn();
-                }
+                else return elseFn && elseFn();
             };
-            _if.is.not[i] = function (obj, fn) {
-                if (_.is.not[i](obj)) {
+            _if.is.not[i] = function (obj, fn,falseFn) {
+                if (_.is.not[i](obj))
                     return fn();
-                }
+                else return falseFn && falseFn();
             };
         }
     })(i);
@@ -1997,10 +2003,6 @@ this.Observable = (function (that, undefined) {
     return Observable;
 })(this);
 
-this.on = function (dom, state, fn) {
-
-};
-
 //#region todo move to on() module 
 var scrollTopSubs = {};
 var scrollDownSubs = {};
@@ -2125,12 +2127,11 @@ this.prototype = (function (_, undefined) {
     prototype.extend = function (constructor_obj, prototypeObj) {
         var constructor = _.if.is.not.function(constructor_obj, function () {
             return _.get.constructor(constructor_obj);
-        });
-        for (var i in prototypeObj) {
-            if (prototypeObj.hasOwnProperty(i)) {
-                constructor_obj.prototype[i] = prototypeObj[i];
-            }
-        }
+        }, function () { return constructor_obj });
+        for (var i in prototypeObj) 
+            if (prototypeObj.hasOwnProperty(i)) 
+                constructor.prototype[i] = prototypeObj[i];
+			return prototype;
     };
     
     return prototype;
@@ -2227,18 +2228,14 @@ this.random = function (min, max) {
     return ((max - min) * Math.random()) + min;
 };
 
-this.ready = (function () {
-    var repos = [];
+this.ready = (function (_) {
     return function (fn) {
-        repos.push(fn);
-        if (document.readyState == "interactive" || document.readyState == "complete") {
+        if (document.readyState == "interactive" || document.readyState == "complete")
             fn();
-            return;
-        }
-        document.addEventListener('DOMContentLoaded', fn, true);
+        else
+			document.addEventListener('DOMContentLoaded', fn, true);
     };
-})();
-
+})(this);
 this.recursive = function () { };
 
 this.regex = (function (_) {

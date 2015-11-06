@@ -22,7 +22,7 @@ describe('catchall', function () {
                 partialPrefix: '/f/r'
             });
             
-            //assert.equal(catchall.getUrl(), "http://localhost:9876");
+            //assert.equal(catchall.build(), "http://localhost:9876");
             
             catchall.key("k1", { multi: false, "default": 111 });
             catchall.key("k2", { multi: true, "default": 222 });
@@ -31,7 +31,8 @@ describe('catchall', function () {
             catchall.add.k2(2);
             catchall.add.k2(22);
             catchall.reset.k2();
-            assert.equal(catchall.getUrl(), "http://localhost:9876/k1-111/k2-222");
+            console.log(catchall.getUrl());
+			assert.equal(catchall.getUrl(), "http://localhost:9876/k1-111/k2-222");
 
             catchall.add.k1(1);
             catchall.add.k1(11);

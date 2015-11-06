@@ -1,3 +1,3 @@
-/*! sutility - v0.0.82 - 2015-11-04 */
-this.prototype=function(a,b){var c=function(){};return c.extend=function(b,c){a["if"].is.not["function"](b,function(){return a.get.constructor(b)});for(var d in c)c.hasOwnProperty(d)&&(b.prototype[d]=c[d])},c}(this);
+/*! sutility - v0.0.82 - 2015-11-06 */
+this.prototype=function(a,b){var c=function(){};return c.extend=function(b,d){var e=a["if"].is.not["function"](b,function(){return a.get.constructor(b)},function(){return b});for(var f in d)d.hasOwnProperty(f)&&(e.prototype[f]=d[f]);return c},c}(this);
 //# sourceMappingURL=prototype.js.map

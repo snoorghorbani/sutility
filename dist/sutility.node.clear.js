@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.82 - 2015-11-04
+ * sutility v0.0.82 - 2015-11-06
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -149,9 +149,8 @@
                 }, Fn;
             }(this), this.catchall = function(_) {
                 var instatiate = null, keys = {}, values = {}, defaultCatchAllConfig = {
-                    prefix: "/defaultPrefix",
-                    partialPrefix: "/defaultPrefix/defaultFilterresult",
-                    replace: [ "/filter/", "/filter/filterresult/" ]
+                    urlPrefix: "/filter",
+                    routePrefix: "/filter/filterresult"
                 }, defaultKeyConfig = {
                     multi: !1,
                     "default": null
@@ -159,8 +158,12 @@
                     return this.config = _.update(_.cloneObj(defaultCatchAllConfig), config), this;
                 };
                 return Fn.prototype.key = function(name, config) {
-                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.prefix, "");
+                    keys[name] = _.update(_.cloneObj(defaultKeyConfig), config), keys[name]["default"] = config["default"] ? _.is.array(config["default"]) ? config["default"] : [ config["default"] ] : [], 
+                    values[name] = values[name] || [], _.each(keys[name]["default"], function(defaultValue) {
+                        var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
+                        keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
+                    });
+                    var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.urlPrefix, "");
                     catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
                         _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
@@ -173,15 +176,13 @@
                             return a.toLowerCase() !== valueStr.toLowerCase();
                         });
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
-                        var defaultValue = keys[name]["default"], initByType = "";
-                        initByType = _["if"].is.equal(keys[name].multi, "multi", function() {
-                            return [];
-                        }), values[name] = defaultValue ? defaultValue : initByType;
-                    }, Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {}), Fn.prototype.get[name] = function() {
-                        return values[name];
+                        values[name] = [], _.each(keys[name]["default"], function(defaultValue) {
+                            var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
+                            keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
+                        });
                     };
-                }, Fn.prototype.partial = function() {
-                    var url = window.location.origin + this.config.partialPrefix;
+                }, Fn.prototype.getRoute = function() {
+                    var url = window.location.origin || "fortest" + this.config.routePrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -190,8 +191,8 @@
                             fine && (url += "/" + str);
                         });
                     }), decodeURIComponent(url.toLowerCase());
-                }, Fn.prototype.build = function(f) {
-                    var url = window.location.origin + this.config.prefix;
+                }, Fn.prototype.getUrl = function(f) {
+                    var url = window.location.origin || "fortest" + this.config.urlPrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -530,10 +531,10 @@
                 var _if = {};
                 _if.is = {}, _if.is.not = {};
                 for (var i in _.is) (function(i) {
-                    "not" != i && (_if.is[i] = function(obj, fn) {
-                        return _.is[i](obj) ? fn() : void 0;
-                    }, _if.is.not[i] = function(obj, fn) {
-                        return _.is.not[i](obj) ? fn() : void 0;
+                    "not" != i && (_if.is[i] = function(obj, fn, elseFn) {
+                        return _.is[i](obj) ? fn() : elseFn && elseFn();
+                    }, _if.is.not[i] = function(obj, fn, falseFn) {
+                        return _.is.not[i](obj) ? fn() : falseFn && falseFn();
                     });
                 })(i);
                 return _if;
@@ -712,7 +713,7 @@
                 }, Observable.prototype.notify = function() {
                     for (var args = Array.prototype.slice.call(arguments, 0), i = 0, len = this.subsciber.length; len > i; i++) this.subsciber[i].update.apply(null, args);
                 }, Observable.set = function(val) {}, Observable;
-            }(this), this.on = function(dom, state, fn) {};
+            }(this);
             var scrollTopSubs = {}, scrollDownSubs = {};
             this.onScrollDown = function(Y, fn) {
                 scrollDownSubs[Y] = scrollDownSubs[Y] || [], scrollDownSubs[Y].push(fn);
@@ -772,10 +773,13 @@
             }, this.prototype = function(_, undefined) {
                 var prototype = function() {};
                 return prototype.extend = function(constructor_obj, prototypeObj) {
-                    _["if"].is.not["function"](constructor_obj, function() {
+                    var constructor = _["if"].is.not["function"](constructor_obj, function() {
                         return _.get.constructor(constructor_obj);
+                    }, function() {
+                        return constructor_obj;
                     });
-                    for (var i in prototypeObj) prototypeObj.hasOwnProperty(i) && (constructor_obj.prototype[i] = prototypeObj[i]);
+                    for (var i in prototypeObj) prototypeObj.hasOwnProperty(i) && (constructor.prototype[i] = prototypeObj[i]);
+                    return prototype;
                 }, prototype;
             }(this), this.publisher = function(that, undefined) {
                 var o = {};

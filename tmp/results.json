@@ -1,6 +1,6 @@
 {
-	"numResults": 273,
-	"creationDate": "2015-11-03 20:49:10",
+	"numResults": 271,
+	"creationDate": "2015-11-06 12:15:35",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -36,36 +36,6 @@
 			{
 				"line": 11,
 				"match": "_.each"
-			}
-		],
-		"src/modules/activated.js": [
-			{
-				"line": 3,
-				"match": "_.select"
-			},
-			{
-				"line": 4,
-				"match": "_.each"
-			},
-			{
-				"line": 5,
-				"match": "_.select"
-			},
-			{
-				"line": 6,
-				"match": "_.each"
-			},
-			{
-				"line": 7,
-				"match": "_.event"
-			},
-			{
-				"line": 8,
-				"match": "_.className"
-			},
-			{
-				"line": 9,
-				"match": "_.className"
 			}
 		],
 		"src/modules/ajax.js": [
@@ -180,23 +150,27 @@
 		],
 		"src/modules/catchall.js": [
 			{
-				"line": 15,
+				"line": 14,
 				"match": "_.update"
 			},
 			{
-				"line": 15,
+				"line": 14,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 20,
+				"line": 19,
 				"match": "_.update"
 			},
 			{
-				"line": 20,
+				"line": 19,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 24,
+				"line": 21,
+				"match": "_.is"
+			},
+			{
+				"line": 25,
 				"match": "_.each"
 			},
 			{
@@ -205,62 +179,78 @@
 			},
 			{
 				"line": 27,
+				"match": "_.is"
+			},
+			{
+				"line": 40,
+				"match": "_.each"
+			},
+			{
+				"line": 42,
+				"match": "_.is"
+			},
+			{
+				"line": 43,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 34,
+				"line": 50,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 46,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 49,
-				"match": "_.filter"
-			},
-			{
-				"line": 51,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 55,
-				"match": "_.if"
-			},
-			{
-				"line": 58,
+				"line": 62,
 				"match": "_.assignIfNotDefined"
 			},
 			{
 				"line": 65,
+				"match": "_.filter"
+			},
+			{
+				"line": 68,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 71,
 				"match": "_.each"
 			},
 			{
-				"line": 66,
-				"match": "_.each"
-			},
-			{
-				"line": 67,
-				"match": "_.fine"
-			},
-			{
-				"line": 67,
+				"line": 72,
 				"match": "_.is"
 			},
 			{
-				"line": 77,
+				"line": 73,
+				"match": "_.is"
+			},
+			{
+				"line": 86,
 				"match": "_.each"
 			},
 			{
-				"line": 78,
+				"line": 87,
 				"match": "_.each"
 			},
 			{
-				"line": 79,
+				"line": 88,
 				"match": "_.fine"
 			},
 			{
-				"line": 79,
+				"line": 88,
+				"match": "_.is"
+			},
+			{
+				"line": 98,
+				"match": "_.each"
+			},
+			{
+				"line": 99,
+				"match": "_.each"
+			},
+			{
+				"line": 100,
+				"match": "_.fine"
+			},
+			{
+				"line": 100,
 				"match": "_.is"
 			}
 		],

@@ -95,7 +95,9 @@ module.exports = function (grunt) {
 
     var usedInConcatTask = { files: {}, options: {} }
     // setup dynamic filenames
-    config.versionedName = [config.pkg.name, config.pkg.version].join('-');
+    //TODO
+    //config.versionedName = [config.pkg.name, config.pkg.version].join('-');
+    config.versionedName = [config.pkg.name].join('-');
     config.dist_node = ['dist/', '.node.js'].join(config.versionedName);
     config.dist_bro = ['dist/', '.browser.js'].join(config.versionedName);
     //config.dist_usedIn = ['dist/', '.usedin.js'].join(config.versionedName);
