@@ -112,7 +112,7 @@
                         return fn ? fn.apply(context || {}, arguments) : undefined;
                     };
                 };
-            }(this), this.callWhen = function(callback, nameOrFnCondition, infiniteCall, checkTime) {
+            }(this), this.callWhen = function(nameOrFnCondition, callback, infiniteCall, checkTime) {
                 var conditionType = _.is["function"](nameOrFnCondition) ? "fn" : "string", intervalId = setInterval(function() {
                     ("string" != conditionType || _.valueOf(nameOrFnCondition)) && ("fn" != conditionType || nameOrFnCondition()) && (!infiniteCall && clearInterval(intervalId), 
                     callback());
@@ -182,7 +182,7 @@
                         });
                     };
                 }, Fn.prototype.getRoute = function() {
-                    var url = window.location.origin || "fortest" + this.config.routePrefix;
+                    var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -192,7 +192,7 @@
                         });
                     }), decodeURIComponent(url.toLowerCase());
                 }, Fn.prototype.getUrl = function(f) {
-                    var url = window.location.origin || "fortest" + this.config.urlPrefix;
+                    var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.urlPrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {

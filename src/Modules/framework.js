@@ -225,13 +225,12 @@
                 _.callWhen(function () {
                     var res = true;
                     _.each(neededController.parentIds, function (parentId) {
-                        if (!controllersRepository[parentId]) {
+                        if (!controllersRepository[parentId])
                             res = false;
-                        }
                     });
                     return res;
                 }, function () {
-                    controllerInitializeQualifie(controllers[neededController.id]);
+                    return !!controllerInitializeQualifie(controllers[neededController.id]);
                 });
             });
         });

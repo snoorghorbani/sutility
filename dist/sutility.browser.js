@@ -343,7 +343,7 @@ this.callVoucher = (function (_) {
         };
     };
 })(this);
-this.callWhen = function (callback, nameOrFnCondition, infiniteCall, checkTime) {
+this.callWhen = function (nameOrFnCondition, callback, infiniteCall, checkTime) {
     var conditionType = (_.is.function(nameOrFnCondition)) ? "fn" : "string";
     var intervalId = setInterval(function () {
         if (conditionType == "string" && !_.valueOf(nameOrFnCondition)) return;
@@ -502,7 +502,7 @@ this.catchall = (function (_) {
         };
     };
     Fn.prototype.getRoute = function () {
-        var url = window.location.origin || "fortest" + this.config.routePrefix;
+        var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
@@ -514,7 +514,7 @@ this.catchall = (function (_) {
         return decodeURIComponent(url.toLowerCase());
     };
     Fn.prototype.getUrl = function (f) {
-        var url = window.location.origin || "fortest" + this.config.urlPrefix;
+        var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.urlPrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
@@ -1287,13 +1287,12 @@ this.framework = (function (_) {
                 _.callWhen(function () {
                     var res = true;
                     _.each(neededController.parentIds, function (parentId) {
-                        if (!controllersRepository[parentId]) {
+                        if (!controllersRepository[parentId])
                             res = false;
-                        }
                     });
                     return res;
                 }, function () {
-                    controllerInitializeQualifie(controllers[neededController.id]);
+                    return !!controllerInitializeQualifie(controllers[neededController.id]);
                 });
             });
         });
