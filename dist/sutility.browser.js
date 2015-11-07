@@ -1292,7 +1292,6 @@ this.framework = (function (_) {
                     });
                     return res;
                 }, function () {
-                    debugger;
                     controllerInitializeQualifie(controllers[neededController.id]);
                 });
             });

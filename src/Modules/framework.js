@@ -231,7 +231,6 @@
                     });
                     return res;
                 }, function () {
-                    debugger;
                     controllerInitializeQualifie(controllers[neededController.id]);
                 });
             });
