@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.82 - 2015-11-06
+ * sutility v0.0.82 - 2015-11-07
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -610,7 +610,6 @@ this.className = (function (_, undefined) {
         var nodes = _.select(selectorOrDom);
         //#region shim for ie
         if (_.is.ie()) {
-            debugger;
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].classList) {
                     var classNames = _.spliteAndTrim(className)

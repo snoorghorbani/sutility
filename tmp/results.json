@@ -1,6 +1,6 @@
 {
 	"numResults": 271,
-	"creationDate": "2015-11-06 12:15:35",
+	"creationDate": "2015-11-07 05:41:04",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -294,39 +294,39 @@
 				"match": "_.is"
 			},
 			{
-				"line": 52,
+				"line": 51,
 				"match": "_.spliteAndTrim"
 			},
 			{
-				"line": 65,
+				"line": 64,
 				"match": "_.spliteAndTrim"
+			},
+			{
+				"line": 74,
+				"match": "_.select"
 			},
 			{
 				"line": 75,
-				"match": "_.select"
+				"match": "_.className"
 			},
 			{
 				"line": 76,
 				"match": "_.className"
 			},
 			{
-				"line": 77,
-				"match": "_.className"
-			},
-			{
-				"line": 80,
+				"line": 79,
 				"match": "_.selectFirst"
 			},
 			{
-				"line": 84,
+				"line": 83,
 				"match": "_.select"
 			},
 			{
-				"line": 86,
+				"line": 85,
 				"match": "_.className"
 			},
 			{
-				"line": 86,
+				"line": 85,
 				"match": "_.className"
 			}
 		],

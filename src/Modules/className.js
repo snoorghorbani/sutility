@@ -46,7 +46,6 @@
         var nodes = _.select(selectorOrDom);
         //#region shim for ie
         if (_.is.ie()) {
-            debugger;
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].classList) {
                     var classNames = _.spliteAndTrim(className)
