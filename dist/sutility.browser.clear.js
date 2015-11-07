@@ -281,16 +281,6 @@
                         var reg = new RegExp(className, "g");
                         nodes[i].className = nodes[i].className.replace(reg, "").trim();
                     }
-                    var nodes = _.select(selectorOrDom);
-                    if (_.is.ie()) for (var i = 0; i < nodes.length; i++) {
-                        if (nodes[i].classList) for (var classNames = _.spliteAndTrim(className), i = 0; i < classNames.length; i++) DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
-                        var reg = new RegExp(className, "g");
-                        nodes[i].className = nodes[i].className.replace(reg, "").trim();
-                    }
-                    for (var i = 0; i < nodes.length; i++) if (nodes[i].classList) DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className)); else {
-                        var reg = new RegExp(className, "g");
-                        nodes[i].className = nodes[i].className.replace(reg, "").trim();
-                    }
                 }, className.toggle = function() {}, className.change = function(selectorOrDom, className, replaceWith) {
                     var nodes = _.select(selectorOrDom);
                     _.className.remove(nodes, className), _.className.add(nodes, replaceWith);
