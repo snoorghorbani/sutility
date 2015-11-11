@@ -588,9 +588,10 @@
                                 }), nodes = _.argToArray(controllerNode.querySelectorAll("[data-" + factoryAttrName + "]")), 
                                 _.each(nodes, function(node) {
                                     var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + node.id ? "#" + node.id : "");
-                                    isChildControllerFactory && retrun;
-                                    var id = node.getAttribute("data-" + factoryAttrName), config = controller.scope.config[id] || {};
-                                    factories[factoryName](id, node, config);
+                                    if (!isChildControllerFactory) {
+                                        var id = node.getAttribute("data-" + factoryAttrName), config = controller.scope.config[id] || {};
+                                        factories[factoryName](id, node, config);
+                                    }
                                 });
                             }
                             controller.active = !0;

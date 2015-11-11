@@ -208,7 +208,7 @@
 
                 _.each(nodes, function (node) {
                     var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id) ? "#" + node.id : "");
-                    if (isChildControllerFactory) retrun;
+                    if (isChildControllerFactory) return;
                     var id = node.getAttribute('data-' + factoryAttrName);
                     //if (factoryInstace[id]) return;
                     //factoryInstace[id] = true;
