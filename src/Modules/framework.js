@@ -207,7 +207,7 @@
                 nodes = _.argToArray(controllerNode.querySelectorAll('[data-' + factoryAttrName + ']'));
 
                 _.each(nodes, function (node) {
-                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id) ? "#" + node.id : "");
+                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id ? "#" + node.id : ""));
                     if (isChildControllerFactory) return;
                     var id = node.getAttribute('data-' + factoryAttrName);
                     //if (factoryInstace[id]) return;

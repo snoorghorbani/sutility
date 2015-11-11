@@ -587,7 +587,7 @@
                                     factories[factoryName](id, node, config);
                                 }), nodes = _.argToArray(controllerNode.querySelectorAll("[data-" + factoryAttrName + "]")), 
                                 _.each(nodes, function(node) {
-                                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + node.id ? "#" + node.id : "");
+                                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id ? "#" + node.id : ""));
                                     if (!isChildControllerFactory) {
                                         var id = node.getAttribute("data-" + factoryAttrName), config = controller.scope.config[id] || {};
                                         factories[factoryName](id, node, config);
