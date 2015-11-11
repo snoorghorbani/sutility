@@ -94,7 +94,7 @@
         return decodeURIComponent(url.toLowerCase());
     };
     Fn.prototype.getUrl = function (f) {
-        var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.urlPrefix;
+        var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });

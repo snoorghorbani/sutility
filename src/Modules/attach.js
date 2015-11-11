@@ -37,6 +37,7 @@
                 } else if (_.is.string(handler.domOrSelector)) {
                     do {
                         if (_.is(el, handler.domOrSelector)) {
+                            //TODO  : pass arguments
                             handler.fn(e, el, handler.domOrSelector);
                             done = true;
                         } else {

@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.84 - 2015-11-07
+ * sutility v0.0.84 - 2015-11-11
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -239,7 +239,7 @@
                         });
                     }), decodeURIComponent(url.toLowerCase());
                 }, Fn.prototype.getUrl = function(f) {
-                    var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.urlPrefix;
+                    var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -587,6 +587,8 @@
                                     factories[factoryName](id, node, config);
                                 }), nodes = _.argToArray(controllerNode.querySelectorAll("[data-" + factoryAttrName + "]")), 
                                 _.each(nodes, function(node) {
+                                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + node.id ? "#" + node.id : "");
+                                    isChildControllerFactory && retrun;
                                     var id = node.getAttribute("data-" + factoryAttrName), config = controller.scope.config[id] || {};
                                     factories[factoryName](id, node, config);
                                 });

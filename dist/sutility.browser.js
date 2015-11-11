@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.84 - 2015-11-07
+ * sutility v0.0.84 - 2015-11-11
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -256,6 +256,7 @@ this.attach = (function (_) {
                 } else if (_.is.string(handler.domOrSelector)) {
                     do {
                         if (_.is(el, handler.domOrSelector)) {
+                            //TODO  : pass arguments
                             handler.fn(e, el, handler.domOrSelector);
                             done = true;
                         } else {
@@ -514,7 +515,7 @@ this.catchall = (function (_) {
         return decodeURIComponent(url.toLowerCase());
     };
     Fn.prototype.getUrl = function (f) {
-        var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.urlPrefix;
+        var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
         _.each(values, function (value, key) {
             _.each(value, function (str) {
                 var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
@@ -530,6 +531,7 @@ this.catchall = (function (_) {
         return (instatiate) ? instatiate : instatiate = new Fn(config);
     };
 })(this);
+
 this.categorize = function (obj, key) {
     var res = {};
     _.each(obj, function (item) {
@@ -1267,7 +1269,10 @@ this.framework = (function (_) {
                 });
 
                 nodes = _.argToArray(controllerNode.querySelectorAll('[data-' + factoryAttrName + ']'));
+
                 _.each(nodes, function (node) {
+                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id) ? "#" + node.id : "");
+                    if (isChildControllerFactory) retrun;
                     var id = node.getAttribute('data-' + factoryAttrName);
                     //if (factoryInstace[id]) return;
                     //factoryInstace[id] = true;

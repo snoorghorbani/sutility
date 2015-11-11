@@ -1,3 +1,3 @@
-/*! sutility - v0.0.84 - 2015-11-07 */
+/*! sutility - v0.0.84 - 2015-11-11 */
 this.getXHR=function(){var a=new XMLHttpRequest;return a};
 //# sourceMappingURL=getXHR.js.map

@@ -205,7 +205,10 @@
                 });
 
                 nodes = _.argToArray(controllerNode.querySelectorAll('[data-' + factoryAttrName + ']'));
+
                 _.each(nodes, function (node) {
+                    var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id) ? "#" + node.id : "");
+                    if (isChildControllerFactory) retrun;
                     var id = node.getAttribute('data-' + factoryAttrName);
                     //if (factoryInstace[id]) return;
                     //factoryInstace[id] = true;
