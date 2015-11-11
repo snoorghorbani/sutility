@@ -227,6 +227,9 @@
                             var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
                             keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
                         });
+                    }, Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {}), Fn.prototype.get[name] = function() {
+                        var res;
+                        return res = values[name];
                     };
                 }, Fn.prototype.getRoute = function() {
                     var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;

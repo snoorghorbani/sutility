@@ -501,6 +501,17 @@ this.catchall = (function (_) {
                 }
             });
         };
+
+
+        Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {});
+        Fn.prototype.get[name] = function () {
+            var res;
+
+            res = values[name];
+
+            return res
+
+        };
     };
     Fn.prototype.getRoute = function () {
         var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;

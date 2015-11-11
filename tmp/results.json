@@ -1,6 +1,6 @@
 {
-	"numResults": 273,
-	"creationDate": "2015-11-11 10:42:35",
+	"numResults": 274,
+	"creationDate": "2015-11-11 11:57:17",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -222,20 +222,12 @@
 				"match": "_.is"
 			},
 			{
-				"line": 86,
+				"line": 85,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 97,
 				"match": "_.each"
-			},
-			{
-				"line": 87,
-				"match": "_.each"
-			},
-			{
-				"line": 88,
-				"match": "_.fine"
-			},
-			{
-				"line": 88,
-				"match": "_.is"
 			},
 			{
 				"line": 98,
@@ -243,14 +235,26 @@
 			},
 			{
 				"line": 99,
-				"match": "_.each"
-			},
-			{
-				"line": 100,
 				"match": "_.fine"
 			},
 			{
-				"line": 100,
+				"line": 99,
+				"match": "_.is"
+			},
+			{
+				"line": 109,
+				"match": "_.each"
+			},
+			{
+				"line": 110,
+				"match": "_.each"
+			},
+			{
+				"line": 111,
+				"match": "_.fine"
+			},
+			{
+				"line": 111,
 				"match": "_.is"
 			}
 		],
