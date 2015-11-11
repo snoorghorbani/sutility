@@ -638,14 +638,14 @@
                 var callOnChangeFn = function(currentMedias, fn) {
                     if (fn) fn(currentMedias); else for (var fn, i = 0; fn = callOnChangeFnFns[i]; i++) fn(currentMedias);
                 };
-                return handler.onChange = function(fn) {
-                    callOnChangeFnFns.push(fn);
+                return handler.onChange = function(fn, callOnInit) {
+                    callOnInit = _.assignIfNotDefined(callOnInit, !0), callOnChangeFnFns.push(fn);
                     var currentMedias = [];
                     for (var i in matchMedias) matchMedias[i].matches && currentMedias.push({
                         name: i,
                         selector: medias[i]
                     });
-                    callOnChangeFn(currentMedias, fn);
+                    callOnInit && callOnChangeFn(currentMedias, fn);
                 }, handler.getMatchesMedia = function() {
                     var res = [];
                     for (var i in matchMedias) matchMedias[i].matches && res.push({

@@ -1,6 +1,6 @@
 {
-	"numResults": 272,
-	"creationDate": "2015-11-11 08:36:39",
+	"numResults": 273,
+	"creationDate": "2015-11-11 10:42:35",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -844,6 +844,10 @@
 			{
 				"line": 65,
 				"match": "_.callConstantly"
+			},
+			{
+				"line": 67,
+				"match": "_.assignIfNotDefined"
 			}
 		],
 		"src/modules/merge.js": [

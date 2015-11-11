@@ -63,13 +63,14 @@
             for (var i = 0, fn; fn = callOnChangeFnFns[i]; i++) fn(currentMedias);
     };
     //var medaChange = _.callConstantly(callOnChangeFn, 1);
-    handler.onChange = function (fn) {
+    handler.onChange = function (fn, callOnInit) {
+        callOnInit = _.assignIfNotDefined(callOnInit, true);
         callOnChangeFnFns.push(fn);
         var currentMedias = [];
         for (var i in matchMedias) {
             if (matchMedias[i].matches) currentMedias.push({ name: i, selector: medias[i] });
-        }
-        callOnChangeFn(currentMedias, fn);
+        };
+        callOnInit && callOnChangeFn(currentMedias, fn);
     }
     handler.getMatchesMedia = function () {
         var res = [];
@@ -79,4 +80,4 @@
         return res;
     }
     return handler;
-} (this));
+}(this));
