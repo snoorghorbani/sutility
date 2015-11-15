@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.84 - 2015-11-11
+ * sutility v0.0.85 - 2015-11-15
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -682,7 +682,7 @@
                     props.length > 0 && (grouped[i] = that.groupByTreeMode.call(that, group, _.cloneArray(props), fn));
                 }), obj = grouped;
             }, this.groupIf = function(obj, cond, fn) {
-                fn = fn || _["return"];
+                fn = fn || _.i;
                 var res = {};
                 return _.each(obj, function(item) {
                     var flag = cond(item);

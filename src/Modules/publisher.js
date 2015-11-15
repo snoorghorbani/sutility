@@ -44,7 +44,7 @@
         obj = obj || {};
         var i;
         for (i in o) {
-            if (o.hasOwnProperty(i) && _.is.function(o[i])) {
+            if (o.hasOwnProperty(i) && _.is['function'](o[i])) {
                 obj[i] = o[i];
             }
         }

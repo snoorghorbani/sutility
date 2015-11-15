@@ -1,6 +1,6 @@
 {
-	"numResults": 274,
-	"creationDate": "2015-11-11 11:57:17",
+	"numResults": 271,
+	"creationDate": "2015-11-15 13:44:22",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -410,10 +410,6 @@
 				"match": "_.update"
 			},
 			{
-				"line": 24,
-				"match": "_.if"
-			},
-			{
 				"line": 25,
 				"match": "_.get"
 			},
@@ -696,10 +692,6 @@
 		],
 		"src/modules/groupIf.js": [
 			{
-				"line": 2,
-				"match": "_.return"
-			},
-			{
 				"line": 4,
 				"match": "_.each"
 			}
@@ -961,10 +953,6 @@
 			}
 		],
 		"src/modules/prototype.js": [
-			{
-				"line": 5,
-				"match": "_.if"
-			},
 			{
 				"line": 6,
 				"match": "_.get"

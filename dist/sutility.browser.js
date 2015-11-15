@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.84 - 2015-11-11
+ * sutility v0.0.85 - 2015-11-15
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -146,7 +146,7 @@ this.array = (function (_) {
         
         if (typeof callback === 'number') {
             n = callback;
-        } else if (that.is.function(callback)) {
+        } else if (that.is['function'](callback)) {
             var index = 0;
             while (callback(array[index++])) {
                 n++;
@@ -183,7 +183,7 @@ this.array = (function (_) {
     fn.indexOf = function (arr, idxOrIterator, context) {
         var res;
         
-        if (_.is.function(idxOrIterator)) {
+        if (_.is['function'](idxOrIterator)) {
             _.each(arr, function (item, idx) {
                 if (idxOrIterator.call(context, item))
                     res = idx;
@@ -345,7 +345,7 @@ this.callVoucher = (function (_) {
     };
 })(this);
 this.callWhen = function (nameOrFnCondition, callback, infiniteCall, checkTime) {
-    var conditionType = (_.is.function(nameOrFnCondition)) ? "fn" : "string";
+    var conditionType = (_.is['function'](nameOrFnCondition)) ? "fn" : "string";
     var intervalId = setInterval(function () {
         if (conditionType == "string" && !_.valueOf(nameOrFnCondition)) return;
         else if (conditionType == "fn" && !nameOrFnCondition()) return;
@@ -438,12 +438,12 @@ this.catchall = (function (_) {
 
     Fn.prototype.key = function (name, config) {
         keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-        keys[name].default = (config.default)
-                    ? (_.is.array(config.default) ? config.default : [config.default])
+        keys[name]['default'] = (config['default'])
+                    ? (_.is.array(config['default']) ? config['default'] : [config['default']])
                     : [];
 
         values[name] = values[name] || [];
-        _.each(keys[name].default, function (defaultValue) {
+        _.each(keys[name]['default'], function (defaultValue) {
             var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
             var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
             var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
@@ -489,7 +489,7 @@ this.catchall = (function (_) {
         Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
         Fn.prototype.reset[name] = function () {
             values[name] = [];
-            _.each(keys[name].default, function (defaultValue) {
+            _.each(keys[name]['default'], function (defaultValue) {
                 var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
                 var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
                 var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
@@ -657,7 +657,7 @@ this.className = (function (_, undefined) {
         var node = _.selectFirst(selectorOrDom);
         return node.classList.contains(className);
     };
-    className.if = function (selectorOrDom, className, fn) {
+    className['if'] = function (selectorOrDom, className, fn) {
         var nodes = _.select(selectorOrDom);
         for (var i = 0; i < nodes.length; i++)
             ((fn(nodes[i])) ? _.className.add : _.className.remove)(nodes[i], className);
@@ -853,7 +853,7 @@ this.dictionary = (function (that, undefined) {
         defaultValues = _defaultValues || {};
         _.extend(this, defaultValues);
     };
-    Fn.prototype.default = function (obj) {
+    Fn.prototype['default'] = function (obj) {
         that.extend(defaultValues, obj);
     };
     Fn.prototype.reset = function (k) {
@@ -883,7 +883,7 @@ this.each = function (obj, iterator, context, onProto) {
     //remove improve perfomancee
     //obj.forEach && obj.forEach(iterator, context);
     var key;
-    if (this.is.array(obj) || this.is.function(obj))
+    if (this.is.array(obj) || this.is['function'](obj))
         for (key in obj)
             if (obj.hasOwnProperty(key) || onProto)
                 iterator.call(context, obj[key], key);
@@ -916,7 +916,7 @@ this.enableBackup = (function (_, undefined) {
     };
     
     return function (constructor_obj) {
-        var constructor = _.if.is.not.function(constructor_obj, function () {
+        var constructor = _['if'].is.not['function'](constructor_obj, function () {
             return _.get.constructor(constructor_obj);
         });
         
@@ -956,7 +956,7 @@ this.exec = function (/*fn , context , arg*/) {
     var arg = args.shift();
     
     if (DEBUG) {
-        if (_.is.not.function(fn)) _.warn(fn + 'is not function');
+        if (_.is.not['function'](fn)) _.warn(fn + 'is not function');
     }
     
     return fn.apply(context || null, arg);
@@ -1026,11 +1026,11 @@ this.fail = function (text) {
 
 this.filter = function (arr, obj_FnCondition) {
     if (DEBUG) {
-        if (_.is.not.object(obj_FnCondition) && _.is.not.function(obj_FnCondition)) debugger;
+        if (_.is.not.object(obj_FnCondition) && _.is.not['function'](obj_FnCondition)) debugger;
     }
     
     var res = [];
-    var condFn = (_.is.function(obj_FnCondition)) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
+    var condFn = (_.is['function'](obj_FnCondition)) ? obj_FnCondition : _.rightCurry(_.is.closet)(obj_FnCondition);
     
     _.each(arr, function (item) {
         if (condFn(item))
@@ -1143,7 +1143,7 @@ this.framework = (function (_) {
                 if (parentCtrlName) {
                     controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn;
                     controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event;
-                    controller.scope.const.__proto__ = controllers[parentCtrlName].scope.const;
+                    controller.scope['const'].__proto__ = controllers[parentCtrlName].scope.const;
                     controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module;
                 }
                 instansiteController(controller, controllerNode);
@@ -1456,7 +1456,7 @@ this.groupByTreeMode = function (/*obj, props*/) {
 };
 
 this.groupIf = function (obj, cond, fn) {
-    fn = fn || _.return;
+    fn = fn || _.i;
     var res = {};
     _.each(obj, function (item) {
         var flag = cond(item);
@@ -1547,7 +1547,7 @@ this.is = (function (_, undefined) {
     is.number = function (_var) {
         return Object.prototype.toString.call(_var) === '[object Number]';
     };
-    is.function = function (_var) {
+    is['function'] = function (_var) {
         return Object.prototype.toString.call(_var) === '[object Function]';
     };
     is.string = function (_var) {
@@ -1585,7 +1585,7 @@ this.is = (function (_, undefined) {
     is.truthy = function () { };
     is.scalar = function (_var) {
         //TODO : improve
-        return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not.function(_var);
+        return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not['function'](_var);
     };
     is.prototypeProp = function (obj, prop) {
         return (obj[prop] && !obj.hasOwnProperty(prop));
@@ -1652,7 +1652,7 @@ this.is = (function (_, undefined) {
     
     return is;
 })(this);
-this.if = (function (_) {
+this['if']= (function (_) {
     var _if = {};
     _if.is = {};
     _if.is.not = {};
@@ -1854,12 +1854,12 @@ this.mediaHandler = (function (_) {
         for (var i in medias) {
             subscribeChangeEvent({ name: i, selector: medias[i] });
 
-            handler.in[i] = _.leftCurry(subscibeOnMediaIn)({ name: i, selector: medias[i] });
+            handler['in'][i] = _.leftCurry(subscibeOnMediaIn)({ name: i, selector: medias[i] });
             handler.out[i] = _.leftCurry(subscibeOnMediaOut)({ name: i, selector: medias[i] });
             handler.only[i] = _.leftCurry(_.fn)({ name: i, selector: medias[i] });
             handler.is[i] = _.leftCurry(isInTheMedia)({ name: i, selector: medias[i] });
-            //handler.if.is[i] = _.leftCurry(ifIsInMedia)({ name: i, selector: medias[i] });
-            //handler.if.is.not[i] = _.leftCurry(ifIsOutOfMedia)({ name: i, selector: medias[i] });
+            //handler['if'].is[i] = _.leftCurry(ifIsInMedia)({ name: i, selector: medias[i] });
+            //handler['if'].is.not[i] = _.leftCurry(ifIsOutOfMedia)({ name: i, selector: medias[i] });
         }
     };
     var callOnChangeFn = function (currentMedias, fn) {
@@ -2140,7 +2140,7 @@ this.prototype = (function (_, undefined) {
     var prototype = function () { };
     
     prototype.extend = function (constructor_obj, prototypeObj) {
-        var constructor = _.if.is.not.function(constructor_obj, function () {
+        var constructor = _['if'].is.not['function'](constructor_obj, function () {
             return _.get.constructor(constructor_obj);
         }, function () { return constructor_obj });
         for (var i in prototypeObj) 
@@ -2198,7 +2198,7 @@ this.publisher = (function (that, undefined) {
         obj = obj || {};
         var i;
         for (i in o) {
-            if (o.hasOwnProperty(i) && _.is.function(o[i])) {
+            if (o.hasOwnProperty(i) && _.is['function'](o[i])) {
                 obj[i] = o[i];
             }
         }
@@ -2354,7 +2354,7 @@ this.rightCurry = (function (_) {
     };
 }(this))
 this.runInFunc = function (fn) {
-    if (this.is.not.function(fn)) this.warn(fn + 'is not function');
+    if (this.is.not['function'](fn)) this.warn(fn + 'is not function');
     return function () {
         fn();
     };
@@ -2385,7 +2385,7 @@ this.scope = function () {
         this.option = new (function () { });
         this.event = new (function () { });
         this.module = new (function () { });
-        this.const = new (function () { });
+        this['const'] = new (function () { });
     };
     return new Scope();
 };
@@ -2429,7 +2429,7 @@ this.selectFirst = function (selectorOrDom, parent) {
 
 
 this.sortBy = function (obj, typeOrOperator, path) {
-    if (_.is.function(typeOrOperator))
+    if (_.is['function'](typeOrOperator))
         return obj.sort(typeOrOperator);
     else {
         if (typeOrOperator == 'string')
@@ -2462,7 +2462,7 @@ this.sortBy = function (obj, typeOrOperator, path) {
 //    _obj = this.objToArr(obj);
 //}
 
-//if (this.is.function(typeOrOperator))
+//if (this.is['function'](typeOrOperator))
 //    res = _obj.sort(typeOrOperator);
 //else {
 //    if (typeOrOperator == 'string')

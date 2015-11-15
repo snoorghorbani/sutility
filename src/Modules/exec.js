@@ -5,7 +5,7 @@
     var arg = args.shift();
     
     if (DEBUG) {
-        if (_.is.not.function(fn)) _.warn(fn + 'is not function');
+        if (_.is.not['function'](fn)) _.warn(fn + 'is not function');
     }
     
     return fn.apply(context || null, arg);

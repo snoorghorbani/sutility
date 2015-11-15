@@ -17,12 +17,12 @@
 
     Fn.prototype.key = function (name, config) {
         keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-        keys[name].default = (config.default)
-                    ? (_.is.array(config.default) ? config.default : [config.default])
+        keys[name]['default'] = (config['default'])
+                    ? (_.is.array(config['default']) ? config['default'] : [config['default']])
                     : [];
 
         values[name] = values[name] || [];
-        _.each(keys[name].default, function (defaultValue) {
+        _.each(keys[name]['default'], function (defaultValue) {
             var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
             var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
             var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
@@ -68,7 +68,7 @@
         Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
         Fn.prototype.reset[name] = function () {
             values[name] = [];
-            _.each(keys[name].default, function (defaultValue) {
+            _.each(keys[name]['default'], function (defaultValue) {
                 var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
                 var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
                 var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');

@@ -1,1 +1,1 @@
-{"version":3,"file":"runInFunc.js","sources":["../../src/modules/runInFunc.js"],"names":["this","runInFunc","fn","is","not","warn"],"mappings":";AAAAA,KAAKC,UAAY,SAAUC,GAEvB,MADIF,MAAKG,GAAGC,IAARJ,YAAqBE,IAAKF,KAAKK,KAAKH,EAAK,mBACtC,WACHA"}
+{"version":3,"file":"runInFunc.js","sources":["../../src/modules/runInFunc.js"],"names":["this","runInFunc","fn","is","not","warn"],"mappings":";AAAAA,KAAKC,UAAY,SAAUC,GAEvB,MADIF,MAAKG,GAAGC,IAAI,YAAYF,IAAKF,KAAKK,KAAKH,EAAK,mBACzC,WACHA"}

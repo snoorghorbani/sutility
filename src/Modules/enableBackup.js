@@ -21,7 +21,7 @@ this.enableBackup = (function (_, undefined) {
     };
     
     return function (constructor_obj) {
-        var constructor = _.if.is.not.function(constructor_obj, function () {
+        var constructor = _['if'].is.not['function'](constructor_obj, function () {
             return _.get.constructor(constructor_obj);
         });
         

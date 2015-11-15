@@ -1,5 +1,5 @@
 ﻿this.sortBy = function (obj, typeOrOperator, path) {
-    if (_.is.function(typeOrOperator))
+    if (_.is['function'](typeOrOperator))
         return obj.sort(typeOrOperator);
     else {
         if (typeOrOperator == 'string')
@@ -32,7 +32,7 @@
 //    _obj = this.objToArr(obj);
 //}
 
-//if (this.is.function(typeOrOperator))
+//if (this.is['function'](typeOrOperator))
 //    res = _obj.sort(typeOrOperator);
 //else {
 //    if (typeOrOperator == 'string')

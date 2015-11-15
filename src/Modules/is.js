@@ -25,7 +25,7 @@
     is.number = function (_var) {
         return Object.prototype.toString.call(_var) === '[object Number]';
     };
-    is.function = function (_var) {
+    is['function'] = function (_var) {
         return Object.prototype.toString.call(_var) === '[object Function]';
     };
     is.string = function (_var) {
@@ -63,7 +63,7 @@
     is.truthy = function () { };
     is.scalar = function (_var) {
         //TODO : improve
-        return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not.function(_var);
+        return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not['function'](_var);
     };
     is.prototypeProp = function (obj, prop) {
         return (obj[prop] && !obj.hasOwnProperty(prop));
@@ -130,7 +130,7 @@
     
     return is;
 })(this);
-this.if = (function (_) {
+this['if']= (function (_) {
     var _if = {};
     _if.is = {};
     _if.is.not = {};

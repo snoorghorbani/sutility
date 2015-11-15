@@ -48,12 +48,12 @@
         for (var i in medias) {
             subscribeChangeEvent({ name: i, selector: medias[i] });
 
-            handler.in[i] = _.leftCurry(subscibeOnMediaIn)({ name: i, selector: medias[i] });
+            handler['in'][i] = _.leftCurry(subscibeOnMediaIn)({ name: i, selector: medias[i] });
             handler.out[i] = _.leftCurry(subscibeOnMediaOut)({ name: i, selector: medias[i] });
             handler.only[i] = _.leftCurry(_.fn)({ name: i, selector: medias[i] });
             handler.is[i] = _.leftCurry(isInTheMedia)({ name: i, selector: medias[i] });
-            //handler.if.is[i] = _.leftCurry(ifIsInMedia)({ name: i, selector: medias[i] });
-            //handler.if.is.not[i] = _.leftCurry(ifIsOutOfMedia)({ name: i, selector: medias[i] });
+            //handler['if'].is[i] = _.leftCurry(ifIsInMedia)({ name: i, selector: medias[i] });
+            //handler['if'].is.not[i] = _.leftCurry(ifIsOutOfMedia)({ name: i, selector: medias[i] });
         }
     };
     var callOnChangeFn = function (currentMedias, fn) {

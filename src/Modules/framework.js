@@ -68,7 +68,7 @@
                 if (parentCtrlName) {
                     controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn;
                     controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event;
-                    controller.scope.const.__proto__ = controllers[parentCtrlName].scope.const;
+                    controller.scope['const'].__proto__ = controllers[parentCtrlName].scope.const;
                     controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module;
                 }
                 instansiteController(controller, controllerNode);

@@ -2,7 +2,7 @@
     var prototype = function () { };
     
     prototype.extend = function (constructor_obj, prototypeObj) {
-        var constructor = _.if.is.not.function(constructor_obj, function () {
+        var constructor = _['if'].is.not['function'](constructor_obj, function () {
             return _.get.constructor(constructor_obj);
         }, function () { return constructor_obj });
         for (var i in prototypeObj) 

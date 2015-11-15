@@ -4,7 +4,7 @@
         defaultValues = _defaultValues || {};
         _.extend(this, defaultValues);
     };
-    Fn.prototype.default = function (obj) {
+    Fn.prototype['default'] = function (obj) {
         that.extend(defaultValues, obj);
     };
     Fn.prototype.reset = function (k) {

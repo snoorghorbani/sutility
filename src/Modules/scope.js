@@ -7,7 +7,7 @@
         this.option = new (function () { });
         this.event = new (function () { });
         this.module = new (function () { });
-        this.const = new (function () { });
+        this['const'] = new (function () { });
     };
     return new Scope();
 };

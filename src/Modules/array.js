@@ -54,7 +54,7 @@
         
         if (typeof callback === 'number') {
             n = callback;
-        } else if (that.is.function(callback)) {
+        } else if (that.is['function'](callback)) {
             var index = 0;
             while (callback(array[index++])) {
                 n++;
@@ -91,7 +91,7 @@
     fn.indexOf = function (arr, idxOrIterator, context) {
         var res;
         
-        if (_.is.function(idxOrIterator)) {
+        if (_.is['function'](idxOrIterator)) {
             _.each(arr, function (item, idx) {
                 if (idxOrIterator.call(context, item))
                     res = idx;

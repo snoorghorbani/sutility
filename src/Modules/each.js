@@ -7,7 +7,7 @@
     //remove improve perfomancee
     //obj.forEach && obj.forEach(iterator, context);
     var key;
-    if (this.is.array(obj) || this.is.function(obj))
+    if (this.is.array(obj) || this.is['function'](obj))
         for (key in obj)
             if (obj.hasOwnProperty(key) || onProto)
                 iterator.call(context, obj[key], key);
