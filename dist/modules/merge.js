@@ -1,3 +1,3 @@
-/*! sutility - v0.0.85 - 2015-11-15 */
+/*! sutility - v0.0.86 - 2015-12-26 */
 this.merge=function(a,b){var c=_.cloneObj(a);return _.is.object(b)?_.each(b,function(a,d){c[d]=b[d]}):_.is.array(b)&&_.each(b,function(a){c.push(a)}),c};
 //# sourceMappingURL=merge.js.map

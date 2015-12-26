@@ -1,3 +1,3 @@
-/*! sutility - v0.0.85 - 2015-11-15 */
+/*! sutility - v0.0.86 - 2015-12-26 */
 this.arrToObj=function(){var a=_.argToArray(arguments),b=a.shift(),c=a.shift(),d=a.shift(),e={};return _.each(b,function(a){var b=a[c];d&&delete a[c],e[b]=a}),e};
 //# sourceMappingURL=arrToObj.js.map

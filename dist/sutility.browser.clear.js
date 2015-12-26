@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.85 - 2015-11-15
+ * sutility v0.0.86 - 2015-12-26
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -29,7 +29,9 @@
                     200 == xhttp.status && 4 == xhttp.readyState && callback(xhttp.responseText);
                 };
             }, this.argToArray = function(arg) {
-                return Array.prototype.slice.call(arg);
+                if (_.is.not.ie()) return Array.prototype.slice.call(arg);
+                for (var array = [], i = 0; i < arg.length; i++) array.push(arg[i]);
+                return array;
             }, this.arrToObj = function() {
                 var args = _.argToArray(arguments), arr = args.shift(), key = args.shift(), removeKey = args.shift(), res = {};
                 return _.each(arr, function(item) {
@@ -104,7 +106,7 @@
                 }, listener = function(state) {
                     document.body.addEventListener(state, function(e) {
                         for (var handler, done = !1, i = 0; handler = eventList[state][i]; i++) {
-                            var el = e.target;
+                            var el = e.target || e.srcElement;
                             if (done = !1, _.is.element(handler.domOrSelector)) {
                                 do _.is.same(el, handler.domOrSelector) ? (handler.fn(e, el, handler.domOrSelector), 
                                 done = !0) : el = el.parentNode; while (!done && "body" != el.tagName.toLowerCase());
@@ -390,7 +392,7 @@
             }, this.data = function(_) {}(this), this.dataset = function(_, undefined) {
                 var dataset = function() {};
                 return dataset.add = function() {}, dataset.get = function(el, name) {
-                    return el.dataset[name];
+                    return el.dataset ? el.dataset[name] : el.getAttribute("data-" + _.dashCase(name));
                 }, dataset;
             }(this), this.decorator = function() {}, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
@@ -414,8 +416,8 @@
                 if (onProto = this.assignIfNotDefined(onProto, !1), !obj) return !1;
                 this.is.nodeList(obj) && this.each(this.argToArray(obj), iterator, context);
                 var key;
-                if (this.is.array(obj) || this.is["function"](obj)) for (key in obj) (obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
-                if (this.is.object(obj)) for (key in obj) (obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
+                if (this.is.array(obj) || this.is["function"](obj)) for (key in obj) (obj.hasOwnProperty && obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
+                if (this.is.object(obj)) for (key in obj) (obj.hasOwnProperty && obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
             }, this.enableBackup = function(_, undefined) {
                 var o = {};
                 return o.__repository = {}, o.backup = function(key) {
@@ -502,7 +504,8 @@
                     fm.compile = function(selectroOrNode) {
                         var node = _.selectFirst(selectroOrNode), newControllers = _.select("[data-controller]", node);
                         _.each(newControllers, function(newController) {
-                            controllerInitializeQualifie(controllers[newController.dataset.controller]), _.each(controllers, function(controller, key) {
+                            controllerInitializeQualifie(controllers[_.dataset.get(newController, "controller")]), 
+                            _.each(controllers, function(controller, key) {
                                 var ctrlNode = _.selectFirst('[data-controller="' + key + '"]');
                                 ctrlNode || (controllers[key].active = !1);
                             });
@@ -524,9 +527,9 @@
                     var controllerInitializeQualifie = function(controller) {
                         var parentCtrl, parentCtrlName, controllerNode = _.selectFirst('[data-controller="' + controller.name + '"]'), parentNode = controllerNode;
                         if (controllerNode) {
-                            do parentNode = parentNode.parentNode, parentCtrlName = parentNode.dataset.controller, 
+                            do parentNode = parentNode.parentNode, parentCtrlName = _.dataset.get(parentNode, "controller"), 
                             parentCtrlName && (parentCtrl = controllerInitializeQualifie(controllers[parentCtrlName])); while (parentNode && "HTML" != parentNode.tagName && !parentCtrlName);
-                            parentCtrlName && (controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn, 
+                            parentCtrlName && controller.scope.fn.__proto__ && (controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn, 
                             controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event, controller.scope["const"].__proto__ = controllers[parentCtrlName].scope["const"], 
                             controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module), instansiteController(controller, controllerNode);
                         }
@@ -710,9 +713,9 @@
                     return nodes.indexOf(node) > -1 ? !0 : !1;
                 };
                 is.object = function(_var) {
-                    return "[object Object]" === Object.prototype.toString.call(_var);
+                    return _.is.not.ie() ? "[object Object]" === Object.prototype.toString.call(_var) : _var ? "[object Object]" === Object.prototype.toString.call(_var) : !1;
                 }, is.nodeList = function(obj) {
-                    return "[object NodeList]" === Object.prototype.toString.call(obj);
+                    return _.is.not.ie() ? "[object NodeList]" === Object.prototype.toString.call(obj) : obj.length !== undefined && obj.push === undefined && (obj.length > 0 ? obj[0].tagName !== undefined : !0);
                 }, is.element = function(obj) {
                     return Object.prototype.toString.call(obj).search("Element") > -1;
                 }, is.HTMLCollection = function(obj) {
@@ -730,7 +733,7 @@
                 }, is.event = function(_var) {
                     return Object.prototype.toString.call(_var).toLowerCase().search("event") > -1;
                 }, is.defined = function(_var) {
-                    return "[object Undefined]" !== Object.prototype.toString.call(_var) && "[object Null]" !== Object.prototype.toString.call(_var) && "" !== Object;
+                    return _var !== undefined && null !== _var && "" !== _var;
                 }, is.json = function() {}, is.error = function() {}, is.startWith = function(str, prefix) {
                     return 0 === str.indexOf(prefix);
                 }, is.endWith = function(str) {}, is.value = function(_var) {
@@ -754,8 +757,12 @@
                     return str.match(reg) && str.match(reg).length > 0;
                 }, is.regex = function(r) {
                     return "RegExp" === r.constructor.name;
-                }, is.ie = function() {
-                    return window.navigator.userAgent.indexOf("Trident") > 0;
+                }, is.ie = function(v) {
+                    var reg = new RegExp("(MSIE)Wd", "g"), version = window.navigator.userAgent.match(reg);
+                    if (!version) return !1;
+                    version = version[version.lenght];
+                    var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
+                    return isTrident;
                 }, is.same = function(fv, sv) {
                     return fv.isEqualNode ? fv.isEqualNode(sv) : fv === sv;
                 };
@@ -1062,16 +1069,19 @@
                 }
                 return properties;
             }, this.prototype = function(_, undefined) {
-                var prototype = function() {};
-                return prototype.extend = function(constructor_obj, prototypeObj) {
+                var fn = function() {};
+                return fn.extend = function(constructor_obj, prototypeObj) {
                     var constructor = _["if"].is.not["function"](constructor_obj, function() {
                         return _.get.constructor(constructor_obj);
                     }, function() {
                         return constructor_obj;
                     });
                     for (var i in prototypeObj) prototypeObj.hasOwnProperty(i) && (constructor.prototype[i] = prototypeObj[i]);
-                    return prototype;
-                }, prototype;
+                    return fn;
+                }, fn.getConstruntorFunction = function(prototype) {
+                    var fn = function() {};
+                    return fn.prototype = prototype, fn;
+                }, fn;
             }(this), this.publisher = function(that, undefined) {
                 var o = {};
                 return o.subscribers = {
@@ -1114,7 +1124,9 @@
                 return (max - min) * Math.random() + min;
             }, this.ready = function(_) {
                 return function(fn) {
-                    "interactive" == document.readyState || "complete" == document.readyState ? fn() : document.addEventListener("DOMContentLoaded", fn, !0);
+                    document.detachEvent ? "complete" == document.readyState ? fn() : document.attachEvent("onreadystatechange", function() {
+                        "complete" === document.readyState && (fn(), document.detachEvent("onreadystatechange", arguments.callee));
+                    }) : "interactive" == document.readyState || "complete" == document.readyState ? fn() : document.addEventListener("DOMContentLoaded", fn, !0);
                 };
             }(this), this.recursive = function() {}, this.regex = function(_) {
                 var type = {
@@ -1201,8 +1213,8 @@
             }(), this.select = function(selectorOrDom, parent) {
                 parent = parent || document;
                 var nodes = "";
-                return nodes = this.is.string(selectorOrDom) ? parent.querySelectorAll(selectorOrDom) : selectorOrDom, 
-                this.is.nodeList(nodes) ? nodes = this.argToArray(nodes) : this.is.HTMLCollection(nodes) ? nodes = this.argToArray(nodes) : this.is.array(nodes) || (nodes = [ nodes ]), 
+                return nodes = that.is.string(selectorOrDom) ? parent.querySelectorAll(selectorOrDom) : selectorOrDom, 
+                that.is.nodeList(nodes) ? nodes = that.argToArray(nodes) : that.is.HTMLCollection(nodes) ? nodes = that.argToArray(nodes) : that.is.array(nodes) || (nodes = [ nodes ]), 
                 nodes;
             }, this.selectFirst = function(selectorOrDom, parent) {
                 return _.valueOf(_.select(selectorOrDom, parent), 0);

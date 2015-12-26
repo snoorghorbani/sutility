@@ -1,3 +1,3 @@
-/*! sutility - v0.0.85 - 2015-11-15 */
+/*! sutility - v0.0.86 - 2015-12-26 */
 this.rightCurry=function(a){return function(b){return function(){var c=a.argToArray(arguments);return function(){var d=a.array.concat(that.argToArray(arguments),c);return b.apply(a,d)}}}}(this);
 //# sourceMappingURL=rightCurry.js.map

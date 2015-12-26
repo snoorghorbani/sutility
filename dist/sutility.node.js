@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.85 - 2015-11-15
+ * sutility v0.0.86 - 2015-12-26
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -16,7 +16,14 @@ var _ = this;
  var that = this;
 
 this.argToArray = function (arg) {
-    return Array.prototype.slice.call(arg);
+    if (_.is.not.ie())
+        return Array.prototype.slice.call(arg);
+    else {
+        var array = [];
+        for (var i = 0; i < arg.length; i++)
+            array.push(arg[i]);
+        return array;
+    }
 };
 
 this.arrToObj = function (/*arr , key , removeKey*/) {
@@ -567,15 +574,16 @@ this.data = (function (_) {
 
 this.dataset = (function (_, undefined) {
     var dataset = function () { };
-    
+
     dataset.add = function () { };
     dataset.get = function (el, name) {
-        return el.dataset[name];
+        return el.dataset
+            ? el.dataset[name]
+            : el.getAttribute('data-' + _.dashCase(name));
     };
-    
+
     return dataset;
 })(this);
-
 this.decorator = function () { };
 
 this.dictionary = (function (that, undefined) {
@@ -608,22 +616,21 @@ this.dictionary = (function (that, undefined) {
 this.each = function (obj, iterator, context, onProto) {
     onProto = this.assignIfNotDefined(onProto, false);
     if (!obj) return false;
-    
+
     if (this.is.nodeList(obj)) this.each(this.argToArray(obj), iterator, context);
-    
+
     //remove improve perfomancee
     //obj.forEach && obj.forEach(iterator, context);
     var key;
     if (this.is.array(obj) || this.is['function'](obj))
         for (key in obj)
-            if (obj.hasOwnProperty(key) || onProto)
+            if ((obj.hasOwnProperty && obj.hasOwnProperty(key)) || onProto)
                 iterator.call(context, obj[key], key);
     if (this.is.object(obj))
         for (key in obj)
-            if (obj.hasOwnProperty(key) || onProto)
+            if ((obj.hasOwnProperty && obj.hasOwnProperty(key)) || onProto)
                 iterator.call(context, obj[key], key);
 };
-
 //TOTHINK freezable or statable : 
 //freeazable -> Defines an object that has a modifiable state and a read-only (frozen) state. 
 //Classes that derive from Freezable provide detailed change notification, can be made immutable, and can clone themselves.
@@ -656,12 +663,6 @@ this.enableBackup = (function (_, undefined) {
         return constructor;
     };
 })(this);
-this.event = function (domOrSelector, state, fn) {
-    var nodes = this.select(domOrSelector);
-    this.each(nodes, function (node) {
-        node.addEventListener(state, fn);
-    });
-};
 this.eventBus = {
     topics: {},
     
@@ -975,12 +976,22 @@ this.is = (function (_, undefined) {
         var nodes = this.argToArray(node.parentNode.querySelectorAll(selector));
         return (nodes.indexOf(node) > -1) ? true : false;
     };
-    
+
     is.object = function (_var) {
-        return Object.prototype.toString.call(_var) === '[object Object]';
+        if (_.is.not.ie())
+            return Object.prototype.toString.call(_var) === '[object Object]';
+        else {
+            if (!_var) return false;
+            return Object.prototype.toString.call(_var) === '[object Object]';
+
+        }
     };
     is.nodeList = function (obj) {
-        return Object.prototype.toString.call(obj) === '[object NodeList]';
+        if (_.is.not.ie())
+            return Object.prototype.toString.call(obj) === '[object NodeList]';
+        else
+            return (obj.length !== undefined
+                && obj.push === undefined && (obj.length > 0 ? obj[0].tagName !== undefined : true));
     };
     is.element = function (obj) {
         return Object.prototype.toString.call(obj).search('Element') > -1;
@@ -1005,19 +1016,20 @@ this.is = (function (_, undefined) {
         return Object.prototype.toString.call(_var) === '[object Undefined]';
     };
     is.event = function (_var) {
-                          return Object.prototype.toString.call(_var).toLowerCase().search('event')>-1;
+        return Object.prototype.toString.call(_var).toLowerCase().search('event') > -1;
     };
     is.defined = function (_var) {
-        return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
+        //return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
+        return _var !== undefined && _var !== null && _var !== "";
     };
     is.json = function () { };
     is.error = function () { };
-    
+
     is.startWith = function (str, prefix) {
         return str.indexOf(prefix) === 0;
     };
     is.endWith = function (str) { };
-    
+
     is.value = function (_var) {
         return (_var) ? true : false;
     };
@@ -1041,7 +1053,7 @@ this.is = (function (_, undefined) {
     is.equal = function (fv, sv) {
         //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
         //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
-        
+
         return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
     };
     is.equalText = function (fv, sv) {
@@ -1049,29 +1061,43 @@ this.is = (function (_, undefined) {
             if (_.is.not.string(fv)) that.warn('equal function :' + fv + ' is Not String');
             if (_.is.not.string(sv)) that.warn('equal function :' + sv + ' is Not String');
         }
-        
+
         return (fv.toLowerCase(fv) === sv.toLowerCase(sv)) ? true : false;
-    }; 
-	is.closet = function (fo, so) {
+    };
+    is.closet = function (fo, so) {
         return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
     };
-    is.contain = function (str , searchStr) {
-        var reg = (_.is.regex(searchStr))?searchStr: new RegExp(searchStr, 'g');
+    is.contain = function (str, searchStr) {
+        var reg = (_.is.regex(searchStr)) ? searchStr : new RegExp(searchStr, 'g');
         return str.match(reg) && str.match(reg).length > 0;
     };
     is.regex = function (r) {
         return r.constructor.name === "RegExp";
     };
-	is.ie = function () {
-                    return window.navigator.userAgent.indexOf("Trident") > 0;
-                };
-	is.same = function (fv, sv) {
-	    //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-	    //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+    is.ie = function (v) {
+        //TODO : rewrite
 
-	    return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
-	};
-				
+        var reg = new RegExp("(MSIE)\W\d", 'g')
+        var version = window.navigator.userAgent.match(reg);
+        if (!version) return false;
+        version = version[version.lenght];
+
+        var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
+        return isTrident;
+
+        if (v) {
+            return isTrident;
+        } else {
+            return isTrident;
+        }
+    };
+    is.same = function (fv, sv) {
+        //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+        //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+
+        return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
+    };
+
     var not = {};
     var i;
     for (i in is) (function (i) {
@@ -1080,7 +1106,7 @@ this.is = (function (_, undefined) {
         };
     })(i);
     is.not = not;
-    
+
     //TODO : impelement
     var all = {};
     for (i in is) (function (i) {
@@ -1089,7 +1115,7 @@ this.is = (function (_, undefined) {
         };
     })(i);
     is.all = all;
-    
+
     var any = {};
     for (var j in is) (function (j) {
         if (is.hasOwnProperty(j)) any[j] = function (o) {
@@ -1097,21 +1123,21 @@ this.is = (function (_, undefined) {
         };
     })(j);
     is.any = any;
-    
+
     return is;
 })(this);
-this['if']= (function (_) {
+this['if'] = (function (_) {
     var _if = {};
     _if.is = {};
     _if.is.not = {};
     for (var i in _.is) (function (i) {
         if (i != 'not') {
-            _if.is[i] = function (obj, fn,elseFn) {
+            _if.is[i] = function (obj, fn, elseFn) {
                 if (_.is[i](obj))
                     return fn();
                 else return elseFn && elseFn();
             };
-            _if.is.not[i] = function (obj, fn,falseFn) {
+            _if.is.not[i] = function (obj, fn, falseFn) {
                 if (_.is.not[i](obj))
                     return fn();
                 else return falseFn && falseFn();
@@ -1502,21 +1528,25 @@ this.propByPrefix = function (obj, prefix, removePrefixFromKey) {
     return properties;
 };
 this.prototype = (function (_, undefined) {
-    var prototype = function () { };
-    
-    prototype.extend = function (constructor_obj, prototypeObj) {
+    var fn = function () { };
+
+    fn.extend = function (constructor_obj, prototypeObj) {
         var constructor = _['if'].is.not['function'](constructor_obj, function () {
             return _.get.constructor(constructor_obj);
         }, function () { return constructor_obj });
-        for (var i in prototypeObj) 
-            if (prototypeObj.hasOwnProperty(i)) 
+        for (var i in prototypeObj)
+            if (prototypeObj.hasOwnProperty(i))
                 constructor.prototype[i] = prototypeObj[i];
-			return prototype;
+        return fn;
     };
-    
-    return prototype;
-})(this);
+    fn.getConstruntorFunction = function (prototype) {
+        var fn = function () { };
+        fn.prototype = prototype;
+        return fn;
+    }
 
+    return fn;
+})(this);
 this.publisher = (function (that, undefined) {
     var o = {};
     o.subscribers = {

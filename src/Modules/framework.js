@@ -21,7 +21,7 @@
             var node = _.selectFirst(selectroOrNode);
             var newControllers = _.select('[data-controller]', node);
             _.each(newControllers, function (newController) {
-                controllerInitializeQualifie(controllers[newController.dataset.controller]);
+                controllerInitializeQualifie(controllers[_.dataset.get(newController, 'controller')]);
                 _.each(controllers, function (controller, key) {
                     var ctrlNode = _.selectFirst('[data-controller="' + key + '"]');
                     if (ctrlNode) return;
@@ -59,17 +59,34 @@
             if (!!controllerNode) {
                 do {
                     parentNode = parentNode.parentNode;
-                    parentCtrlName = parentNode.dataset.controller;
+                    parentCtrlName = _.dataset.get(parentNode, 'controller');
                     if (parentCtrlName) {
                         parentCtrl = controllerInitializeQualifie(controllers[parentCtrlName]);
                     }
                 } while (parentNode && parentNode.tagName != 'HTML' && !parentCtrlName);
 
                 if (parentCtrlName) {
-                    controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn;
-                    controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event;
-                    controller.scope['const'].__proto__ = controllers[parentCtrlName].scope.const;
-                    controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module;
+                    if (controller.scope.fn.__proto__) {
+                        controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn;
+                        controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event;
+                        controller.scope['const'].__proto__ = controllers[parentCtrlName].scope['const'];
+                        controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module;
+                    } else {
+                        //_.extend(controller.scope.fn.constructor.prototype, controllers[parentCtrlName].scope.fn);
+                        //_.extend(controller.scope.event.constructor.prototype, controllers[parentCtrlName].scope.event);
+                        //_.extend(controller.scope['const'].constructor.prototype, controllers[parentCtrlName].scope['const']);
+                        //_.extend(controller.scope.module.constructor.prototype, controllers[parentCtrlName].scope.module);
+
+
+                        //controller.scope.fn.constructor.prototype.zz = controllers[parentCtrlName].scope.fn;
+                        //controller.scope.event.constructor.prototype = controllers[parentCtrlName].scope.event;
+                        //controller.scope['const'].constructor.prototype = controllers[parentCtrlName].scope['const'];
+                        //controller.scope.module.constructor.prototype = controllers[parentCtrlName].scope.module;
+                    }
+                    //_.merge(controller.scope.fn, controllers[parentCtrlName].scope.fn);
+                    //_.merge(controller.scope.event, controllers[parentCtrlName].scope.event);
+                    //_.merge(controller.scope['const'], controllers[parentCtrlName].scope['const']);
+                    //_.merge(controller.scope.module, controllers[parentCtrlName].scope.module);
                 }
                 instansiteController(controller, controllerNode);
             }

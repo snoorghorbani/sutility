@@ -1,6 +1,6 @@
 {
-	"numResults": 271,
-	"creationDate": "2015-11-15 13:44:22",
+	"numResults": 285,
+	"creationDate": "2015-12-26 06:17:09",
 	"results": {
 		"src/modules/MutationObserver.js": [
 			{
@@ -42,6 +42,12 @@
 			{
 				"line": 5,
 				"match": "_.fn"
+			}
+		],
+		"src/modules/argToArray.js": [
+			{
+				"line": 3,
+				"match": "_.is"
 			}
 		],
 		"src/modules/arrToObj.js": [
@@ -118,11 +124,7 @@
 		],
 		"src/modules/attach.js": [
 			{
-				"line": 14,
-				"match": "_.is"
-			},
-			{
-				"line": 28,
+				"line": 15,
 				"match": "_.is"
 			},
 			{
@@ -130,11 +132,15 @@
 				"match": "_.is"
 			},
 			{
-				"line": 37,
+				"line": 32,
 				"match": "_.is"
 			},
 			{
 				"line": 39,
+				"match": "_.is"
+			},
+			{
+				"line": 41,
 				"match": "_.is"
 			}
 		],
@@ -382,6 +388,12 @@
 				"match": "_.scope"
 			}
 		],
+		"src/modules/dataset.js": [
+			{
+				"line": 8,
+				"match": "_.dashCase"
+			}
+		],
 		"src/modules/dictionary.js": [
 			{
 				"line": 5,
@@ -546,6 +558,10 @@
 				"match": "_.each"
 			},
 			{
+				"line": 24,
+				"match": "_.dataset"
+			},
+			{
 				"line": 25,
 				"match": "_.each"
 			},
@@ -570,91 +586,127 @@
 				"match": "_.selectFirst"
 			},
 			{
+				"line": 62,
+				"match": "_.dataset"
+			},
+			{
+				"line": 75,
+				"match": "_.extend"
+			},
+			{
+				"line": 76,
+				"match": "_.extend"
+			},
+			{
+				"line": 77,
+				"match": "_.extend"
+			},
+			{
+				"line": 78,
+				"match": "_.extend"
+			},
+			{
+				"line": 86,
+				"match": "_.merge"
+			},
+			{
 				"line": 87,
-				"match": "_.scope"
+				"match": "_.merge"
 			},
 			{
 				"line": 88,
-				"match": "_.scope"
+				"match": "_.merge"
 			},
 			{
-				"line": 90,
-				"match": "_.ready"
-			},
-			{
-				"line": 100,
-				"match": "_.fn"
+				"line": 89,
+				"match": "_.merge"
 			},
 			{
 				"line": 104,
-				"match": "_.is"
+				"match": "_.scope"
 			},
 			{
 				"line": 105,
+				"match": "_.scope"
+			},
+			{
+				"line": 107,
+				"match": "_.ready"
+			},
+			{
+				"line": 117,
+				"match": "_.fn"
+			},
+			{
+				"line": 121,
+				"match": "_.is"
+			},
+			{
+				"line": 122,
 				"match": "_.each"
 			},
 			{
-				"line": 127,
+				"line": 144,
 				"match": "_.loadJS"
 			},
 			{
-				"line": 133,
+				"line": 150,
 				"match": "_.array"
 			},
 			{
-				"line": 158,
+				"line": 175,
 				"match": "_.is"
 			},
 			{
-				"line": 159,
+				"line": 176,
 				"match": "_.each"
-			},
-			{
-				"line": 181,
-				"match": "_.ready"
-			},
-			{
-				"line": 195,
-				"match": "_.dashCase"
-			},
-			{
-				"line": 197,
-				"match": "_.argToArray"
 			},
 			{
 				"line": 198,
-				"match": "_.each"
-			},
-			{
-				"line": 207,
-				"match": "_.argToArray"
-			},
-			{
-				"line": 209,
-				"match": "_.each"
-			},
-			{
-				"line": 210,
-				"match": "_.is"
-			},
-			{
-				"line": 224,
 				"match": "_.ready"
 			},
 			{
-				"line": 225,
-				"match": "_.lexer"
+				"line": 212,
+				"match": "_.dashCase"
 			},
 			{
-				"line": 227,
+				"line": 214,
+				"match": "_.argToArray"
+			},
+			{
+				"line": 215,
 				"match": "_.each"
 			},
 			{
-				"line": 228,
+				"line": 224,
+				"match": "_.argToArray"
+			},
+			{
+				"line": 226,
+				"match": "_.each"
+			},
+			{
+				"line": 227,
+				"match": "_.is"
+			},
+			{
+				"line": 241,
+				"match": "_.ready"
+			},
+			{
+				"line": 242,
+				"match": "_.lexer"
+			},
+			{
+				"line": 244,
+				"match": "_.each"
+			},
+			{
+				"line": 245,
 				"match": "_.callWhen"
 			},
 			{
-				"line": 230,
+				"line": 247,
 				"match": "_.each"
 			}
 		],
@@ -712,47 +764,55 @@
 		],
 		"src/modules/is.js": [
 			{
-				"line": 55,
+				"line": 10,
 				"match": "_.is"
 			},
 			{
-				"line": 59,
+				"line": 19,
 				"match": "_.is"
 			},
 			{
-				"line": 79,
+				"line": 66,
 				"match": "_.is"
 			},
 			{
-				"line": 80,
+				"line": 70,
 				"match": "_.is"
 			},
 			{
-				"line": 86,
+				"line": 90,
 				"match": "_.is"
 			},
 			{
-				"line": 86,
+				"line": 91,
+				"match": "_.is"
+			},
+			{
+				"line": 97,
+				"match": "_.is"
+			},
+			{
+				"line": 97,
 				"match": "_.partial"
 			},
 			{
-				"line": 86,
+				"line": 97,
 				"match": "_.report"
 			},
 			{
-				"line": 89,
+				"line": 100,
 				"match": "_.is"
 			},
 			{
-				"line": 137,
+				"line": 162,
 				"match": "_.is"
 			},
 			{
-				"line": 140,
+				"line": 165,
 				"match": "_.is"
 			},
 			{
-				"line": 145,
+				"line": 170,
 				"match": "_.is"
 			}
 		],

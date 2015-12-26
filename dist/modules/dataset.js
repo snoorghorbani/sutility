@@ -1,3 +1,3 @@
-/*! sutility - v0.0.85 - 2015-11-15 */
-this.dataset=function(a,b){var c=function(){};return c.add=function(){},c.get=function(a,b){return a.dataset[b]},c}(this);
+/*! sutility - v0.0.86 - 2015-12-26 */
+this.dataset=function(a,b){var c=function(){};return c.add=function(){},c.get=function(b,c){return b.dataset?b.dataset[c]:b.getAttribute("data-"+a.dashCase(c))},c}(this);
 //# sourceMappingURL=dataset.js.map

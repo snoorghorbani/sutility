@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.85 - 2015-11-15
+ * sutility v0.0.86 - 2015-12-26
  * Functional Library
  *
  * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -12,7 +12,9 @@
         var U = function() {
             var _ = this, that = this;
             this.argToArray = function(arg) {
-                return Array.prototype.slice.call(arg);
+                if (_.is.not.ie()) return Array.prototype.slice.call(arg);
+                for (var array = [], i = 0; i < arg.length; i++) array.push(arg[i]);
+                return array;
             }, this.arrToObj = function() {
                 var args = _.argToArray(arguments), arr = args.shift(), key = args.shift(), removeKey = args.shift(), res = {};
                 return _.each(arr, function(item) {
@@ -288,7 +290,7 @@
             }, this.data = function(_) {}(this), this.dataset = function(_, undefined) {
                 var dataset = function() {};
                 return dataset.add = function() {}, dataset.get = function(el, name) {
-                    return el.dataset[name];
+                    return el.dataset ? el.dataset[name] : el.getAttribute("data-" + _.dashCase(name));
                 }, dataset;
             }(this), this.decorator = function() {}, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
@@ -312,8 +314,8 @@
                 if (onProto = this.assignIfNotDefined(onProto, !1), !obj) return !1;
                 this.is.nodeList(obj) && this.each(this.argToArray(obj), iterator, context);
                 var key;
-                if (this.is.array(obj) || this.is["function"](obj)) for (key in obj) (obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
-                if (this.is.object(obj)) for (key in obj) (obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
+                if (this.is.array(obj) || this.is["function"](obj)) for (key in obj) (obj.hasOwnProperty && obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
+                if (this.is.object(obj)) for (key in obj) (obj.hasOwnProperty && obj.hasOwnProperty(key) || onProto) && iterator.call(context, obj[key], key);
             }, this.enableBackup = function(_, undefined) {
                 var o = {};
                 return o.__repository = {}, o.backup = function(key) {
@@ -330,12 +332,7 @@
                     });
                     return _.prototype.extend(constructor, o), constructor;
                 };
-            }(this), this.event = function(domOrSelector, state, fn) {
-                var nodes = this.select(domOrSelector);
-                this.each(nodes, function(node) {
-                    node.addEventListener(state, fn);
-                });
-            }, this.eventBus = {
+            }(this), this.eventBus = {
                 topics: {},
                 sub: function(topic, listener) {
                     this.topics[topic] || (this.topics[topic] = []), this.topics[topic].push(listener);
@@ -464,9 +461,9 @@
                     return nodes.indexOf(node) > -1 ? !0 : !1;
                 };
                 is.object = function(_var) {
-                    return "[object Object]" === Object.prototype.toString.call(_var);
+                    return _.is.not.ie() ? "[object Object]" === Object.prototype.toString.call(_var) : _var ? "[object Object]" === Object.prototype.toString.call(_var) : !1;
                 }, is.nodeList = function(obj) {
-                    return "[object NodeList]" === Object.prototype.toString.call(obj);
+                    return _.is.not.ie() ? "[object NodeList]" === Object.prototype.toString.call(obj) : obj.length !== undefined && obj.push === undefined && (obj.length > 0 ? obj[0].tagName !== undefined : !0);
                 }, is.element = function(obj) {
                     return Object.prototype.toString.call(obj).search("Element") > -1;
                 }, is.HTMLCollection = function(obj) {
@@ -484,7 +481,7 @@
                 }, is.event = function(_var) {
                     return Object.prototype.toString.call(_var).toLowerCase().search("event") > -1;
                 }, is.defined = function(_var) {
-                    return "[object Undefined]" !== Object.prototype.toString.call(_var) && "[object Null]" !== Object.prototype.toString.call(_var) && "" !== Object;
+                    return _var !== undefined && null !== _var && "" !== _var;
                 }, is.json = function() {}, is.error = function() {}, is.startWith = function(str, prefix) {
                     return 0 === str.indexOf(prefix);
                 }, is.endWith = function(str) {}, is.value = function(_var) {
@@ -508,8 +505,12 @@
                     return str.match(reg) && str.match(reg).length > 0;
                 }, is.regex = function(r) {
                     return "RegExp" === r.constructor.name;
-                }, is.ie = function() {
-                    return window.navigator.userAgent.indexOf("Trident") > 0;
+                }, is.ie = function(v) {
+                    var reg = new RegExp("(MSIE)Wd", "g"), version = window.navigator.userAgent.match(reg);
+                    if (!version) return !1;
+                    version = version[version.lenght];
+                    var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
+                    return isTrident;
                 }, is.same = function(fv, sv) {
                     return fv.isEqualNode ? fv.isEqualNode(sv) : fv === sv;
                 };
@@ -774,16 +775,19 @@
                 }
                 return properties;
             }, this.prototype = function(_, undefined) {
-                var prototype = function() {};
-                return prototype.extend = function(constructor_obj, prototypeObj) {
+                var fn = function() {};
+                return fn.extend = function(constructor_obj, prototypeObj) {
                     var constructor = _["if"].is.not["function"](constructor_obj, function() {
                         return _.get.constructor(constructor_obj);
                     }, function() {
                         return constructor_obj;
                     });
                     for (var i in prototypeObj) prototypeObj.hasOwnProperty(i) && (constructor.prototype[i] = prototypeObj[i]);
-                    return prototype;
-                }, prototype;
+                    return fn;
+                }, fn.getConstruntorFunction = function(prototype) {
+                    var fn = function() {};
+                    return fn.prototype = prototype, fn;
+                }, fn;
             }(this), this.publisher = function(that, undefined) {
                 var o = {};
                 return o.subscribers = {
