@@ -1647,7 +1647,7 @@ this.is = (function (_, undefined) {
     is.truthy = function () { };
     is.scalar = function (_var) {
         //TODO : improve
-        return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not['function'](_var);
+        return is.defined(_var) && is.not.array(_var) && is.not.object(_var) && is.not['function'](_var);
     };
     is.prototypeProp = function (obj, prop) {
         return (obj[prop] && !obj.hasOwnProperty(prop));

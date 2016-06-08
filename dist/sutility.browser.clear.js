@@ -749,7 +749,7 @@
                     if (_.is.object(0)) for (var i in o) if (o.hasOwnProperty(i)) return !1;
                     return _.is.array(o) ? 0 === o.length : !0;
                 }, is.truthy = function() {}, is.scalar = function(_var) {
-                    return is.defined(_var) && is.not.array(this.is.array) && is.not.object(_var) && is.not["function"](_var);
+                    return is.defined(_var) && is.not.array(_var) && is.not.object(_var) && is.not["function"](_var);
                 }, is.prototypeProp = function(obj, prop) {
                     return obj[prop] && !obj.hasOwnProperty(prop);
                 }, is.equal = function(fv, sv) {
