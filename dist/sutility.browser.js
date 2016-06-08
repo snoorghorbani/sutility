@@ -950,7 +950,7 @@ this.deformPathValue = function (obj, fn, path) {
 	var res = obj[_path];
 	while (_path = path.shift()) {
 		if (res[_path]) {
-			if (_.isArray(res[_path])) {
+			if (_.is.array(res[_path])) {
 				_.each(res[_path], function (item) {
 					_.setValueOnPath(item, path.join('.'), fn);
 				});

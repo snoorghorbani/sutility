@@ -419,7 +419,7 @@
                 if (!obj) return undefined;
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 if (null != obj[path]) return obj[path] = fn(obj[path]);
-                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.isArray(res[_path]) && _.each(res[_path], function(item) {
+                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.is.array(res[_path]) && _.each(res[_path], function(item) {
                     _.setValueOnPath(item, path.join("."), fn);
                 });
             }, this.dictionary = function(that, undefined) {
