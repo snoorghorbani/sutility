@@ -1,1 +1,1 @@
-{"version":3,"file":"remove.js","sources":["../../src/modules/remove.js"],"names":["this","remove","ar","idx","obj","length","splice","len"],"mappings":";AAAAA,KAAKC,OAAS,SAAUC,EAAIC,GAMxB,MAAQC,KAAIC,OAASF,EAAOC,IAAIE,OAAOH,EAAKI,KAAO,GAAM"}
+{"version":3,"sources":["../../src/modules/remove.js"],"names":["this","remove","ar","idx","obj","length","splice","len"],"mappings":";AAAAA,KAAKC,OAAS,SAAUC,EAAIC,GAMxB,MAAQC,KAAIC,OAASF,EAAOC,IAAIE,OAAOH,EAAKI,KAAO,GAAM","file":"remove.js"}

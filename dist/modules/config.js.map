@@ -1,1 +1,1 @@
-{"version":3,"file":"config.js","sources":["../../src/modules/config.js"],"names":["this","config","prop","obj","k"],"mappings":";AAAAA,KAAKC,OAAS,SAAUC,EAAMC,GAC1B,IAAK,GAAIC,KAAKF,GACVF,KAAKI,GAAKD,GAAOA,EAAIC,IAAMF,EAAKE"}
+{"version":3,"sources":["../../src/modules/config.js"],"names":["this","config","prop","obj","k"],"mappings":";AAAAA,KAAKC,OAAS,SAAUC,EAAMC,GAC1B,IAAK,GAAIC,KAAKF,GACVF,KAAKI,GAAKD,GAAOA,EAAIC,IAAMF,EAAKE","file":"config.js"}

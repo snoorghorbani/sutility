@@ -1,8 +1,8 @@
 /**
- * sutility v0.0.86 - 2015-12-26
+ * sutility v0.0.87 - 2016-06-08
  * Functional Library
  *
- * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
+ * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
  * Licensed MIT
  */
 ;(function(undefined){
@@ -857,6 +857,27 @@ this.dataset = (function (_, undefined) {
     return dataset;
 })(this);
 this.decorator = function () { };
+
+this.deformPathValue = function (obj, path, fn) {
+	if (!obj) return undefined;
+	if (!obj) return this.warn('Utility getValue function first parameter not defined');
+	
+	if (obj[path] != null) return obj[path] = fn(obj[path]);
+	
+	var path = path.split('.');
+	var _path = path.shift();
+	var res = obj[_path];
+	while (_path = path.shift()) {
+		if (res[_path]) {
+			if (_.isArray(res[_path])) {
+				_.each(res[_path], function (item) {
+					_.setValueOnPath(item, path.join('.'), fn);
+				});
+			}
+		}
+	}
+	return;
+};
 
 this.dictionary = (function (that, undefined) {
     var defaultValues = {};

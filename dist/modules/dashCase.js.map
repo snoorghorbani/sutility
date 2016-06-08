@@ -1,1 +1,1 @@
-{"version":3,"file":"dashCase.js","sources":["../../src/modules/dashCase.js"],"names":["this","dashCase","str","replace","match","test","toLowerCase"],"mappings":";AAAAA,KAAKC,SAAW,SAAUC,GACtB,MAAOA,GAAIC,QAAQ,qBAAsB,SAAUC,GAC/C,MAAQ,OAAOC,KAAKD,GACL,MAAVA,EAAiB,IAAM,IAAMA,EAAME,cACpC"}
+{"version":3,"sources":["../../src/modules/dashCase.js"],"names":["this","dashCase","str","replace","match","test","toLowerCase"],"mappings":";AAAAA,KAAKC,SAAW,SAAUC,GACtB,MAAOA,GAAIC,QAAQ,qBAAsB,SAAUC,GAC/C,MAAQ,OAAOC,KAAKD,GACL,MAAVA,EAAiB,IAAM,IAAMA,EAAME,cACpC","file":"dashCase.js"}

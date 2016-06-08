@@ -1,1 +1,1 @@
-{"version":3,"file":"warn.js","sources":["../../src/modules/warn.js"],"names":["this","warn","text","undefined"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC,GAElB,MAAOC"}
+{"version":3,"sources":["../../src/modules/warn.js"],"names":["this","warn","text"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC","file":"warn.js"}

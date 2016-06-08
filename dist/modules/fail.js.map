@@ -1,1 +1,1 @@
-{"version":3,"file":"fail.js","sources":["../../src/modules/fail.js"],"names":["this","fail","text","Error"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC,GAClB,KAAM,IAAIC,OAAMD"}
+{"version":3,"sources":["../../src/modules/fail.js"],"names":["this","fail","text","Error"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC,GAClB,KAAM,IAAIC,OAAMD","file":"fail.js"}

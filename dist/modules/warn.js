@@ -1,3 +1,3 @@
-/*! sutility - v0.0.86 - 2015-12-26 */
-this.warn=function(a){return void 0};
+/*! sutility - v0.0.87 - 2016-06-08 */
+this.warn=function(a){};
 //# sourceMappingURL=warn.js.map

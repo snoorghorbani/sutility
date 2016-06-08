@@ -1,1 +1,1 @@
-{"version":3,"file":"trim.js","sources":["../../src/modules/trim.js"],"names":["this","trim","str","replace"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC,GAClB,MAAOA,GAAIC,QAAQ,aAAc"}
+{"version":3,"sources":["../../src/modules/trim.js"],"names":["this","trim","str","replace"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC,GAClB,MAAOA,GAAIC,QAAQ,aAAc","file":"trim.js"}

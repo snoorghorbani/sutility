@@ -1,1 +1,1 @@
-{"version":3,"file":"note.js","sources":["../../src/modules/note.js"],"names":["this","note","text"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC"}
+{"version":3,"sources":["../../src/modules/note.js"],"names":["this","note","text"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC","file":"note.js"}

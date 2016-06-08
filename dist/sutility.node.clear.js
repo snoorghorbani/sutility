@@ -1,8 +1,8 @@
 /**
- * sutility v0.0.86 - 2015-12-26
+ * sutility v0.0.87 - 2016-06-08
  * Functional Library
  *
- * Copyright (c) 2015 soushians noorghorbani <snoorghorbani@gmail.com>
+ * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
  * Licensed MIT
  */
 (function(undefined) {
@@ -292,7 +292,14 @@
                 return dataset.add = function() {}, dataset.get = function(el, name) {
                     return el.dataset ? el.dataset[name] : el.getAttribute("data-" + _.dashCase(name));
                 }, dataset;
-            }(this), this.decorator = function() {}, this.dictionary = function(that, undefined) {
+            }(this), this.decorator = function() {}, this.deformPathValue = function(obj, path, fn) {
+                if (!obj) return undefined;
+                if (!obj) return this.warn("Utility getValue function first parameter not defined");
+                if (null != obj[path]) return obj[path] = fn(obj[path]);
+                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.isArray(res[_path]) && _.each(res[_path], function(item) {
+                    _.setValueOnPath(item, path.join("."), fn);
+                });
+            }, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
                     defaultValues = _defaultValues || {}, _.extend(this, defaultValues);
                 };
@@ -458,7 +465,7 @@
                 var is = function(node, selector) {
                     if (node.matches) return node.matches(selector);
                     var nodes = this.argToArray(node.parentNode.querySelectorAll(selector));
-                    return nodes.indexOf(node) > -1 ? !0 : !1;
+                    return nodes.indexOf(node) > -1;
                 };
                 is.object = function(_var) {
                     return _.is.not.ie() ? "[object Object]" === Object.prototype.toString.call(_var) : _var ? "[object Object]" === Object.prototype.toString.call(_var) : !1;
@@ -485,7 +492,7 @@
                 }, is.json = function() {}, is.error = function() {}, is.startWith = function(str, prefix) {
                     return 0 === str.indexOf(prefix);
                 }, is.endWith = function(str) {}, is.value = function(_var) {
-                    return _var ? !0 : !1;
+                    return !!_var;
                 }, is.empty = function(o) {
                     if (_.is.object(0)) for (var i in o) if (o.hasOwnProperty(i)) return !1;
                     return _.is.array(o) ? 0 === o.length : !0;
@@ -494,10 +501,10 @@
                 }, is.prototypeProp = function(obj, prop) {
                     return obj[prop] && !obj.hasOwnProperty(prop);
                 }, is.equal = function(fv, sv) {
-                    return JSON.stringify(fv) == JSON.stringify(sv) ? !0 : !1;
+                    return JSON.stringify(fv) == JSON.stringify(sv);
                 }, is.equalText = function(fv, sv) {
                     return DEBUG && (_.is.not.string(fv) && that.warn("equal function :" + fv + " is Not String"), 
-                    _.is.not.string(sv) && that.warn("equal function :" + sv + " is Not String")), fv.toLowerCase(fv) === sv.toLowerCase(sv) ? !0 : !1;
+                    _.is.not.string(sv) && that.warn("equal function :" + sv + " is Not String")), fv.toLowerCase(fv) === sv.toLowerCase(sv);
                 }, is.closet = function(fo, so) {
                     return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
                 }, is.contain = function(str, searchStr) {
