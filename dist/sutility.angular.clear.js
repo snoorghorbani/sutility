@@ -1302,5 +1302,5 @@
         };
     }(), "undefined" != typeof exports && "undefined" != typeof module && module.exports ? exports = module.exports = SUTILITY.install() : window.SUTILITY = SUTILITY;
 }).call(), angular.module("sutility", []).factory("_", function() {
-    return window._;
+    return SUTILITY.install();
 });

@@ -2750,5 +2750,5 @@ if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.ex
 }).call();
 angular.module('sutility', [])
     .factory('_', function () {
-        return window._;
+        return SUTILITY.install();
     });

@@ -1,4 +1,4 @@
 angular.module('sutility', [])
     .factory('_', function () {
-        return window._;
+        return SUTILITY.install();
     });
