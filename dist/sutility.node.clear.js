@@ -311,7 +311,7 @@
                 return dataset.add = function() {}, dataset.get = function(el, name) {
                     return el.dataset ? el.dataset[name] : el.getAttribute("data-" + _.dashCase(name));
                 }, dataset;
-            }(this), this.decorator = function() {}, this.deformPathValue = function(obj, path, fn) {
+            }(this), this.decorator = function() {}, this.deformPathValue = function(obj, fn, path) {
                 if (!obj) return undefined;
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 if (null != obj[path]) return obj[path] = fn(obj[path]);

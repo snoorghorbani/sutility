@@ -1,4 +1,4 @@
-﻿this.deformPathValue = function (obj, path, fn) {
+﻿this.deformPathValue = function (obj, fn, path) {
 	if (!obj) return undefined;
 	if (!obj) return this.warn('Utility getValue function first parameter not defined');
 	
