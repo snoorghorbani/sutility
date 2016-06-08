@@ -1,3 +1,3 @@
-/*! sutility - v0.0.87 - 2016-06-08 */
-this.css=function(a){var b=function(b,c){for(var d,e=this.select(b),f=0;d=e[f];f++)for(var g in c)d.style[a.camelCase(g)]=c[g]};return b.computedValue=function(b,c,d){if(window.getComputedStyle){var e=a.selectFirst(b),f=window.getComputedStyle(e,null).getPropertyValue(c);return d&&(f=a.regex.matchFirst(f)),f}a.fail('add shim for "window.getComputedStyle" in _.css.computedValue')},b}(this);
+/*! sutility - v0.0.88 - 2016-06-08 */
+this.css=function(a){var b=["transition","transform"],c=["webkit","Moz","o","ms"],d=function(d,e){for(var f,g=this.select(d),h=0;f=g[h];h++)for(var i in e)-1==b.indexOf(a.camelCase(i))?f.style[a.camelCase(i)]=e[i]:a.each(c,function(b){f.style[b+a.pascalCase(i)]=e[i]})};return d.computedValue=function(b,c,d){if(window.getComputedStyle){var e=a.selectFirst(b),f=window.getComputedStyle(e,null).getPropertyValue(c);return d&&(f=a.regex.matchFirst(f)),f}a.fail('add shim for "window.getComputedStyle" in _.css.computedValue')},d}(this);
 //# sourceMappingURL=css.js.map

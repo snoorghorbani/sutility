@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.87 - 2016-06-08
+ * sutility v0.0.88 - 2016-06-08
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -28,7 +28,36 @@
                 xhttp.open("GET", options.url, !0), xhttp.send(options.data), xhttp.onreadystatechange = function() {
                     200 == xhttp.status && 4 == xhttp.readyState && callback(xhttp.responseText);
                 };
-            }, this.argToArray = function(arg) {
+            }, this.animation = function(_, undefined) {
+                var fn = _.fn();
+                return fn.endProp = _.memoize(function() {
+                    var animation, element = document.createElement("div"), animations = {
+                        animation: "animationend",
+                        OAnimation: "oAnimationEnd",
+                        MozAnimation: "mozAnimationEnd",
+                        WebkitAnimation: "webkitAnimationEnd"
+                    };
+                    for (animation in animations) if (element.style[animation] !== undefined) return animations[animation];
+                    return !1;
+                }), fn.startProp = _.memoize(function() {
+                    var animation, element = document.createElement("div"), animations = {
+                        animation: "animationstart",
+                        OAnimation: "oAnimationStart",
+                        MozAnimation: "mozAnimationStart",
+                        WebkitAnimation: "webkitAnimationStart"
+                    };
+                    for (animation in animations) if (element.style[animation] !== undefined) return animations[animation];
+                    return !1;
+                }), fn.end = function(el, callback) {
+                    el.addEventListener(fn.endProp(), callback);
+                }, fn.to = function(el, startClass, endClass) {
+                    _.className.add(el, startClass), _.each(_.select(el), function(el) {
+                        fn.end(el, _.callConstantly(function() {
+                            _.className.remove(el, startClass), _.className.add(el, endClass);
+                        }, 1));
+                    });
+                }, fn;
+            }(this), this.argToArray = function(arg) {
                 if (_.is.not.ie()) return Array.prototype.slice.call(arg);
                 for (var array = [], i = 0; i < arg.length; i++) array.push(arg[i]);
                 return array;
@@ -109,9 +138,9 @@
                             var el = e.target || e.srcElement;
                             if (done = !1, _.is.element(handler.domOrSelector)) {
                                 do _.is.same(el, handler.domOrSelector) ? (handler.fn(e, el, handler.domOrSelector), 
-                                done = !0) : el = el.parentNode; while (!done && "body" != el.tagName.toLowerCase());
+                                done = !0) : el = el.parentNode; while (!done && el.tagName && "body" != el.tagName.toLowerCase());
                             } else if (_.is.string(handler.domOrSelector)) do _.is(el, handler.domOrSelector) ? (handler.fn(e, el, handler.domOrSelector), 
-                            done = !0) : el = el.parentNode; while (!done && "body" != el.tagName.toLowerCase());
+                            done = !0) : el = el.parentNode; while (!done && el.tagName && "body" != el.tagName.toLowerCase());
                         }
                     });
                 };
@@ -201,6 +230,7 @@
                     urlPrefix: "/filter",
                     routePrefix: "/filter/filterresult"
                 }, defaultKeyConfig = {
+                    fixedName: null,
                     multi: !1,
                     "default": null
                 }, Fn = function(config) {
@@ -213,7 +243,7 @@
                         keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
                     });
                     var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.urlPrefix, "");
-                    catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
+                    if (catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
                         _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
                     }), Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {}), Fn.prototype.add[name] = function(a, b) {
@@ -224,6 +254,11 @@
                         values[name] = _.filter(values[name], function(a) {
                             return a.toLowerCase() !== valueStr.toLowerCase();
                         });
+                        var fixedName = keys[name].fixedName;
+                        fixedName && (valueStr = fixedName + "-" + a.toString() + (b ? "-" + b.toString() : ""), 
+                        values[fixedName] = _.filter(values[fixedName], function(a) {
+                            return a.toLowerCase() !== valueStr.toLowerCase();
+                        }));
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
                         values[name] = [], _.each(keys[name]["default"], function(defaultValue) {
                             var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
@@ -232,7 +267,10 @@
                     }, Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {}), Fn.prototype.get[name] = function() {
                         var res;
                         return res = values[name];
-                    };
+                    }, config.fixedName) {
+                        var _config = _.clone(config);
+                        delete _config.fixedName, this.key(config.fixedName, _config);
+                    }
                 }, Fn.prototype.getRoute = function() {
                     var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;
                     return _.each(values, function(value, key) {
@@ -245,6 +283,16 @@
                     }), decodeURIComponent(url.toLowerCase());
                 }, Fn.prototype.getUrl = function(f) {
                     var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
+                    return _.each(values, function(value, key) {
+                        _.each(value, function(str) {
+                            var fine = _.fine(str.split("-"), function(a) {
+                                return _.is.value(a);
+                            });
+                            fine && (url += "/" + str);
+                        });
+                    }), decodeURIComponent(url.toLowerCase());
+                }, Fn.prototype.url = function(staticRoutePart) {
+                    var url = window.location.origin + staticRoutePart || "fortest" + staticRoutePart;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -375,8 +423,10 @@
                     Fn.set(key, "", 0);
                 }, Fn;
             }(this), this.countBy = function() {}, this.css = function(_) {
-                var fn = function(selectorOrDom, style) {
-                    for (var node, nodes = this.select(selectorOrDom), i = 0; node = nodes[i]; i++) for (var k in style) node.style[_.camelCase(k)] = style[k];
+                var vendorPrefixProperties = [ "transition", "transform" ], vendors = [ "webkit", "Moz", "o", "ms" ], fn = function(selectorOrDom, style) {
+                    for (var node, nodes = this.select(selectorOrDom), i = 0; node = nodes[i]; i++) for (var k in style) -1 == vendorPrefixProperties.indexOf(_.camelCase(k)) ? node.style[_.camelCase(k)] = style[k] : _.each(vendors, function(vendor) {
+                        node.style[vendor + _.pascalCase(k)] = style[k];
+                    });
                 };
                 return fn.computedValue = function(selectorOrDom, prop, numberOnly) {
                     if (window.getComputedStyle) {
@@ -526,8 +576,8 @@
                             var camelCaseName = _.camelCase(name);
                             window[camelCaseName + "s"] && _.fail(camelCaseName + "s exists"), window[camelCaseName + "s"] = {};
                             var Constructor = fn();
-                            return factories[camelCaseName] = function(id, node, config) {
-                                return window[camelCaseName + "s"][id] ? window[camelCaseName + "s"][id] : window[camelCaseName + "s"][id] = new Constructor(id, node, config);
+                            return factories[camelCaseName] = function(id, node, config, controller, uniqueId) {
+                                return window[camelCaseName + "s"][uniqueId] ? window[camelCaseName + "s"][uniqueId] : window[camelCaseName + "s"][uniqueId] = new Constructor(id, node, config, controller);
                             }, Constructor;
                         };
                     }(this);
@@ -602,8 +652,8 @@
                                 _.each(nodes, function(node) {
                                     var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id ? "#" + node.id : ""));
                                     if (!isChildControllerFactory) {
-                                        var id = node.getAttribute("data-" + factoryAttrName), config = controller.scope.config[id] || {};
-                                        factories[factoryName](id, node, config);
+                                        var id = node.getAttribute("data-" + factoryAttrName), uniqueId = id + (node.id ? node.id : ""), config = controller.scope.config[id] || {};
+                                        factories[factoryName](id, node, config, controller, uniqueId);
                                     }
                                 });
                             }
@@ -765,7 +815,9 @@
                 }, is.regex = function(r) {
                     return "RegExp" === r.constructor.name;
                 }, is.ie = function(v) {
-                    var reg = new RegExp("(MSIE)Wd", "g"), version = window.navigator.userAgent.match(reg);
+                    var reg = new RegExp("(MSIE)Wd", "g");
+                    reg = new RegExp("MSIE 8.0|MSIE 7.0", "g");
+                    var version = window.navigator.userAgent.match(reg);
                     if (!version) return !1;
                     version = version[version.lenght];
                     var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
@@ -790,17 +842,6 @@
                     is.hasOwnProperty(j) && (any[j] = function(o) {});
                 })(j);
                 return is.any = any, is;
-            }(this), this["if"] = function(_) {
-                var _if = {};
-                _if.is = {}, _if.is.not = {};
-                for (var i in _.is) (function(i) {
-                    "not" != i && (_if.is[i] = function(obj, fn, elseFn) {
-                        return _.is[i](obj) ? fn() : elseFn && elseFn();
-                    }, _if.is.not[i] = function(obj, fn, falseFn) {
-                        return _.is.not[i](obj) ? fn() : falseFn && falseFn();
-                    });
-                })(i);
-                return _if;
             }(this), this.iterator = function(_) {
                 return function(array) {
                     var index = -1;

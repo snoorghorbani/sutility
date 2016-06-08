@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.87 - 2016-06-08
+ * sutility v0.0.88 - 2016-06-08
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -154,6 +154,7 @@
                     urlPrefix: "/filter",
                     routePrefix: "/filter/filterresult"
                 }, defaultKeyConfig = {
+                    fixedName: null,
                     multi: !1,
                     "default": null
                 }, Fn = function(config) {
@@ -166,7 +167,7 @@
                         keys[name].multi ? values[name].push(valueStr) : values[name] = [ valueStr ];
                     });
                     var pathName = decodeURIComponent(window.location.pathname), catchAlls = pathName.replace(this.config.urlPrefix, "");
-                    catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
+                    if (catchAlls = catchAlls.split("/"), _.each(catchAlls, function(ca) {
                         _.is.startWith(ca, name + "-") && (values[name] = _.assignIfNotDefined(values[name], []), 
                         ca.length > name.length + 1 && values[name].push(ca));
                     }), Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {}), Fn.prototype.add[name] = function(a, b) {
@@ -177,6 +178,11 @@
                         values[name] = _.filter(values[name], function(a) {
                             return a.toLowerCase() !== valueStr.toLowerCase();
                         });
+                        var fixedName = keys[name].fixedName;
+                        fixedName && (valueStr = fixedName + "-" + a.toString() + (b ? "-" + b.toString() : ""), 
+                        values[fixedName] = _.filter(values[fixedName], function(a) {
+                            return a.toLowerCase() !== valueStr.toLowerCase();
+                        }));
                     }, Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {}), Fn.prototype.reset[name] = function() {
                         values[name] = [], _.each(keys[name]["default"], function(defaultValue) {
                             var a = _.is.array(defaultValue) ? defaultValue[0] : defaultValue, b = _.is.array(defaultValue) ? defaultValue[1] : undefined, valueStr = name + "-" + a.toString() + (b ? "-" + b.toString() : "");
@@ -185,7 +191,10 @@
                     }, Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {}), Fn.prototype.get[name] = function() {
                         var res;
                         return res = values[name];
-                    };
+                    }, config.fixedName) {
+                        var _config = _.clone(config);
+                        delete _config.fixedName, this.key(config.fixedName, _config);
+                    }
                 }, Fn.prototype.getRoute = function() {
                     var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;
                     return _.each(values, function(value, key) {
@@ -198,6 +207,16 @@
                     }), decodeURIComponent(url.toLowerCase());
                 }, Fn.prototype.getUrl = function(f) {
                     var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
+                    return _.each(values, function(value, key) {
+                        _.each(value, function(str) {
+                            var fine = _.fine(str.split("-"), function(a) {
+                                return _.is.value(a);
+                            });
+                            fine && (url += "/" + str);
+                        });
+                    }), decodeURIComponent(url.toLowerCase());
+                }, Fn.prototype.url = function(staticRoutePart) {
+                    var url = window.location.origin + staticRoutePart || "fortest" + staticRoutePart;
                     return _.each(values, function(value, key) {
                         _.each(value, function(str) {
                             var fine = _.fine(str.split("-"), function(a) {
@@ -513,7 +532,9 @@
                 }, is.regex = function(r) {
                     return "RegExp" === r.constructor.name;
                 }, is.ie = function(v) {
-                    var reg = new RegExp("(MSIE)Wd", "g"), version = window.navigator.userAgent.match(reg);
+                    var reg = new RegExp("(MSIE)Wd", "g");
+                    reg = new RegExp("MSIE 8.0|MSIE 7.0", "g");
+                    var version = window.navigator.userAgent.match(reg);
                     if (!version) return !1;
                     version = version[version.lenght];
                     var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
@@ -538,17 +559,6 @@
                     is.hasOwnProperty(j) && (any[j] = function(o) {});
                 })(j);
                 return is.any = any, is;
-            }(this), this["if"] = function(_) {
-                var _if = {};
-                _if.is = {}, _if.is.not = {};
-                for (var i in _.is) (function(i) {
-                    "not" != i && (_if.is[i] = function(obj, fn, elseFn) {
-                        return _.is[i](obj) ? fn() : elseFn && elseFn();
-                    }, _if.is.not[i] = function(obj, fn, falseFn) {
-                        return _.is.not[i](obj) ? fn() : falseFn && falseFn();
-                    });
-                })(i);
-                return _if;
             }(this), this.iterator = function(_) {
                 return function(array) {
                     var index = -1;

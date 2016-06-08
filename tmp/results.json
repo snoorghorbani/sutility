@@ -1,6 +1,6 @@
 {
-	"numResults": 288,
-	"creationDate": "2016-06-08 08:53:21",
+	"numResults": 304,
+	"creationDate": "2016-06-08 10:06:27",
 	"results": {
 		"src/Modules/MutationObserver.js": [
 			{
@@ -42,6 +42,44 @@
 			{
 				"line": 5,
 				"match": "_.fn"
+			}
+		],
+		"src/Modules/animation.js": [
+			{
+				"line": 2,
+				"match": "_.fn"
+			},
+			{
+				"line": 3,
+				"match": "_.memoize"
+			},
+			{
+				"line": 21,
+				"match": "_.memoize"
+			},
+			{
+				"line": 43,
+				"match": "_.className"
+			},
+			{
+				"line": 44,
+				"match": "_.each"
+			},
+			{
+				"line": 44,
+				"match": "_.select"
+			},
+			{
+				"line": 45,
+				"match": "_.callConstantly"
+			},
+			{
+				"line": 46,
+				"match": "_.className"
+			},
+			{
+				"line": 47,
+				"match": "_.className"
 			}
 		],
 		"src/Modules/argToArray.js": [
@@ -156,96 +194,88 @@
 		],
 		"src/Modules/catchall.js": [
 			{
-				"line": 14,
+				"line": 15,
 				"match": "_.update"
 			},
 			{
-				"line": 14,
+				"line": 15,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 19,
+				"line": 20,
 				"match": "_.update"
 			},
 			{
-				"line": 19,
+				"line": 20,
 				"match": "_.cloneObj"
 			},
 			{
-				"line": 21,
+				"line": 22,
 				"match": "_.is"
-			},
-			{
-				"line": 25,
-				"match": "_.each"
 			},
 			{
 				"line": 26,
-				"match": "_.is"
+				"match": "_.each"
 			},
 			{
 				"line": 27,
 				"match": "_.is"
 			},
 			{
-				"line": 40,
-				"match": "_.each"
+				"line": 28,
+				"match": "_.is"
 			},
 			{
-				"line": 42,
-				"match": "_.is"
+				"line": 41,
+				"match": "_.each"
 			},
 			{
 				"line": 43,
+				"match": "_.is"
+			},
+			{
+				"line": 44,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 50,
+				"line": 51,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 62,
+				"line": 63,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 65,
+				"line": 66,
 				"match": "_.filter"
 			},
 			{
-				"line": 68,
-				"match": "_.assignIfNotDefined"
-			},
-			{
-				"line": 71,
-				"match": "_.each"
-			},
-			{
 				"line": 72,
-				"match": "_.is"
+				"match": "_.filter"
 			},
 			{
-				"line": 73,
-				"match": "_.is"
-			},
-			{
-				"line": 85,
+				"line": 75,
 				"match": "_.assignIfNotDefined"
 			},
 			{
-				"line": 97,
+				"line": 78,
 				"match": "_.each"
 			},
 			{
-				"line": 98,
-				"match": "_.each"
-			},
-			{
-				"line": 99,
-				"match": "_.fine"
-			},
-			{
-				"line": 99,
+				"line": 79,
 				"match": "_.is"
+			},
+			{
+				"line": 80,
+				"match": "_.is"
+			},
+			{
+				"line": 91,
+				"match": "_.assignIfNotDefined"
+			},
+			{
+				"line": 102,
+				"match": "_.clone"
 			},
 			{
 				"line": 109,
@@ -261,6 +291,38 @@
 			},
 			{
 				"line": 111,
+				"match": "_.is"
+			},
+			{
+				"line": 121,
+				"match": "_.each"
+			},
+			{
+				"line": 122,
+				"match": "_.each"
+			},
+			{
+				"line": 123,
+				"match": "_.fine"
+			},
+			{
+				"line": 123,
+				"match": "_.is"
+			},
+			{
+				"line": 133,
+				"match": "_.each"
+			},
+			{
+				"line": 134,
+				"match": "_.each"
+			},
+			{
+				"line": 135,
+				"match": "_.fine"
+			},
+			{
+				"line": 135,
 				"match": "_.is"
 			}
 		],
@@ -362,23 +424,35 @@
 		],
 		"src/Modules/css.js": [
 			{
-				"line": 9,
+				"line": 10,
+				"match": "_.camelCase"
+			},
+			{
+				"line": 11,
 				"match": "_.camelCase"
 			},
 			{
 				"line": 13,
+				"match": "_.each"
+			},
+			{
+				"line": 14,
+				"match": "_.pascalCase"
+			},
+			{
+				"line": 21,
 				"match": "_.selectFirst"
 			},
 			{
-				"line": 16,
+				"line": 24,
 				"match": "_.regex"
 			},
 			{
-				"line": 19,
+				"line": 27,
 				"match": "_.fail"
 			},
 			{
-				"line": 19,
+				"line": 27,
 				"match": "_.css"
 			}
 		],
@@ -576,151 +650,155 @@
 				"match": "_.dataset"
 			},
 			{
-				"line": 25,
-				"match": "_.each"
-			},
-			{
 				"line": 26,
-				"match": "_.selectFirst"
-			},
-			{
-				"line": 31,
-				"match": "_.each"
-			},
-			{
-				"line": 40,
-				"match": "_.camelCase"
-			},
-			{
-				"line": 41,
-				"match": "_.fail"
-			},
-			{
-				"line": 54,
-				"match": "_.selectFirst"
-			},
-			{
-				"line": 62,
 				"match": "_.dataset"
 			},
 			{
-				"line": 75,
+				"line": 29,
+				"match": "_.each"
+			},
+			{
+				"line": 30,
+				"match": "_.selectFirst"
+			},
+			{
+				"line": 35,
+				"match": "_.each"
+			},
+			{
+				"line": 44,
+				"match": "_.camelCase"
+			},
+			{
+				"line": 45,
+				"match": "_.fail"
+			},
+			{
+				"line": 58,
+				"match": "_.selectFirst"
+			},
+			{
+				"line": 66,
+				"match": "_.dataset"
+			},
+			{
+				"line": 79,
 				"match": "_.extend"
 			},
 			{
-				"line": 76,
+				"line": 80,
 				"match": "_.extend"
 			},
 			{
-				"line": 77,
+				"line": 81,
 				"match": "_.extend"
 			},
 			{
-				"line": 78,
+				"line": 82,
 				"match": "_.extend"
 			},
 			{
-				"line": 86,
+				"line": 90,
 				"match": "_.merge"
 			},
 			{
-				"line": 87,
+				"line": 91,
 				"match": "_.merge"
 			},
 			{
-				"line": 88,
+				"line": 92,
 				"match": "_.merge"
 			},
 			{
-				"line": 89,
+				"line": 93,
 				"match": "_.merge"
 			},
 			{
-				"line": 104,
+				"line": 108,
 				"match": "_.scope"
 			},
 			{
-				"line": 105,
+				"line": 109,
 				"match": "_.scope"
 			},
 			{
-				"line": 107,
+				"line": 111,
 				"match": "_.ready"
-			},
-			{
-				"line": 117,
-				"match": "_.fn"
 			},
 			{
 				"line": 121,
+				"match": "_.fn"
+			},
+			{
+				"line": 125,
 				"match": "_.is"
 			},
 			{
-				"line": 122,
+				"line": 126,
 				"match": "_.each"
 			},
 			{
-				"line": 144,
+				"line": 148,
 				"match": "_.loadJS"
 			},
 			{
-				"line": 150,
+				"line": 154,
 				"match": "_.array"
 			},
 			{
-				"line": 175,
+				"line": 179,
 				"match": "_.is"
 			},
 			{
-				"line": 176,
+				"line": 180,
 				"match": "_.each"
 			},
 			{
-				"line": 198,
+				"line": 202,
 				"match": "_.ready"
 			},
 			{
-				"line": 212,
+				"line": 216,
 				"match": "_.dashCase"
 			},
 			{
-				"line": 214,
+				"line": 218,
 				"match": "_.argToArray"
 			},
 			{
-				"line": 215,
+				"line": 219,
 				"match": "_.each"
 			},
 			{
-				"line": 224,
+				"line": 228,
 				"match": "_.argToArray"
 			},
 			{
-				"line": 226,
+				"line": 230,
 				"match": "_.each"
 			},
 			{
-				"line": 227,
+				"line": 231,
 				"match": "_.is"
 			},
 			{
-				"line": 241,
+				"line": 246,
 				"match": "_.ready"
 			},
 			{
-				"line": 242,
+				"line": 247,
 				"match": "_.lexer"
 			},
 			{
-				"line": 244,
+				"line": 249,
 				"match": "_.each"
 			},
 			{
-				"line": 245,
+				"line": 250,
 				"match": "_.callWhen"
 			},
 			{
-				"line": 247,
+				"line": 252,
 				"match": "_.each"
 			}
 		],
@@ -815,18 +893,6 @@
 			},
 			{
 				"line": 100,
-				"match": "_.is"
-			},
-			{
-				"line": 162,
-				"match": "_.is"
-			},
-			{
-				"line": 165,
-				"match": "_.is"
-			},
-			{
-				"line": 170,
 				"match": "_.is"
 			}
 		],

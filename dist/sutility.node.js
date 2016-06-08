@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.87 - 2016-06-08
+ * sutility v0.0.88 - 2016-06-08
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -300,129 +300,151 @@ this.canvas = (function (_) {
 })(this)
 
 this.catchall = (function (_) {
-    var instatiate = null;
-    var keys = {};
-    var values = {};
-    var defaultCatchAllConfig = {
-        urlPrefix: '/filter',
-        routePrefix: '/filter/filterresult'
-    };
-    var defaultKeyConfig = {
-        multi: false,
-        'default': null
-    };
-    var Fn = function (config) {
-        this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
-        return this;
-    };
+	var instatiate = null;
+	var keys = {};
+	var values = {};
+	var defaultCatchAllConfig = {
+		urlPrefix: '/filter',
+		routePrefix: '/filter/filterresult'
+	};
+	var defaultKeyConfig = {
+		fixedName: null,
+		multi: false,
+		'default': null
+	};
+	var Fn = function (config) {
+		this.config = _.update(_.cloneObj(defaultCatchAllConfig), config);
+		return this;
+	};
+	
+	Fn.prototype.key = function (name, config) {
+		keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
+		keys[name]['default'] = (config['default'])
+                                ? (_.is.array(config['default']) ? config['default'] : [config['default']])
+                                : [];
+		
+		values[name] = values[name] || [];
+		_.each(keys[name]['default'], function (defaultValue) {
+			var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
+			var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
+			var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+			
+			if (keys[name].multi) {
+				values[name].push(valueStr);
+			} else {
+				values[name] = [valueStr];
+			}
+		});
+		
+		var pathName = decodeURIComponent(window.location.pathname);
+		var catchAlls = pathName.replace(this.config.urlPrefix, '');
+		catchAlls = catchAlls.split('/');
+		_.each(catchAlls, function (ca) {
+			//if (ca.startsWith(name + '-')) {
+			if (_.is.startWith(ca, name + '-')) {
+				values[name] = _.assignIfNotDefined(values[name], []);
+				if (ca.length > name.length + 1) {
+					values[name].push(ca);
+				}
+			}
+		});
+		
+		Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
+		Fn.prototype.add[name] = function (a, b) {
+			var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+			
+			if (keys[name].multi) {
+				values[name] = values[name] || [];
+				values[name].push(valueStr);
+			} else {
+				values[name] = [valueStr];
+			}
+		};
+		
+		Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
+		Fn.prototype.remove[name] = function (a, b) {
+			var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+			values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
+			
+			var fixedName = keys[name].fixedName;
+			if (!fixedName) return;
+			
+			valueStr = fixedName + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+			values[fixedName] = _.filter(values[fixedName], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
+		};
+		
+		Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
+		Fn.prototype.reset[name] = function () {
+			values[name] = [];
+			_.each(keys[name]['default'], function (defaultValue) {
+				var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
+				var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
+				var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
+				
+				if (keys[name].multi) {
+					values[name].push(valueStr);
+				} else {
+					values[name] = [valueStr];
+				}
+			});
+		};
+		
+		Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {});
+		Fn.prototype.get[name] = function () {
+			var res;
+			
+			res = values[name];
+			
+			return res
 
-    Fn.prototype.key = function (name, config) {
-        keys[name] = _.update(_.cloneObj(defaultKeyConfig), config);
-        keys[name]['default'] = (config['default'])
-                    ? (_.is.array(config['default']) ? config['default'] : [config['default']])
-                    : [];
-
-        values[name] = values[name] || [];
-        _.each(keys[name]['default'], function (defaultValue) {
-            var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
-            var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
-            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-
-            if (keys[name].multi) {
-                values[name].push(valueStr);
-            } else {
-                values[name] = [valueStr];
-            }
-        });
-
-        var pathName = decodeURIComponent(window.location.pathname);
-        var catchAlls = pathName.replace(this.config.urlPrefix, '');
-        catchAlls = catchAlls.split('/');
-        _.each(catchAlls, function (ca) {
-            //if (ca.startsWith(name + '-')) {
-            if (_.is.startWith(ca, name + '-')) {
-                values[name] = _.assignIfNotDefined(values[name], []);
-                if (ca.length > name.length + 1) {
-                    values[name].push(ca);
-                }
-            }
-        });
-
-        Fn.prototype.add = _.assignIfNotDefined(Fn.prototype.add, {});
-        Fn.prototype.add[name] = function (a, b) {
-            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-
-            if (keys[name].multi) {
-                values[name] = values[name] || [];
-                values[name].push(valueStr);
-            } else {
-                values[name] = [valueStr];
-            }
-        };
-
-        Fn.prototype.remove = _.assignIfNotDefined(Fn.prototype.remove, {});
-        Fn.prototype.remove[name] = function (a, b) {
-            var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-            values[name] = _.filter(values[name], function (a) { return a.toLowerCase() !== valueStr.toLowerCase(); });
-        };
-
-        Fn.prototype.reset = _.assignIfNotDefined(Fn.prototype.reset, {});
-        Fn.prototype.reset[name] = function () {
-            values[name] = [];
-            _.each(keys[name]['default'], function (defaultValue) {
-                var a = (_.is.array(defaultValue)) ? defaultValue[0] : defaultValue;
-                var b = (_.is.array(defaultValue)) ? defaultValue[1] : undefined;
-                var valueStr = name + '-' + a.toString() + ((b) ? '-' + b.toString() : '');
-
-                if (keys[name].multi) {
-                    values[name].push(valueStr);
-                } else {
-                    values[name] = [valueStr];
-                }
-            });
-        };
-
-
-        Fn.prototype.get = _.assignIfNotDefined(Fn.prototype.get, {});
-        Fn.prototype.get[name] = function () {
-            var res;
-
-            res = values[name];
-
-            return res
-
-        };
-    };
-    Fn.prototype.getRoute = function () {
-        var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;
-        _.each(values, function (value, key) {
-            _.each(value, function (str) {
-                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
-                if (fine) {
-                    url += '/' + str;
-                }
-            });
-        });
-        return decodeURIComponent(url.toLowerCase());
-    };
-    Fn.prototype.getUrl = function (f) {
-        var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
-        _.each(values, function (value, key) {
-            _.each(value, function (str) {
-                var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
-                if (fine) {
-                    url += '/' + str;
-                }
-            });
-        });
-        return decodeURIComponent(url.toLowerCase());
-    };
-
-    return function (config) {
-        return (instatiate) ? instatiate : instatiate = new Fn(config);
-    };
+		};
+		
+		if (config.fixedName) {
+			var _config = _.clone(config);
+			delete _config.fixedName;
+			this.key(config.fixedName, _config);
+		}
+	};
+	Fn.prototype.getRoute = function () {
+		var url = window.location.origin + this.config.routePrefix || "fortest" + this.config.routePrefix;
+		_.each(values, function (value, key) {
+			_.each(value, function (str) {
+				var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+				if (fine) {
+					url += '/' + str;
+				}
+			});
+		});
+		return decodeURIComponent(url.toLowerCase());
+	};
+	Fn.prototype.getUrl = function (f) {
+		var url = window.location.origin + this.config.urlPrefix || "fortest" + this.config.urlPrefix;
+		_.each(values, function (value, key) {
+			_.each(value, function (str) {
+				var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+				if (fine) {
+					url += '/' + str;
+				}
+			});
+		});
+		return decodeURIComponent(url.toLowerCase());
+	};
+	Fn.prototype.url = function (staticRoutePart) {
+		var url = window.location.origin + staticRoutePart || "fortest" + staticRoutePart;
+		_.each(values, function (value, key) {
+			_.each(value, function (str) {
+				var fine = _.fine(str.split('-'), function (a) { return _.is.value(a); });
+				if (fine) {
+					url += '/' + str;
+				}
+			});
+		});
+		return decodeURIComponent(url.toLowerCase());
+	};
+	return function (config) {
+		return (instatiate) ? instatiate : instatiate = new Fn(config);
+	};
 })(this);
-
 this.categorize = function (obj, key) {
     var res = {};
     _.each(obj, function (item) {
@@ -991,182 +1013,163 @@ this.interface = function (obj, decl) {
 };
 
 this.is = (function (_, undefined) {
-    var is = function (node, selector) {
-        if (node.matches)
-            return node.matches(selector);
-        var nodes = this.argToArray(node.parentNode.querySelectorAll(selector));
-        return (nodes.indexOf(node) > -1) ? true : false;
-    };
+	var is = function (node, selector) {
+		if (node.matches)
+			return node.matches(selector);
+		var nodes = this.argToArray(node.parentNode.querySelectorAll(selector));
+		return (nodes.indexOf(node) > -1) ? true : false;
+	};
+	
+	is.object = function (_var) {
+		if (_.is.not.ie())
+			return Object.prototype.toString.call(_var) === '[object Object]';
+		else {
+			if (!_var) return false;
+			return Object.prototype.toString.call(_var) === '[object Object]';
 
-    is.object = function (_var) {
-        if (_.is.not.ie())
-            return Object.prototype.toString.call(_var) === '[object Object]';
-        else {
-            if (!_var) return false;
-            return Object.prototype.toString.call(_var) === '[object Object]';
+		}
+	};
+	is.nodeList = function (obj) {
+		if (_.is.not.ie())
+			return Object.prototype.toString.call(obj) === '[object NodeList]';
+		else
+			return (obj.length !== undefined 
+                            && obj.push === undefined && (obj.length > 0 ? obj[0].tagName !== undefined : true));
+	};
+	is.element = function (obj) {
+		return Object.prototype.toString.call(obj).search('Element') > -1;
+                    //return !!Object.prototype.toString.call(_var).toLowerCase().search('element');;
+	};
+	is.HTMLCollection = function (obj) {
+		return Object.prototype.toString.call(obj) === '[object HTMLCollection]';
+	};
+	is.array = function (_var) {
+		return Object.prototype.toString.call(_var) === '[object Array]';
+	};
+	is.number = function (_var) {
+		return Object.prototype.toString.call(_var) === '[object Number]';
+	};
+	is['function'] = function (_var) {
+		return Object.prototype.toString.call(_var) === '[object Function]';
+	};
+	is.string = function (_var) {
+		return (Object.prototype.toString.call(_var) === '[object String]');//&& ((isEmpty));
+	};
+	is.undefined = function (_var) {
+		return Object.prototype.toString.call(_var) === '[object Undefined]';
+	};
+	is.event = function (_var) {
+		return Object.prototype.toString.call(_var).toLowerCase().search('event') > -1;
+	};
+	is.defined = function (_var) {
+		//return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
+		return _var !== undefined && _var !== null && _var !== "";
+	};
+	is.json = function () { };
+	is.error = function () { };
+	
+	is.startWith = function (str, prefix) {
+		return str.indexOf(prefix) === 0;
+	};
+	is.endWith = function (str) { };
+	
+	is.value = function (_var) {
+		return (_var) ? true : false;
+	};
+	is.empty = function (o) {
+		if (_.is.object(0))
+			for (var i in o)
+				if (o.hasOwnProperty(i))
+					return false;
+		if (_.is.array(o))
+			return o.length === 0
+		return true;
+	};
+	is.truthy = function () { };
+	is.scalar = function (_var) {
+		//TODO : improve
+		return is.defined(_var) && is.not.array(_var) && is.not.object(_var) && is.not['function'](_var);
+	};
+	is.prototypeProp = function (obj, prop) {
+		return (obj[prop] && !obj.hasOwnProperty(prop));
+	};
+	is.equal = function (fv, sv) {
+		//if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+		//if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+		
+		return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
+	};
+	is.equalText = function (fv, sv) {
+		if (DEBUG) {
+			if (_.is.not.string(fv)) that.warn('equal function :' + fv + ' is Not String');
+			if (_.is.not.string(sv)) that.warn('equal function :' + sv + ' is Not String');
+		}
+		
+		return (fv.toLowerCase(fv) === sv.toLowerCase(sv)) ? true : false;
+	};
+	is.closet = function (fo, so) {
+		return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
+	};
+	is.contain = function (str, searchStr) {
+		var reg = (_.is.regex(searchStr)) ? searchStr : new RegExp(searchStr, 'g');
+		return str.match(reg) && str.match(reg).length > 0;
+	};
+	is.regex = function (r) {
+		return r.constructor.name === "RegExp";
+	};
+	is.ie = function (v) {
+		var reg = new RegExp("(MSIE)\W\d", 'g');
+		reg = new RegExp("MSIE 8.0|MSIE 7.0", 'g');
+		
+		var version = window.navigator.userAgent.match(reg);
+		if (!version) return false;
+		version = version[version.lenght];
+		
+		var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
+		return isTrident;
+		
+		if (v) {
+			return isTrident;
+		} else {
+			return isTrident;
+		}
+	};
+	is.same = function (fv, sv) {
+		//if (!fv) that.warn('equal function :' + fv + ' is Not Object');
+		//if (!sv) that.warn('equal function :' + sv + ' is Not Object');
+		
+		return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
+	};
+	
+	var not = {};
+	var i;
+	for (i in is) (function (i) {
+		if (is.hasOwnProperty(i)) not[i] = function (a, b, c) {
+			return !is[i](a, b, c);
+		};
+	})(i);
+	is.not = not;
+	
+	//TODO : impelement
+	var all = {};
+	for (i in is) (function (i) {
+		if (is.hasOwnProperty(i)) all[i] = function (o) {
 
-        }
-    };
-    is.nodeList = function (obj) {
-        if (_.is.not.ie())
-            return Object.prototype.toString.call(obj) === '[object NodeList]';
-        else
-            return (obj.length !== undefined
-                && obj.push === undefined && (obj.length > 0 ? obj[0].tagName !== undefined : true));
-    };
-    is.element = function (obj) {
-        return Object.prototype.toString.call(obj).search('Element') > -1;
-        //return !!Object.prototype.toString.call(_var).toLowerCase().search('element');;
-    };
-    is.HTMLCollection = function (obj) {
-        return Object.prototype.toString.call(obj) === '[object HTMLCollection]';
-    };
-    is.array = function (_var) {
-        return Object.prototype.toString.call(_var) === '[object Array]';
-    };
-    is.number = function (_var) {
-        return Object.prototype.toString.call(_var) === '[object Number]';
-    };
-    is['function'] = function (_var) {
-        return Object.prototype.toString.call(_var) === '[object Function]';
-    };
-    is.string = function (_var) {
-        return (Object.prototype.toString.call(_var) === '[object String]');//&& ((isEmpty));
-    };
-    is.undefined = function (_var) {
-        return Object.prototype.toString.call(_var) === '[object Undefined]';
-    };
-    is.event = function (_var) {
-        return Object.prototype.toString.call(_var).toLowerCase().search('event') > -1;
-    };
-    is.defined = function (_var) {
-        //return Object.prototype.toString.call(_var) !== '[object Undefined]' && Object.prototype.toString.call(_var) !== '[object Null]' && Object !== '';
-        return _var !== undefined && _var !== null && _var !== "";
-    };
-    is.json = function () { };
-    is.error = function () { };
+		};
+	})(i);
+	is.all = all;
+	
+	var any = {};
+	for (var j in is) (function (j) {
+		if (is.hasOwnProperty(j)) any[j] = function (o) {
 
-    is.startWith = function (str, prefix) {
-        return str.indexOf(prefix) === 0;
-    };
-    is.endWith = function (str) { };
-
-    is.value = function (_var) {
-        return (_var) ? true : false;
-    };
-    is.empty = function (o) {
-        if (_.is.object(0))
-            for (var i in o)
-                if (o.hasOwnProperty(i))
-                    return false;
-        if (_.is.array(o))
-            return o.length === 0
-        return true;
-    };
-    is.truthy = function () { };
-    is.scalar = function (_var) {
-        //TODO : improve
-        return is.defined(_var) && is.not.array(_var) && is.not.object(_var) && is.not['function'](_var);
-    };
-    is.prototypeProp = function (obj, prop) {
-        return (obj[prop] && !obj.hasOwnProperty(prop));
-    };
-    is.equal = function (fv, sv) {
-        //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-        //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
-
-        return (JSON.stringify(fv) == JSON.stringify(sv)) ? true : false;
-    };
-    is.equalText = function (fv, sv) {
-        if (DEBUG) {
-            if (_.is.not.string(fv)) that.warn('equal function :' + fv + ' is Not String');
-            if (_.is.not.string(sv)) that.warn('equal function :' + sv + ' is Not String');
-        }
-
-        return (fv.toLowerCase(fv) === sv.toLowerCase(sv)) ? true : false;
-    };
-    is.closet = function (fo, so) {
-        return _.is.equal(_.partial(fo, _.report.skeleton(so)), so);
-    };
-    is.contain = function (str, searchStr) {
-        var reg = (_.is.regex(searchStr)) ? searchStr : new RegExp(searchStr, 'g');
-        return str.match(reg) && str.match(reg).length > 0;
-    };
-    is.regex = function (r) {
-        return r.constructor.name === "RegExp";
-    };
-    is.ie = function (v) {
-        //TODO : rewrite
-
-        var reg = new RegExp("(MSIE)\W\d", 'g')
-        var version = window.navigator.userAgent.match(reg);
-        if (!version) return false;
-        version = version[version.lenght];
-
-        var isTrident = window.navigator.userAgent.indexOf("Trident") > 0;
-        return isTrident;
-
-        if (v) {
-            return isTrident;
-        } else {
-            return isTrident;
-        }
-    };
-    is.same = function (fv, sv) {
-        //if (!fv) that.warn('equal function :' + fv + ' is Not Object');
-        //if (!sv) that.warn('equal function :' + sv + ' is Not Object');
-
-        return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
-    };
-
-    var not = {};
-    var i;
-    for (i in is) (function (i) {
-        if (is.hasOwnProperty(i)) not[i] = function (a, b, c) {
-            return !is[i](a, b, c);
-        };
-    })(i);
-    is.not = not;
-
-    //TODO : impelement
-    var all = {};
-    for (i in is) (function (i) {
-        if (is.hasOwnProperty(i)) all[i] = function (o) {
-
-        };
-    })(i);
-    is.all = all;
-
-    var any = {};
-    for (var j in is) (function (j) {
-        if (is.hasOwnProperty(j)) any[j] = function (o) {
-
-        };
-    })(j);
-    is.any = any;
-
-    return is;
+		};
+	})(j);
+	is.any = any;
+	
+	return is;
 })(this);
-this['if'] = (function (_) {
-    var _if = {};
-    _if.is = {};
-    _if.is.not = {};
-    for (var i in _.is) (function (i) {
-        if (i != 'not') {
-            _if.is[i] = function (obj, fn, elseFn) {
-                if (_.is[i](obj))
-                    return fn();
-                else return elseFn && elseFn();
-            };
-            _if.is.not[i] = function (obj, fn, falseFn) {
-                if (_.is.not[i](obj))
-                    return fn();
-                else return falseFn && falseFn();
-            };
-        }
-    })(i);
-    return _if;
-})(this);
+
 this.iterator = (function (_) {
     return function (array) {
         var index = -1;
