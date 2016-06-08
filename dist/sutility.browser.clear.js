@@ -28,36 +28,7 @@
                 xhttp.open("GET", options.url, !0), xhttp.send(options.data), xhttp.onreadystatechange = function() {
                     200 == xhttp.status && 4 == xhttp.readyState && callback(xhttp.responseText);
                 };
-            }, this.animation = function(_, undefined) {
-                var fn = _.fn();
-                return fn.endProp = _.memoize(function() {
-                    var animation, element = document.createElement("div"), animations = {
-                        animation: "animationend",
-                        OAnimation: "oAnimationEnd",
-                        MozAnimation: "mozAnimationEnd",
-                        WebkitAnimation: "webkitAnimationEnd"
-                    };
-                    for (animation in animations) if (element.style[animation] !== undefined) return animations[animation];
-                    return !1;
-                }), fn.startProp = _.memoize(function() {
-                    var animation, element = document.createElement("div"), animations = {
-                        animation: "animationstart",
-                        OAnimation: "oAnimationStart",
-                        MozAnimation: "mozAnimationStart",
-                        WebkitAnimation: "webkitAnimationStart"
-                    };
-                    for (animation in animations) if (element.style[animation] !== undefined) return animations[animation];
-                    return !1;
-                }), fn.end = function(el, callback) {
-                    el.addEventListener(fn.endProp(), callback);
-                }, fn.to = function(el, startClass, endClass) {
-                    _.className.add(el, startClass), _.each(_.select(el), function(el) {
-                        fn.end(el, _.callConstantly(function() {
-                            _.className.remove(el, startClass), _.className.add(el, endClass);
-                        }, 1));
-                    });
-                }, fn;
-            }(this), this.argToArray = function(arg) {
+            }, this.animation = function(_, undefined) {}(this), this.argToArray = function(arg) {
                 if (_.is.not.ie()) return Array.prototype.slice.call(arg);
                 for (var array = [], i = 0; i < arg.length; i++) array.push(arg[i]);
                 return array;
