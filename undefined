@@ -14,6 +14,113 @@ window.SUTILITY = (function () {
 var U = function () {
 var _ = this;
  var that = this;
+// var target = document.querySelector('#basketStepContainer');
+
+// // create an observer instance
+// var observer = new MutationObserver(function (mutations) {
+    // mutations.forEach(function (mutation) {
+        // console.log(mutation);
+        // _.each(mutation.addedNodes, function (node) {
+            // //console.log(node.innerHTML);
+        // });
+    // });
+// });
+
+// // configuration of the observer:
+// var config = { attributes: false, childList: true, characterData: true };
+
+// // pass in the target node, as well as the observer options
+// observer.observe(target, config);
+this.activate = function (selector, classname, callback) {
+    classname = classname || 'active';
+    //var parents = _.select(parentOrSelector);
+    _.attach(selector, 'click', function (e, el, itemsSelector) {
+        _.className.remove(itemsSelector, classname);
+        _.className.add(el, classname);
+        callback && callback(e, el);
+    });
+    //_.each(parents, function (parent) {
+    //    var nodes = _.select(selector, parent);
+    //    _.each(nodes, function (node) {
+    //    });
+    //});
+};
+
+this.ajax = function (options, callback) {
+    var xhttp = this.getXHR();
+    options.url = options.url || location.href;
+    options.data = options.data || null;
+    callback = callback || _.fn();
+    
+    options.type = options.type || 'json';
+    var url = options.url;
+    if (options.type == 'jsonp') {
+        window.jsonCallback = callback;
+        var $url = url.replace('callback=?', 'callback=jsonCallback');
+        var script = document.createElement('script');
+        script.src = $url;
+        document.body.appendChild(script);
+    }
+    xhttp.open('GET', options.url, true);
+    xhttp.send(options.data);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.status == 200 && xhttp.readyState == 4) {
+            callback(xhttp.responseText);
+        }
+    };
+};
+;this.animation = (function (_, undefined) {
+	// var fn = _.fn();
+	// fn.endProp = _.memoize(function () {
+		// var 
+                  // element = document.createElement('div'),
+			// animations = {
+				// 'animation': 'animationend',
+				// 'OAnimation': 'oAnimationEnd',
+				// 'MozAnimation': 'mozAnimationEnd',
+				// 'WebkitAnimation': 'webkitAnimationEnd'
+			// },
+			// animation
+		// ;
+		// for (animation in animations) {
+			// if (element.style[animation] !== undefined) {
+				// return animations[animation];
+			// }
+		// }
+		// return false;
+	// });
+	// fn.startProp = _.memoize(function () {
+		// var 
+                  // element = document.createElement('div'),
+			// animations = {
+				// 'animation': 'animationstart',
+				// 'OAnimation': 'oAnimationStart',
+				// 'MozAnimation': 'mozAnimationStart',
+				// 'WebkitAnimation': 'webkitAnimationStart'
+			// },
+			// animation
+		// ;
+		// for (animation in animations) {
+			// if (element.style[animation] !== undefined) {
+				// return animations[animation];
+			// }
+		// }
+		// return false;
+	// });
+	// fn.end = function (el, callback) {
+		// el.addEventListener(fn.endProp(), callback);
+	// }
+	// fn.to = function (el, startClass, endClass) {
+		// _.className.add(el, startClass);
+		// _.each(_.select(el), function (el) {
+			// fn.end(el, _.callConstantly(function () {
+				// _.className.remove(el, startClass);
+				// _.className.add(el, endClass);
+			// }, 1));
+		// });
+	// }
+	// return fn;
+})(this);
 
 this.argToArray = function (arg) {
     if (_.is.not.ie())
@@ -169,11 +276,85 @@ this.assignIfNotDefined = function (varible, fnOrObj) {
     //TODO : handel fn
     return (varible === undefined) ? fnOrObj : varible;
 };
+this.attach = (function (_) {
+	var eventList = {};
+	
+	var fn = function (domOrSelector, state, fn) {
+		
+		if (!eventList[state]) {
+			eventList[state] = [];
+			listener(state);
+		};
+		var temp = {
+			fn: fn,
+			domOrSelector: domOrSelector
+		}
+		for (var i = 0, item; item = eventList[state][i]; i++)
+			if (_.is.equal(temp, item))
+				return i;
+		
+		eventList[state].push(temp);
+		
+		return eventList[state].length - 1;
+	}
+	
+	var listener = function (state) {
+		
+		document.body.addEventListener(state, function (e) {
+			var done = false;
+			for (var i = 0, handler; handler = eventList[state][i]; i++) {
+				var el = e.target || e.srcElement;
+				done = false;
+				if (_.is.element(handler.domOrSelector)) {
+					do {
+						if (_.is.same(el, handler.domOrSelector)) {
+							handler.fn(e, el, handler.domOrSelector);
+							done = true;
+						} else {
+							el = el.parentNode;
+						}
+					} while (!done && el.tagName && el.tagName.toLowerCase() != 'body');
+				} else if (_.is.string(handler.domOrSelector)) {
+					do {
+						if (_.is(el, handler.domOrSelector)) {
+							//TODO  : pass arguments
+							handler.fn(e, el, handler.domOrSelector);
+							done = true;
+						} else {
+							el = el.parentNode;
+						}
+					} while (!done && el.tagName && el.tagName.toLowerCase() != 'body');
+				}
+			}
+		});
+	};
+	
+	return fn;
+})(this);
 this.attr = (function (_, undefined) {
     var attr = function () { };
     
     return attr;
 })(this);
+
+this.availableDim = function () {
+    var inner = document.createElement('div');
+    
+    inner.style.position = 'fixed';
+    inner.style.top = '0px';
+    inner.style.right = '0px';
+    inner.style.bottom = '0px';
+    inner.style.left = '0px';
+    document.body.appendChild(inner);
+    
+    var height = inner.offsetHeight;
+    var width = inner.offsetWidth;
+    inner.parentNode.removeChild(inner);
+    return {
+        height: height,
+        width: width
+    };
+};
 
 this.bind = function (el, obj, decorator) {
     decorator = decorator || this.i;
@@ -477,6 +658,95 @@ this.chain = function (fn, callback, context) {
     };
 };
 
+this.className = (function (_, undefined) {
+    var className = function (selectorOrDom, className) { };
+
+    className.add = function (selectorOrDom, className) {
+        var nodes = _.select(selectorOrDom);
+
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].classList) {
+                //ToDo
+                DOMTokenList.prototype.add.apply(nodes[i].classList, _.spliteAndTrim(className));
+                continue;
+            }
+            if (nodes[i].className.indexOf(className) === -1) {
+                nodes[i].className = nodes[i].className + ' ' + className;
+            }
+        }
+    };
+    className.remove = function (selectorOrDom, className) {
+        var nodes = _.select(selectorOrDom);
+        //#region shim for ie
+        if (_.is.ie()) {
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].classList) {
+                    var classNames = _.spliteAndTrim(className)
+                    for (var j = 0; j < classNames.length; j++) {
+                        DOMTokenList.prototype.remove.call(nodes[i].classList, classNames[j]);
+                    }
+                }
+
+                var reg = new RegExp(className, 'g');
+                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+            }
+        }
+            //#endregion
+        else {
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].classList) {
+                    DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
+                    continue;
+                }
+
+                var reg = new RegExp(className, 'g');
+                nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+            }
+        }
+
+        //var nodes = _.select(selectorOrDom);
+        ////#region shim for ie
+        //if (_.is.ie()) {
+        //    for (var i = 0; i < nodes.length; i++) {
+        //        if (nodes[i].classList) {
+        //            var classNames = _.spliteAndTrim(className)
+        //            for (var i = 0; i < classNames.length; i++) {
+        //                DOMTokenList.prototype.remove.apply(nodes[i].classList, classNames[i]);
+        //            }
+        //        }
+
+        //        var reg = new RegExp(className, 'g');
+        //        nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+        //    }
+        //};
+        //#endregion
+        //for (var i = 0; i < nodes.length; i++) {
+        //    if (nodes[i].classList) {
+        //        DOMTokenList.prototype.remove.apply(nodes[i].classList, _.spliteAndTrim(className));
+        //        continue;
+        //    }
+
+        //    var reg = new RegExp(className, 'g');
+        //    nodes[i].className = (nodes[i].className.replace(reg, '')).trim();
+        //}
+    }
+    className.toggle = function () { };
+    className.change = function (selectorOrDom, className, replaceWith) {
+        var nodes = _.select(selectorOrDom);
+        _.className.remove(nodes, className);
+        _.className.add(nodes, replaceWith);
+    };
+    className.contains = function (selectorOrDom, className) {
+        var node = _.selectFirst(selectorOrDom);
+        return node.classList.contains(className);
+    };
+    className['if'] = function (selectorOrDom, className, fn) {
+        var nodes = _.select(selectorOrDom);
+        for (var i = 0; i < nodes.length; i++)
+            ((fn(nodes[i])) ? _.className.add : _.className.remove)(nodes[i], className);
+    };
+    return className;
+})(this);
 this.clone = function (arOrObj) {
     if (arOrObj.concat)
         return arOrObj.concat();
@@ -573,8 +843,69 @@ this.contain = function (obj, value) {
     return false;
 };
 
+this.cookie = (function (_) {
+                var Fn = function () { };
+
+                Fn.set = function (key, value, exdays) {
+                    if (_.is.object(value)) {
+                        value = JSON.stringify(value);
+                    }
+                    var d = new Date();
+                    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                    var expires = "expires=" + d.toUTCString();
+
+                    document.cookie = _.compileString('{{key}}={{value}};{{expires}},', { key: key, value: value, expires: expires });
+                    return document.cookie;
+                };
+                Fn.get = function (key) {
+                    var name = key + "=";
+                    var ca = document.cookie.split(';');
+                    for (var i = 0; i < ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') c = c.substring(1);
+                        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+                    }
+                    return "";
+                };
+                Fn.remove = function (key) {
+                    Fn.set(key, '', 0);
+                };
+
+                return Fn;
+            })(this);
 this.countBy = function () { };
 
+this.css = (function (_) {
+	var toPX = function () { };
+	var toNumber = function () { };
+	var vendorPrefixProperties = ['transition', 'transform'];
+	var vendors = ['webkit', 'Moz', 'o', 'ms'];
+	var fn = function (selectorOrDom, style) {
+		var nodes = this.select(selectorOrDom);
+		for (var i = 0, node; node = nodes[i]; i++)
+			for (var k in style) {
+				if (vendorPrefixProperties.indexOf(_.camelCase(k)) == -1) {
+					node.style[_.camelCase(k)] = style[k];
+				} else {
+					_.each(vendors, function (vendor) {
+						node.style[vendor + _.pascalCase(k)] = style[k];
+					});
+				}
+			}
+	};
+	fn.computedValue = function (selectorOrDom, prop, numberOnly) {
+		if (window.getComputedStyle) {
+			var nodes = _.selectFirst(selectorOrDom);
+			var value = window.getComputedStyle(nodes, null).getPropertyValue(prop);
+			if (numberOnly)
+				value = _.regex.matchFirst(value);
+			return value;
+		}
+		_.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
+	};
+	
+	return fn;
+})(this);
 this.dashCase = function (str) {
     return str.replace(/([A-Z])|([\W|\_])/g, function (match) {
         return (/[\w]/.test(match)) ?
@@ -703,6 +1034,16 @@ this.enableBackup = (function (_, undefined) {
         return constructor;
     };
 })(this);
+this.event = function (domOrSelector, state, fn) {
+    var nodes = this.select(domOrSelector);
+    //var oldMethod = (document.body.addEventListener == undefined);
+    this.each(nodes, function (node) {
+        //var state = (oldMethod) ? state : 'on' + state;
+
+        //(node.addEventListener || node.attachEvent)(state, fn);
+        node.addEventListener(state, fn);
+    });
+};
 this.eventBus = {
     topics: {},
     
@@ -845,6 +1186,272 @@ this.flyWeight = (function (_, undefined) {
 this.fn = function () {
     return function () { };
 };
+this.framework = (function (_) {
+	return function (config) {
+		config = config || {};
+		config.version = config.version || 1;
+		config.controllerHolder = config.controllerHolder || window;
+		if (!config.run_env)
+			_.fail('you must define application run_env function in app.js')
+		window.RUN_ENV = config.run_env();
+		
+		var CONST = { controllerSelector: '[data-controller]' };
+		var fm = function () { };
+		var factories = {};
+		var factoryInstace = {};
+		var controllers = {};
+		var controllersRepository = {};
+		var compileTimeFunctions = [];
+		var neededControllers = [];
+		var js = {};
+		var css = {};
+		fm.compile = function (selectroOrNode) {
+			var node = _.selectFirst(selectroOrNode);
+			var newControllers = _.select('[data-controller]', node);
+			_.each(newControllers, function (newController) {
+				controllerInitializeQualifie(controllers[_.dataset.get(newController, 'controller')]);
+				
+				//controllers[_.dataset.get(newController, 'controller')].active = false;
+				
+				//maybe we can remove this expresions
+				_.each(controllers, function (controller, key) {
+					var ctrlNode = _.selectFirst('[data-controller="' + key + '"]');
+					if (ctrlNode) return;
+					controllers[key].active = false;
+				});
+			});
+			_.each(compileTimeFunctions, function (compileTimeFunction) {
+				compileTimeFunction(node);
+			});
+		};
+		fm.registerOnCompileTime = function (fn) {
+			compileTimeFunctions.push(fn);
+		};
+		fm.factory = (function (fm) {
+			return function (name, fn) {
+				var camelCaseName = _.camelCase(name);
+				window[camelCaseName + 's'] && _.fail(camelCaseName + 's exists');
+				window[camelCaseName + 's'] = {};
+				var Constructor = fn();
+				factories[camelCaseName] = function (id, node, config, controller, uniqueId) {
+					return (window[camelCaseName + 's'][uniqueId])
+                                    ? window[camelCaseName + 's'][uniqueId]
+                                    : window[camelCaseName + 's'][uniqueId] = new Constructor(id, node, config, controller);
+				};
+				return Constructor;
+			};
+		})(this);
+		var controllerInitializeQualifie = function (controller) {
+			var res;
+			var controllerNode = _.selectFirst('[data-controller="' + controller.name + '"]');
+			
+			var parentCtrl,
+				parentNode = controllerNode
+                            , parentCtrlName;
+			if (!!controllerNode) {
+				do {
+					parentNode = parentNode.parentNode;
+					parentCtrlName = _.dataset.get(parentNode, 'controller');
+					if (parentCtrlName) {
+						parentCtrl = controllerInitializeQualifie(controllers[parentCtrlName]);
+					}
+				} while (parentNode && parentNode.tagName != 'HTML' && !parentCtrlName);
+				
+				if (parentCtrlName) {
+					if (controller.scope.fn.__proto__) {
+						controller.scope.fn.__proto__ = controllers[parentCtrlName].scope.fn;
+						controller.scope.event.__proto__ = controllers[parentCtrlName].scope.event;
+						controller.scope['const'].__proto__ = controllers[parentCtrlName].scope['const'];
+						controller.scope.module.__proto__ = controllers[parentCtrlName].scope.module;
+					} else {
+                                    //_.extend(controller.scope.fn.constructor.prototype, controllers[parentCtrlName].scope.fn);
+                                    //_.extend(controller.scope.event.constructor.prototype, controllers[parentCtrlName].scope.event);
+                                    //_.extend(controller.scope['const'].constructor.prototype, controllers[parentCtrlName].scope['const']);
+                                    //_.extend(controller.scope.module.constructor.prototype, controllers[parentCtrlName].scope.module);
+
+
+                                    //controller.scope.fn.constructor.prototype.zz = controllers[parentCtrlName].scope.fn;
+                                    //controller.scope.event.constructor.prototype = controllers[parentCtrlName].scope.event;
+                                    //controller.scope['const'].constructor.prototype = controllers[parentCtrlName].scope['const'];
+                                    //controller.scope.module.constructor.prototype = controllers[parentCtrlName].scope.module;
+					}
+                                //_.merge(controller.scope.fn, controllers[parentCtrlName].scope.fn);
+                                //_.merge(controller.scope.event, controllers[parentCtrlName].scope.event);
+                                //_.merge(controller.scope['const'], controllers[parentCtrlName].scope['const']);
+                                //_.merge(controller.scope.module, controllers[parentCtrlName].scope.module);
+				}
+				instansiteController(controller, controllerNode);
+			}
+			
+			return controllerNode;
+		};
+		fm.controller = (function (fm, undefined) {
+			var repositoy = {};
+			return function (name, fn) {
+				controllersRepository[name] = fn;
+				controllers[name] = {};
+				controllers[name].active = false;
+				controllers[name].name = name;
+				controllers[name].fn = fn;
+				//controllers[name].scope = window.scope = _.scope();
+				repositoy[name] = controllers[name].scope = _.scope();
+				
+				//_.ready(function () {
+				//    controllerInitializeQualifie(controllers[name])
+				//});
+				return config.controllerHolder[name] = controllers[name].scope;
+			};
+		})(this);
+		fm.loadJS = (function (fm) {
+			var qeue = [];
+			var dependenciesHistory = {};
+			return function (files) {
+				var thenFn = _.fn();
+				var _dependencies = [];
+				if (RUN_ENV == "development") {
+					for (var i = 0; i < files.length; i++) {
+						if (_.is.array(js[files[i]])) {
+							_.each(js[files[i]], function (filePath) {
+								if (!js[filePath]) {
+									js[filePath] = filePath;
+								}
+								if (!dependenciesHistory[js[filePath]]) {
+									_dependencies.push(js[filePath]);
+									dependenciesHistory[js[filePath]] = false;
+								}
+							});
+						} else {
+							if (!dependenciesHistory[js[files[i]]]) {
+								_dependencies.push(js[files[i]]);
+								dependenciesHistory[js[files[i]]] = false;
+							}
+						}
+					}
+					for (var i = 0; i < _dependencies.length; i++) {
+						_dependencies[i] += '?version=' + config.version;
+					}
+					for (var i = 0, file; file = _dependencies[i]; i++) {
+						var path = file;
+						//TODO
+						_.loadJS(path, function (path) {
+							dependenciesHistory[path] = true;
+							
+							for (var i = qeue.length - 1; i >= 0; i--) {
+								if (qeue[i].done)
+									continue;
+								qeue[i].depen = _.array.remove(qeue[i].depen, path);
+								if (qeue[i].depen.length === 0) {
+									qeue[i].done = true;
+									qeue[i].thenFn();
+								}
+							}
+						});
+					}
+				}
+				return {
+					then: function (fn) {
+						thenFn = fn;
+						if (_dependencies.length == 0) {
+							thenFn();
+						} else {
+							qeue.push({ depen: _dependencies, thenFn: fn });
+						}
+					}
+				};
+			}
+		})(this);
+		fm.loadCSS = (function (fm) {
+			return function (files) {
+				var _dependencies = [];
+				for (var i = 0; i < files.length; i++) {
+					if (_.is.array(css[files[i]])) {
+						_.each(css[files[i]], function (filePath) {
+							if (!css[filePath]) {
+								css[filePath] = filePath;
+							}
+							_dependencies.push(css[filePath]);
+						});
+					} else {
+						_dependencies.push(css[files[i]]);
+					}
+				}
+				for (var i = 0; i < _dependencies.length; i++) {
+					that.loadCSS(_dependencies[i]);
+				}
+				return this;
+			};
+		})(this);
+		fm.config = (function (_) {
+			return function (config) {
+				that.extend(js, config.js);
+				that.extend(css, config.css);
+			}
+		})(this);
+		//_.ready(function () {
+		//    for (var i = 0, controllerNode; controllerNode = controllerNodes[i]; i++) {
+		//        var controllerName = controllerNode.dataset.controller;
+		//        var controller = controllers[controllerName];
+		//        if (controller) {
+		//            instansiteController(controller, controllerNode);
+		//        }
+		//    }
+		//});
+		var instansiteController = function (controller, controllerNode) {
+			if (controller.active) return;
+			controller.fn.apply(controller.scope, [controller.scope, controllerNode]);
+			
+			for (var factoryName in factories) {
+				var factoryAttrName = _.dashCase(factoryName);
+				
+				var nodes = _.argToArray(controllerNode.querySelectorAll('[' + factoryAttrName + ']'));
+				_.each(nodes, function (node) {
+					var id = node.getAttribute(factoryAttrName);
+					//if (factoryInstace[id]) return;
+					//factoryInstace[id] = true;
+					
+					var config = controller.scope.config[id] || {};
+					factories[factoryName](id, node, config);
+				});
+				
+				nodes = _.argToArray(controllerNode.querySelectorAll('[data-' + factoryAttrName + ']'));
+				
+				_.each(nodes, function (node) {
+					var isChildControllerFactory = _.is(node, '[data-controller="' + controller.name + '"] [data-controller] ' + node.tagName.toLowerCase() + (node.id ? "#" + node.id : ""));
+					if (isChildControllerFactory) return;
+					var id = node.getAttribute('data-' + factoryAttrName);
+					var uniqueId = id + ((node.id) ? node.id : "");
+					//if (factoryInstace[id]) return;
+					//factoryInstace[id] = true;
+					
+					var config = controller.scope.config[id] || {};
+					factories[factoryName](id, node, config, controller, uniqueId);
+				});
+			}
+			
+			controller.active = true;
+		};
+		
+		_.ready(function () {
+			neededControllers = _.lexer('data-controller');
+			
+			_.each(neededControllers, function (neededController) {
+				_.callWhen(function () {
+					var res = true;
+					_.each(neededController.parentIds, function (parentId) {
+						if (!controllersRepository[parentId])
+							res = false;
+					});
+					return res;
+				}, function () {
+					return !!controllerInitializeQualifie(controllers[neededController.id]);
+				});
+			});
+		});
+		
+		return fm;
+	}
+})(this);
+
 this.freezable = (function (_, undefined) {
     var o = {};
     
@@ -877,6 +1484,41 @@ this.getCumulativeOffset = function (obj) {
         y: top
     };
 };
+this.getJSON = function (options, callback) {
+    var xhttp = this.getXHR();
+    options.url = options.url || location.href;
+    options.data = options.data || null;
+    callback = callback || function () { };
+    
+    options.type = options.type || 'json';
+    var url = options.url;
+    if (options.type == 'jsonp') {
+        window.jsonCallback = callback;
+        var $url = url.replace('callback=?', 'callback=jsonCallback');
+        var script = document.createElement('script');
+        script.src = $url;
+        document.body.appendChild(script);
+    }
+    xhttp.open('GET', options.url, true);
+    xhttp.send(options.data);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.status == 200 && xhttp.readyState == 4) {
+            callback(xhttp.responseText);
+        }
+    };
+};
+this.getTransitionEvent = function () {
+            var fakeElement = document.createElement('div');
+            var transition = {
+                WebkitTransition: 'webkitTransitionEnd',
+                OTransition: 'TranstionEnd',
+                MozTransition: 'transtionend',
+                transition: 'transtionend',
+            };
+            for (var i in transition) {
+                if (_.is.defined(fakeElement.style[i])) return transition[i];
+            }
+        };
 this.getValue = function (obj, path) {
     if (DEBUG) {
         if (!obj) return undefined;
@@ -894,6 +1536,10 @@ this.getValue = function (obj, path) {
     return (i == path.length) ? res : null;
 };
 
+this.getXHR = function () {
+    var instance = new XMLHttpRequest();
+    return instance;
+};
 this.groupBy = function (obj, prop, fn) {
     fn = fn || _.i;
     var res = {};
@@ -1207,6 +1853,89 @@ this.leftCurry = function (fn, context) {
         };
     };
 };
+this.lexer = (function (_) {
+    var lexed = {};
+    return function (selector, el, idx, parentIds) {
+        var atrrSelector = '[' + selector + ']';
+        idx = idx || 0;
+        el = el || document;
+        parentIds = parentIds || [];
+        var id = el.getAttribute ? el.getAttribute(selector) : null;
+
+        var res = {
+            el: el,
+            idx: idx,
+            parentId: parentIds,
+            id: id
+        };
+
+        var childs = _.select(atrrSelector, el);
+
+        if (el.getAttribute)
+            if (lexed[id]) {
+                if (lexed[id].idx < res.idx)
+                    lexed[id] = res;
+            }
+            else
+                lexed[id] = res;
+
+        _.each(childs, function (node, i) {
+            _.lexer(selector, node, idx + 1, (id) ? parentIds.concat(id) : parentIds);
+        });
+        return lexed;
+    }
+})(this);
+
+this.loadCSS = (function (_) {
+    var loadedFiles = {};
+    return function (path, callback) {
+        if (loadedFiles[path])
+            return;
+        var css = document.createElement('link')
+        css.setAttribute("rel", "stylesheet")
+        css.setAttribute("href", '/' + path);
+        document.getElementsByTagName("head")[0].appendChild(css);
+    }
+})(this);
+
+this.loadJS = (function (_) {
+    var loadedFiles = {};
+    return function (path, callback) {
+        if (loadedFiles[path]) {
+            if (loadedFiles[path].state) {
+                setTimeout(function () {
+                    callback(path, path);
+                }, 1);
+            } else {
+                loadedFiles[path].callbacks.push(callback);
+            }
+        } else {
+            loadedFiles[path] = {
+                state: false,
+                callbacks: []
+            };
+            loadedFiles[path].callbacks.push(callback);
+            
+            var script = document.createElement('script')
+            script.setAttribute("type", "text/javascript")
+            script.onload = function (e) {
+                            var n = e.srcElement || e.explicitOriginalTarget || e.path[0];
+                var filePath = n.getAttribute('src');
+                if (filePath) {
+                    path = filePath.substring(1, filePath.length);
+                }
+                
+                loadedFiles[path].state = true;
+                for (var i = 0, fn; fn = loadedFiles[path].callbacks[i]; i++) {
+                    fn(path);
+                }
+            };
+            script.setAttribute("src", '/' + path);
+            document.getElementsByTagName("head")[0].appendChild(script);
+        }
+    };
+})(this);
+
 this.map = function (obj, iterator, context) {
     var results = [];
     
@@ -1659,6 +2388,26 @@ this.random = function (min, max) {
     return ((max - min) * Math.random()) + min;
 };
 
+this.ready = (function (_) {
+    return function (fn) {
+        if (document.detachEvent) {
+            if (document.readyState == "complete")
+                fn();
+            else
+                document.attachEvent("onreadystatechange", function () {
+                    if (document.readyState === "complete") {
+                        fn();
+                        document.detachEvent("onreadystatechange", arguments.callee);
+                    }
+                });
+        } else {
+            if (document.readyState == "interactive" || document.readyState == "complete")
+                fn();
+            else
+                document.addEventListener('DOMContentLoaded', fn, true);
+        }
+    };
+})(this);
 this.recursive = function () { };
 
 this.regex = (function (_) {
@@ -1816,6 +2565,24 @@ this.scroll = (function () {
     
     return Fn;
 }());
+
+//todo : move to DOM namespace
+this.select = function (selectorOrDom, parent) {
+    parent = parent || document;
+    var nodes = '';
+    if (that.is.string(selectorOrDom))
+        nodes = parent.querySelectorAll(selectorOrDom);
+    else
+        nodes = selectorOrDom;
+    if (that.is.nodeList(nodes)) nodes = that.argToArray(nodes);
+    else if (that.is.HTMLCollection(nodes)) nodes = that.argToArray(nodes);
+    else if (!that.is.array(nodes)) nodes = [nodes];
+    
+    return nodes;
+};
+this.selectFirst = function (selectorOrDom, parent) {
+    return _.valueOf(_.select(selectorOrDom, parent), 0);
+};
 
 
 this.sortBy = function (obj, typeOrOperator, path) {
@@ -1981,3 +2748,7 @@ if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.ex
     window.SUTILITY = SUTILITY;
 }
 }).call();
+angular.module('sutility', [])
+    .factory('_', function () {
+        return window._;
+    });

@@ -15,4 +15,4 @@ if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.ex
 } else {
     window.SUTILITY = SUTILITY;
 }
-}).call(this);
+}).call();

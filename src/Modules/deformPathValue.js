@@ -7,14 +7,11 @@
 	var path = path.split('.');
 	var _path = path.shift();
 	var res = obj[_path];
-	while (_path = path.shift()) {
-		if (res[_path]) {
-			if (_.is.array(res[_path])) {
+	while (_path = path.shift()) 
+		if (res[_path] && _.is.array(res[_path])) 
 				_.each(res[_path], function (item) {
-					_.setValueOnPath(item, fn, path.join('.'));
+					_.deformPathValue(item, fn, path.join('.'));
 				});
-			}
-		}
-	}
+				
 	return;
 };

@@ -1,6 +1,6 @@
 {
 	"numResults": 304,
-	"creationDate": "2016-06-08 16:14:35",
+	"creationDate": "2016-06-08 18:18:31",
 	"results": {
 		"src/Modules/MutationObserver.js": [
 			{
@@ -470,16 +470,16 @@
 		],
 		"src/Modules/deformPathValue.js": [
 			{
-				"line": 12,
+				"line": 11,
 				"match": "_.is"
 			},
 			{
-				"line": 13,
+				"line": 12,
 				"match": "_.each"
 			},
 			{
-				"line": 14,
-				"match": "_.setValueOnPath"
+				"line": 13,
+				"match": "_.deformPathValue"
 			}
 		],
 		"src/Modules/dictionary.js": [

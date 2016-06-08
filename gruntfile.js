@@ -85,12 +85,19 @@ module.exports = function (grunt) {
         files.nodeModules.unshift('src/intro.js');
         files.nodeModules.push('src/outro.js');
 
+        //angular
+        files.angularModules = files.browserModules.concat(['src/angular.js']);
+
         //fill nodeAndBroPack params
         nodeAndBroPack.options = {
             banner: config.banner
         };
         nodeAndBroPack.files[config.dist_node] = files.nodeModules;
         nodeAndBroPack.files[config.dist_bro] = files.browserModules;
+        nodeAndBroPack.files[config.dist_angular] = files.angularModules;
+    };
+    var concatAngular = function () {
+
     };
 
     var usedInConcatTask = { files: {}, options: {} }
@@ -100,12 +107,15 @@ module.exports = function (grunt) {
     config.versionedName = [config.pkg.name].join('-');
     config.dist_node = ['dist/', '.node.js'].join(config.versionedName);
     config.dist_bro = ['dist/', '.browser.js'].join(config.versionedName);
+    config.dist_angular = ['dist/', '.angular.js'].join(config.versionedName);
     //config.dist_usedIn = ['dist/', '.usedin.js'].join(config.versionedName);
 
     files.clearFiles[['dist/', '.browser.clear.js'].join(config.versionedName)] = config.dist_bro;
     files.clearFiles[['dist/', '.node.clear.js'].join(config.versionedName)] = config.dist_node;
+    files.clearFiles[['dist/', '.angular.clear.js'].join(config.versionedName)] = config.dist_angular;
     files.uglifyFiles[['dist/', '.browser.min.js'].join(config.versionedName)] = config.dist_bro;
     files.uglifyFiles[['dist/', '.node.min.js'].join(config.versionedName)] = config.dist_node;
+    files.uglifyFiles[['dist/', '.angular.min.js'].join(config.versionedName)] = config.dist_angular;
 
     //#region usedInBox 
 
@@ -117,11 +127,11 @@ module.exports = function (grunt) {
                 options: {}
             }
         },
-        src:cuatomConfig.usedIn,
+        src: cuatomConfig.usedIn,
         minPath: '',
         distPath: ['dist/', '.usedin.js'].join(config.versionedName),
         temp: {
-            modules:[]
+            modules: []
         }
 
     };
@@ -395,6 +405,7 @@ module.exports = function (grunt) {
     // Default task.
     //grunt.registerTask('default', ['clean', 'prompt:concat', 'concat', 'uglify', 'jasmine']);
     grunt.registerTask('getNodeModules', getNodeModules);
+    grunt.registerTask('concatAngular', concatAngular);
     grunt.registerTask("generateUsedInConcatTask", generateUsedInConcatTask);
     grunt.registerTask('default', function (target) {
         if (!target) {
