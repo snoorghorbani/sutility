@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.88 - 2016-06-08
+ * sutility v0.0.88 - 2016-06-20
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -407,8 +407,8 @@
                     _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
                 }, fn;
             }(this), this.dashCase = function(str) {
-                return str.replace(/([A-Z])|([\W|\_])/g, function(match) {
-                    return /[\w]/.test(match) ? "_" === match ? "-" : "-" + match.toLowerCase() : "-";
+                return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
+                    return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "-" + match.toLowerCase() : "-" : "-";
                 });
             }, this.data = function(_) {}(this), this.dataset = function(_, undefined) {
                 var dataset = function() {};
@@ -419,9 +419,9 @@
                 if (!obj) return undefined;
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 if (null != obj[path]) return obj[path] = fn(obj[path]);
-                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.is.array(res[_path]) && _.each(res[_path], function(item) {
+                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.is.array(res[_path]) ? _.each(res[_path], function(item) {
                     _.deformPathValue(item, fn, path.join("."));
-                });
+                }) : res[_path] && (res[_path] = fn(res[_path]));
             }, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
                     defaultValues = _defaultValues || {}, _.extend(this, defaultValues);
@@ -1253,6 +1253,10 @@
                 el.addEventListener(t, _fn);
             }, this.trim = function(str) {
                 return str.replace(/^\s+|\s+$/g, "");
+            }, this.underscoreCase = function(str) {
+                return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
+                    return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "_" + match.toLowerCase() : "_" : "_";
+                });
             }, this.update = function(toObj, fromObj, copyPrototype) {
                 return _.is.object(fromObj) && _.each(toObj, function(value, key) {
                     fromObj[key] !== undefined && (toObj[key] = fromObj[key]);

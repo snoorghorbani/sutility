@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.88 - 2016-06-08
+ * sutility v0.0.88 - 2016-06-20
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -575,11 +575,12 @@ this.contain = function (obj, value) {
 
 this.countBy = function () { };
 
-this.dashCase = function (str) {
-    return str.replace(/([A-Z])|([\W|\_])/g, function (match) {
-        return (/[\w]/.test(match)) ?
-            (match === '_') ? '-' : '-' + match.toLowerCase() :
-            '-';
+;this.dashCase = function (str) {
+    return str.replace(/([A-Z])|([\W|\_])/g, function (match, a, b, index, originText) {
+        return (!(/[\w]/.test(match))) ? '-'
+          : (/[\w]/.test(match && index == 0)) ? match.toLowerCase()
+          : (/[\w]/.test(match)) ? '-' + match.toLowerCase()
+          : '-';
     });
 };
 this.data = (function (_) {
@@ -609,23 +610,24 @@ this.dataset = (function (_, undefined) {
 this.decorator = function () { };
 
 this.deformPathValue = function (obj, fn, path) {
-	if (!obj) return undefined;
-	if (!obj) return this.warn('Utility getValue function first parameter not defined');
-	
-	if (obj[path] != null) return obj[path] = fn(obj[path]);
-	
-	var path = path.split('.');
-	var _path = path.shift();
-	var res = obj[_path];
-	while (_path = path.shift()) 
-		if (res[_path] && _.is.array(res[_path])) 
-				_.each(res[_path], function (item) {
-					_.deformPathValue(item, fn, path.join('.'));
-				});
-				
-	return;
-};
+    if (!obj) return undefined;
+    if (!obj) return this.warn('Utility getValue function first parameter not defined');
 
+    if (obj[path] != null) return obj[path] = fn(obj[path]);
+
+    var path = path.split('.');
+    var _path = path.shift();
+    var res = obj[_path];
+    while (_path = path.shift())
+        if (res[_path] && _.is.array(res[_path]))
+            _.each(res[_path], function (item) {
+                _.deformPathValue(item, fn, path.join('.'));
+            });
+        else if (res[_path])
+            res[_path] = fn(res[_path]);
+
+    return;
+};
 this.dictionary = (function (that, undefined) {
     var defaultValues = {};
     var Fn = function (_defaultValues) {
@@ -1888,6 +1890,14 @@ this.subSet = function (fo, so) {
 this.trim = function (str) {
     return str.replace(/^\s+|\s+$/g, "");
 }
+this.underscoreCase = function (str) {
+    return str.replace(/([A-Z])|([\W|\_])/g, function (match, a, b, index, originText) {
+        return (!(/[\w]/.test(match))) ? '_'
+            : (/[\w]/.test(match && index == 0)) ? match.toLowerCase()
+            : (/[\w]/.test(match)) ? '_' + match.toLowerCase()
+            : '_';
+    });
+};
 this.update = function (toObj, fromObj, copyPrototype) {
     if (_.is.object(fromObj)) {
         _.each(toObj, function (value, key) {
