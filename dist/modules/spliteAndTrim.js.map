@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/spliteAndTrim.js"],"names":["this","spliteAndTrim","str","_","trim","split"],"mappings":";AAAAA,KAAKC,cAAgB,SAAUC,GAC3B,MAAOC,GAAEC,KAAKF,GAAKG,MAAM","file":"spliteAndTrim.js"}

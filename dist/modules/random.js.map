@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/random.js"],"names":["this","random","min","max","Math"],"mappings":";AAAAA,KAAKC,OAAS,SAAUC,EAAKC,GACzB,OAASA,EAAMD,GAAOE,KAAKH,SAAYC","file":"random.js"}

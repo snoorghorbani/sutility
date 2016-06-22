@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/exec.js"],"names":["this","exec","args","argToArray","arguments","fn","shift","context","arg","apply"],"mappings":";AAAAA,KAAKC,KAAO,WACR,GAAIC,GAAOF,KAAKG,WAAWC,WACvBC,EAAKH,EAAKI,QACVC,EAAUL,EAAKI,QACfE,EAAMN,EAAKI,OAMf,OAAOD,GAAGI,MAAMF,GAAW,KAAMC","file":"exec.js"}

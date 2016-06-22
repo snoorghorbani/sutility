@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/bind.js"],"names":["this","bind","el","obj","decorator","i"],"mappings":";AAAAA,KAAKC,KAAO,SAAUC,EAAIC,EAAKC,GAC3BA,EAAYA,GAAaJ,KAAKK","file":"bind.js"}

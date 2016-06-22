@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/pascalCase.js"],"names":["this","pascalCase","str","_","camelCase","toUpperCase","substr","lenght"],"mappings":";AAAAA,KAAKC,WAAa,SAAUC,GAKxB,MADAA,GAAMC,EAAEC,UAAUF,GACXA,EAAI,GAAGG,cAAgBH,EAAII,OAAO,EAAGJ,EAAIK","file":"pascalCase.js"}

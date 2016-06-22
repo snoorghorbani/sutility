@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/extendFunc.js"],"names":["this","extendFunc","fn","callBack","data","arguments","call"],"mappings":";AAAAA,KAAKC,WAAa,SAAUC,EAAIC,GAC5B,GAAIC,GAAOC,UAAU,EACrB,OAAO,YACHH,EAAGI,KAAKN,MACRG,EAASG,KAAKN,KAAMI","file":"extendFunc.js"}

@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/getXHR.js"],"names":["this","getXHR","instance","XMLHttpRequest"],"mappings":";AAAAA,KAAKC,OAAS,WACV,GAAIC,GAAW,GAAIC,eACnB,OAAOD","file":"getXHR.js"}

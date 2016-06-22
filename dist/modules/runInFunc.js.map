@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/runInFunc.js"],"names":["this","runInFunc","fn","is","not","warn"],"mappings":";AAAAA,KAAKC,UAAY,SAAUC,GAEvB,MADIF,MAAKG,GAAGC,IAAI,YAAYF,IAAKF,KAAKK,KAAKH,EAAK,mBACzC,WACHA","file":"runInFunc.js"}

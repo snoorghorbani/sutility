@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/camelCase.js"],"names":["this","camelCase","str","replace","match","group","toUpperCase"],"mappings":";AAAAA,KAAKC,UAAY,SAAUC,GAIvB,MAAOA,GAAIC,QAAQ,cAAe,SAAUC,EAAOC,GAC/C,MAAOA,IAASA,EAAMC","file":"camelCase.js"}

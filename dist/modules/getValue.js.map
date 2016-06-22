@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/getValue.js"],"names":["this","getValue","obj","path","split","i","res","length"],"mappings":";AAAAA,KAAKC,SAAW,SAAUC,EAAKC,GAM3B,GAAkB,OAAdD,EAAIC,GAAgB,MAAOD,GAAIC,EAEnCA,GAAOA,EAAKC,MAAM,IAGlB,KAFA,GAAIC,GAAI,EACJC,EAAMJ,EAAIC,EAAKE,MACZA,EAAIF,EAAKI,QACZD,EAAMA,EAAIH,EAAKE,KAEnB,OAAQA,IAAKF,EAAKI,OAAUD,EAAM","file":"getValue.js"}

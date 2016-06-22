@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.88 - 2016-06-20
+ * sutility v0.0.88 - 2016-06-08
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -28,7 +28,36 @@
                 xhttp.open("GET", options.url, !0), xhttp.send(options.data), xhttp.onreadystatechange = function() {
                     200 == xhttp.status && 4 == xhttp.readyState && callback(xhttp.responseText);
                 };
-            }, this.animation = function(_, undefined) {}(this), this.argToArray = function(arg) {
+            }, this.animation = function(_, undefined) {
+                var fn = _.fn();
+                return fn.endProp = _.memoize(function() {
+                    var animation, element = document.createElement("div"), animations = {
+                        animation: "animationend",
+                        OAnimation: "oAnimationEnd",
+                        MozAnimation: "mozAnimationEnd",
+                        WebkitAnimation: "webkitAnimationEnd"
+                    };
+                    for (animation in animations) if (element.style[animation] !== undefined) return animations[animation];
+                    return !1;
+                }), fn.startProp = _.memoize(function() {
+                    var animation, element = document.createElement("div"), animations = {
+                        animation: "animationstart",
+                        OAnimation: "oAnimationStart",
+                        MozAnimation: "mozAnimationStart",
+                        WebkitAnimation: "webkitAnimationStart"
+                    };
+                    for (animation in animations) if (element.style[animation] !== undefined) return animations[animation];
+                    return !1;
+                }), fn.end = function(el, callback) {
+                    el.addEventListener(fn.endProp(), callback);
+                }, fn.to = function(el, startClass, endClass) {
+                    _.className.add(el, startClass), _.each(_.select(el), function(el) {
+                        fn.end(el, _.callConstantly(function() {
+                            _.className.remove(el, startClass), _.className.add(el, endClass);
+                        }, 1));
+                    });
+                }, fn;
+            }(this), this.argToArray = function(arg) {
                 if (_.is.not.ie()) return Array.prototype.slice.call(arg);
                 for (var array = [], i = 0; i < arg.length; i++) array.push(arg[i]);
                 return array;
@@ -407,21 +436,21 @@
                     _.fail('add shim for "window.getComputedStyle" in _.css.computedValue');
                 }, fn;
             }(this), this.dashCase = function(str) {
-                return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
-                    return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "-" + match.toLowerCase() : "-" : "-";
+                return str.replace(/([A-Z])|([\W|\_])/g, function(match) {
+                    return /[\w]/.test(match) ? "_" === match ? "-" : "-" + match.toLowerCase() : "-";
                 });
             }, this.data = function(_) {}(this), this.dataset = function(_, undefined) {
                 var dataset = function() {};
                 return dataset.add = function() {}, dataset.get = function(el, name) {
                     return el.dataset ? el.dataset[name] : el.getAttribute("data-" + _.dashCase(name));
                 }, dataset;
-            }(this), this.decorator = function() {}, this.deformPathValue = function(obj, fn, path) {
+            }(this), this.decorator = function() {}, this.deformPathValue = function(obj, path, fn) {
                 if (!obj) return undefined;
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 if (null != obj[path]) return obj[path] = fn(obj[path]);
-                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.is.array(res[_path]) ? _.each(res[_path], function(item) {
-                    _.deformPathValue(item, fn, path.join("."));
-                }) : res[_path] && (res[_path] = fn(res[_path]));
+                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.isArray(res[_path]) && _.each(res[_path], function(item) {
+                    _.setValueOnPath(item, path.join("."), fn);
+                });
             }, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
                     defaultValues = _defaultValues || {}, _.extend(this, defaultValues);
@@ -1253,10 +1282,6 @@
                 el.addEventListener(t, _fn);
             }, this.trim = function(str) {
                 return str.replace(/^\s+|\s+$/g, "");
-            }, this.underscoreCase = function(str) {
-                return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
-                    return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "_" + match.toLowerCase() : "_" : "_";
-                });
             }, this.update = function(toObj, fromObj, copyPrototype) {
                 return _.is.object(fromObj) && _.each(toObj, function(value, key) {
                     fromObj[key] !== undefined && (toObj[key] = fromObj[key]);
@@ -1305,4 +1330,4 @@
             }
         };
     }(), "undefined" != typeof exports && "undefined" != typeof module && module.exports ? exports = module.exports = SUTILITY.install() : window.SUTILITY = SUTILITY;
-}).call();
+}).call(this);

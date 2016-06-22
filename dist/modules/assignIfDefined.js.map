@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/assignIfDefined.js"],"names":["this","assignIfDefined","to","fnOrObj","undefined","that","safeAssign"],"mappings":";AAAAA,KAAKC,gBAAkB,SAAUC,EAAIC,GAEjC,MAAoBC,UAAZD,EAAyBE,KAAKC,WAAWJ,EAAIC,GAAWD","file":"assignIfDefined.js"}

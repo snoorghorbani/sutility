@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/modules/scope.js"],"names":["this","scope","Scope","fn","data","config","option","event","module"],"mappings":";AAAAA,KAAKC,MAAQ,WACT,GACIC,GAAQ,WACRF,KAAKG,GAAK,GAAI,cACdH,KAAKI,KAAO,GAAI,cAChBJ,KAAKK,OAAS,GAAI,cAClBL,KAAKM,OAAS,GAAI,cAClBN,KAAKO,MAAQ,GAAI,cACjBP,KAAKQ,OAAS,GAAI,cAClBR,KAAK,SAAW,GAAI,cAExB,OAAO,IAAIE","file":"scope.js"}
