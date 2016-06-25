@@ -10,11 +10,11 @@ module.exports = function (config) {
         
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['mocha'],
+        frameworks: ['mocha', 'chai'],
         
         // list of files / patterns to load in the browser
         files: [
-            'public/lib/chai/chai.js',
+            'node_modules/chai/lib/chai.js',
             'dist/sutility.browser.js',
             'test/installSutilityForKarmaTest.js',
             'test/modules/*.js',
@@ -62,7 +62,8 @@ module.exports = function (config) {
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         //browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS', 'ChromeCanary'],
-        browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+        //browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+        browsers: ['Chrome', 'Firefox'],
         //'client' : {
         //    'mocha' : {
         //        'ui' : 'tdd'

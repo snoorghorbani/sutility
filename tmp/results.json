@@ -1,14 +1,8 @@
 {
-	"numResults": 304,
-	"creationDate": "2016-06-08 10:06:27",
+	"numResults": 328,
+	"creationDate": "2016-06-25 07:07:42",
 	"results": {
-		"src/Modules/MutationObserver.js": [
-			{
-				"line": 7,
-				"match": "_.each"
-			}
-		],
-		"src/Modules/activate.js": [
+		"src/modules/activate.js": [
 			{
 				"line": 3,
 				"match": "_.select"
@@ -38,13 +32,43 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/ajax.js": [
+		"src/modules/activated.js": [
+			{
+				"line": 3,
+				"match": "_.select"
+			},
+			{
+				"line": 4,
+				"match": "_.each"
+			},
+			{
+				"line": 5,
+				"match": "_.select"
+			},
+			{
+				"line": 6,
+				"match": "_.each"
+			},
+			{
+				"line": 7,
+				"match": "_.event"
+			},
+			{
+				"line": 8,
+				"match": "_.className"
+			},
+			{
+				"line": 9,
+				"match": "_.className"
+			}
+		],
+		"src/modules/ajax.js": [
 			{
 				"line": 5,
 				"match": "_.fn"
 			}
 		],
-		"src/Modules/animation.js": [
+		"src/modules/animation.js": [
 			{
 				"line": 2,
 				"match": "_.fn"
@@ -82,23 +106,13 @@
 				"match": "_.className"
 			}
 		],
-		"src/Modules/argToArray.js": [
+		"src/modules/argToArray.js": [
 			{
 				"line": 3,
 				"match": "_.is"
 			}
 		],
-		"src/Modules/arrToObj.js": [
-			{
-				"line": 2,
-				"match": "_.argToArray"
-			},
-			{
-				"line": 8,
-				"match": "_.each"
-			}
-		],
-		"src/Modules/array.js": [
+		"src/modules/array.js": [
 			{
 				"line": 5,
 				"match": "_.filter"
@@ -160,7 +174,17 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/attach.js": [
+		"src/modules/arrToObj.js": [
+			{
+				"line": 2,
+				"match": "_.argToArray"
+			},
+			{
+				"line": 8,
+				"match": "_.each"
+			}
+		],
+		"src/modules/attach.js": [
 			{
 				"line": 15,
 				"match": "_.is"
@@ -182,7 +206,7 @@
 				"match": "_.is"
 			}
 		],
-		"src/Modules/callWhen.js": [
+		"src/modules/callWhen.js": [
 			{
 				"line": 2,
 				"match": "_.is"
@@ -192,7 +216,7 @@
 				"match": "_.valueOf"
 			}
 		],
-		"src/Modules/catchall.js": [
+		"src/modules/catchall.js": [
 			{
 				"line": 15,
 				"match": "_.update"
@@ -326,13 +350,13 @@
 				"match": "_.is"
 			}
 		],
-		"src/Modules/categorize.js": [
+		"src/modules/categorize.js": [
 			{
 				"line": 3,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/className.js": [
+		"src/modules/className.js": [
 			{
 				"line": 5,
 				"match": "_.select"
@@ -402,7 +426,13 @@
 				"match": "_.className"
 			}
 		],
-		"src/Modules/cloneObj.js": [
+		"src/modules/clone.js": [
+			{
+				"line": 4,
+				"match": "_.cloneObj"
+			}
+		],
+		"src/modules/cloneObj.js": [
 			{
 				"line": 2,
 				"match": "_.assignIfNotDefined"
@@ -410,9 +440,17 @@
 			{
 				"line": 3,
 				"match": "_.object"
+			},
+			{
+				"line": 6,
+				"match": "_.is"
+			},
+			{
+				"line": 10,
+				"match": "_.clone"
 			}
 		],
-		"src/Modules/coockie.js": [
+		"src/modules/coockie.js": [
 			{
 				"line": 5,
 				"match": "_.is"
@@ -422,7 +460,7 @@
 				"match": "_.compileString"
 			}
 		],
-		"src/Modules/css.js": [
+		"src/modules/css.js": [
 			{
 				"line": 10,
 				"match": "_.camelCase"
@@ -456,33 +494,91 @@
 				"match": "_.css"
 			}
 		],
-		"src/Modules/data.js": [
+		"src/modules/data.js": [
 			{
 				"line": 2,
 				"match": "_.scope"
 			}
 		],
-		"src/Modules/dataset.js": [
+		"src/modules/dataset.js": [
 			{
 				"line": 8,
 				"match": "_.dashCase"
 			}
 		],
-		"src/Modules/deformPathValue.js": [
+		"src/modules/date.js": [
 			{
-				"line": 12,
-				"match": "_.isArray"
+				"line": 18,
+				"match": "_.math"
 			},
 			{
-				"line": 13,
+				"line": 39,
+				"match": "_.is"
+			},
+			{
+				"line": 51,
+				"match": "_.math"
+			},
+			{
+				"line": 53,
+				"match": "_.math"
+			},
+			{
+				"line": 55,
+				"match": "_.math"
+			},
+			{
+				"line": 61,
+				"match": "_.date"
+			},
+			{
+				"line": 62,
+				"match": "_.date"
+			},
+			{
+				"line": 64,
+				"match": "_.is"
+			},
+			{
+				"line": 67,
+				"match": "_.date"
+			},
+			{
+				"line": 78,
+				"match": "_.date"
+			},
+			{
+				"line": 80,
+				"match": "_.math"
+			},
+			{
+				"line": 85,
+				"match": "_.math"
+			},
+			{
+				"line": 93,
+				"match": "_.date"
+			},
+			{
+				"line": 95,
+				"match": "_.date"
+			}
+		],
+		"src/modules/deformPathValue.js": [
+			{
+				"line": 11,
+				"match": "_.is"
+			},
+			{
+				"line": 12,
 				"match": "_.each"
 			},
 			{
-				"line": 14,
-				"match": "_.setValueOnPath"
+				"line": 13,
+				"match": "_.deformPathValue"
 			}
 		],
-		"src/Modules/dictionary.js": [
+		"src/modules/dictionary.js": [
 			{
 				"line": 5,
 				"match": "_.extend"
@@ -492,7 +588,7 @@
 				"match": "_.cloneObj"
 			}
 		],
-		"src/Modules/enableBackup.js": [
+		"src/modules/enableBackup.js": [
 			{
 				"line": 10,
 				"match": "_.assignIfNotDefined"
@@ -518,7 +614,7 @@
 				"match": "_.prototype"
 			}
 		],
-		"src/Modules/exec.js": [
+		"src/modules/exec.js": [
 			{
 				"line": 8,
 				"match": "_.is"
@@ -528,7 +624,7 @@
 				"match": "_.warn"
 			}
 		],
-		"src/Modules/extend.js": [
+		"src/modules/extend.js": [
 			{
 				"line": 3,
 				"match": "_.is"
@@ -586,7 +682,7 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/filter.js": [
+		"src/modules/filter.js": [
 			{
 				"line": 3,
 				"match": "_.is"
@@ -612,13 +708,13 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/fine.js": [
+		"src/modules/fine.js": [
 			{
 				"line": 3,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/flatTreeBy.js": [
+		"src/modules/flatTreeBy.js": [
 			{
 				"line": 4,
 				"match": "_.each"
@@ -628,7 +724,7 @@
 				"match": "_.cloneObj"
 			}
 		],
-		"src/Modules/framework.js": [
+		"src/modules/framework.js": [
 			{
 				"line": 7,
 				"match": "_.fail"
@@ -802,25 +898,25 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/getTransitionEvent.js": [
+		"src/modules/getTransitionEvent.js": [
 			{
 				"line": 10,
 				"match": "_.is"
 			}
 		],
-		"src/Modules/groupBy.js": [
+		"src/modules/groupBy.js": [
 			{
 				"line": 4,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/groupByFlatMode.js": [
+		"src/modules/groupByFlatMode.js": [
 			{
 				"line": 3,
 				"match": "_.argToArray"
 			}
 		],
-		"src/Modules/groupByTreeMode.js": [
+		"src/modules/groupByTreeMode.js": [
 			{
 				"line": 3,
 				"match": "_.argToArray"
@@ -834,13 +930,13 @@
 				"match": "_.cloneArray"
 			}
 		],
-		"src/Modules/groupIf.js": [
+		"src/modules/groupIf.js": [
 			{
 				"line": 4,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/haveKey.js": [
+		"src/modules/haveKey.js": [
 			{
 				"line": 3,
 				"match": "_.is"
@@ -854,7 +950,7 @@
 				"match": "_.is"
 			}
 		],
-		"src/Modules/is.js": [
+		"src/modules/is.js": [
 			{
 				"line": 10,
 				"match": "_.is"
@@ -896,7 +992,7 @@
 				"match": "_.is"
 			}
 		],
-		"src/Modules/keys.js": [
+		"src/modules/keys.js": [
 			{
 				"line": 2,
 				"match": "_.argToArray"
@@ -906,7 +1002,7 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/leftCurry.js": [
+		"src/modules/leftCurry.js": [
 			{
 				"line": 4,
 				"match": "_.argToArray"
@@ -920,7 +1016,7 @@
 				"match": "_.argToArray"
 			}
 		],
-		"src/Modules/lexer.js": [
+		"src/modules/lexer.js": [
 			{
 				"line": 17,
 				"match": "_.select"
@@ -934,13 +1030,13 @@
 				"match": "_.lexer"
 			}
 		],
-		"src/Modules/map.js": [
+		"src/modules/map.js": [
 			{
 				"line": 4,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/mediaHandler.js": [
+		"src/modules/mediaHandler.js": [
 			{
 				"line": 20,
 				"match": "_.fn"
@@ -986,7 +1082,7 @@
 				"match": "_.assignIfNotDefined"
 			}
 		],
-		"src/Modules/merge.js": [
+		"src/modules/merge.js": [
 			{
 				"line": 2,
 				"match": "_.cloneObj"
@@ -1008,23 +1104,19 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/nexTick.js": [
+		"src/modules/MutationObserver.js": [
 			{
-				"line": 2,
-				"match": "_.argToArray"
-			}
-		],
-		"src/Modules/objToTwoDimArray.js": [
-			{
-				"line": 2,
-				"match": "_.argToArray"
-			},
-			{
-				"line": 5,
+				"line": 7,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/object.js": [
+		"src/modules/nexTick.js": [
+			{
+				"line": 2,
+				"match": "_.argToArray"
+			}
+		],
+		"src/modules/object.js": [
 			{
 				"line": 2,
 				"match": "_.fn"
@@ -1034,7 +1126,17 @@
 				"match": "_.extend"
 			}
 		],
-		"src/Modules/partial.js": [
+		"src/modules/objToTwoDimArray.js": [
+			{
+				"line": 2,
+				"match": "_.argToArray"
+			},
+			{
+				"line": 5,
+				"match": "_.each"
+			}
+		],
+		"src/modules/partial.js": [
 			{
 				"line": 3,
 				"match": "_.is"
@@ -1076,13 +1178,13 @@
 				"match": "_.partial"
 			}
 		],
-		"src/Modules/pascalCase.js": [
+		"src/modules/pascalCase.js": [
 			{
 				"line": 5,
 				"match": "_.camelCase"
 			}
 		],
-		"src/Modules/propByPrefix.js": [
+		"src/modules/propByPrefix.js": [
 			{
 				"line": 2,
 				"match": "_.assignIfNotDefined"
@@ -1092,13 +1194,13 @@
 				"match": "_.camelCase"
 			}
 		],
-		"src/Modules/prototype.js": [
+		"src/modules/prototype.js": [
 			{
 				"line": 6,
 				"match": "_.get"
 			}
 		],
-		"src/Modules/publisher.js": [
+		"src/modules/publisher.js": [
 			{
 				"line": 8,
 				"match": "_.spliteAndTrim"
@@ -1116,7 +1218,7 @@
 				"match": "_.is"
 			}
 		],
-		"src/Modules/randJson.js": [
+		"src/modules/randJson.js": [
 			{
 				"line": 4,
 				"match": "_.repeat"
@@ -1134,7 +1236,7 @@
 				"match": "_.random"
 			}
 		],
-		"src/Modules/randString.js": [
+		"src/modules/randString.js": [
 			{
 				"line": 4,
 				"match": "_.repeat"
@@ -1144,19 +1246,19 @@
 				"match": "_.random"
 			}
 		],
-		"src/Modules/regex.js": [
+		"src/modules/regex.js": [
 			{
 				"line": 5,
 				"match": "_.fn"
 			}
 		],
-		"src/Modules/remove.js": [
+		"src/modules/remove.js": [
 			{
 				"line": 3,
 				"match": "_.is"
 			}
 		],
-		"src/Modules/removeEventArg.js": [
+		"src/modules/removeEventArg.js": [
 			{
 				"line": 2,
 				"match": "_.each"
@@ -1166,7 +1268,7 @@
 				"match": "_.remove"
 			}
 		],
-		"src/Modules/report.js": [
+		"src/modules/report.js": [
 			{
 				"line": 9,
 				"match": "_.is"
@@ -1200,7 +1302,7 @@
 				"match": "_.map"
 			}
 		],
-		"src/Modules/rightCurry.js": [
+		"src/modules/rightCurry.js": [
 			{
 				"line": 4,
 				"match": "_.argToArray"
@@ -1210,13 +1312,13 @@
 				"match": "_.array"
 			}
 		],
-		"src/Modules/safeClear.js": [
+		"src/modules/safeClear.js": [
 			{
 				"line": 3,
 				"match": "_.is"
 			}
 		],
-		"src/Modules/scroll.js": [
+		"src/modules/scroll.js": [
 			{
 				"line": 4,
 				"match": "_.selectFirst"
@@ -1226,7 +1328,7 @@
 				"match": "_.scroll"
 			}
 		],
-		"src/Modules/select.js": [
+		"src/modules/select.js": [
 			{
 				"line": 16,
 				"match": "_.valueOf"
@@ -1236,7 +1338,7 @@
 				"match": "_.select"
 			}
 		],
-		"src/Modules/sortBy.js": [
+		"src/modules/sortBy.js": [
 			{
 				"line": 2,
 				"match": "_.is"
@@ -1258,13 +1360,13 @@
 				"match": "_.getValue"
 			}
 		],
-		"src/Modules/spliteAndTrim.js": [
+		"src/modules/spliteAndTrim.js": [
 			{
 				"line": 2,
 				"match": "_.trim"
 			}
 		],
-		"src/Modules/update.js": [
+		"src/modules/update.js": [
 			{
 				"line": 2,
 				"match": "_.is"
@@ -1274,7 +1376,7 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/upsert.js": [
+		"src/modules/upsert.js": [
 			{
 				"line": 3,
 				"match": "_.is"
@@ -1284,7 +1386,7 @@
 				"match": "_.each"
 			}
 		],
-		"src/Modules/valueOf.js": [
+		"src/modules/valueOf.js": [
 			{
 				"line": 9,
 				"match": "_.is"
@@ -1302,13 +1404,13 @@
 				"match": "_.getValue2"
 			}
 		],
-		"src/Modules/valueOfAll.js": [
+		"src/modules/valueOfAll.js": [
 			{
 				"line": 3,
 				"match": "_.each"
 			}
 		],
-		"src/Modules/verify.js": [
+		"src/modules/verify.js": [
 			{
 				"line": 3,
 				"match": "_.is"

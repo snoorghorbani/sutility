@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.88 - 2016-06-08
+ * sutility v0.0.91 - 2016-06-25
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -15,12 +15,6 @@
                 if (_.is.not.ie()) return Array.prototype.slice.call(arg);
                 for (var array = [], i = 0; i < arg.length; i++) array.push(arg[i]);
                 return array;
-            }, this.arrToObj = function() {
-                var args = _.argToArray(arguments), arr = args.shift(), key = args.shift(), removeKey = args.shift(), res = {};
-                return _.each(arr, function(item) {
-                    var temp = item[key];
-                    removeKey && delete item[key], res[temp] = item;
-                }), res;
             }, this.array = function(_) {
                 var fn = function() {};
                 fn.compact = function(arr) {
@@ -67,7 +61,13 @@
                         idxOrIterator.call(context, item) && (res = idx);
                     }) : res = arr.indexOf(idxOrIterator), res;
                 }, fn;
-            }(this), this.assign = function(_) {
+            }(this), this.arrToObj = function() {
+                var args = _.argToArray(arguments), arr = args.shift(), key = args.shift(), removeKey = args.shift(), res = {};
+                return _.each(arr, function(item) {
+                    var temp = item[key];
+                    removeKey && delete item[key], res[temp] = item;
+                }), res;
+            }, this.assign = function(_) {
                 var fn = function() {};
                 fn.ifDefined = function(to, fnOrObj) {
                     return fnOrObj !== undefined ? that.safeAssign(to, fnOrObj) : to;
@@ -87,7 +87,8 @@
                 return function(fn, boxTime, context) {
                     var lastDate = null;
                     return function() {
-                        return !lastDate || Date.now() - lastDate > boxTime ? (lastDate = Date.now(), fn.apply(context, arguments)) : void 0;
+                        if (!lastDate || Date.now() - lastDate > boxTime) return lastDate = Date.now(), 
+                        fn.apply(context, arguments);
                     };
                 };
             }(this), this.callConstantly = function(_) {
@@ -103,7 +104,7 @@
                 return function(fn, counter, context, reset) {
                     var _counter = counter;
                     return function() {
-                        return 0 == counter-- ? (counter = reset ? _counter : counter, fn.apply(context, arguments)) : void 0;
+                        if (0 == counter--) return counter = reset ? _counter : counter, fn.apply(context, arguments);
                     };
                 };
             }(this), this.callVoucher = function(_) {
@@ -124,8 +125,8 @@
                     var checker, args, lastCalledTime = Date.now();
                     return function() {
                         args = arguments, lastCalledTime = Date.now(), checker = checker ? checker : setInterval(function() {
-                            return Date.now() - lastCalledTime < delay ? void 0 : (clearInterval(checker), checker = undefined, 
-                            fn.apply(context || _, args || []));
+                            if (!(Date.now() - lastCalledTime < delay)) return clearInterval(checker), checker = undefined, 
+                            fn.apply(context || _, args || []);
                         }, delay);
                     };
                 };
@@ -245,16 +246,13 @@
                     }), fnResault) : that.exec(callback, context || null, [ fnResault ]);
                 };
             }, this.clone = function(arOrObj) {
-                if (arOrObj.concat) return arOrObj.concat();
-                var temp = {};
-                for (var key in arOrObj) temp[key] = arOrObj[key];
-                return temp;
+                return arOrObj.concat ? arOrObj.concat() : _.cloneObj(arOrObj);
             }, this.cloneArray = function(ar) {
                 return ar.concat();
             }, this.cloneObj = function(obj, prototype) {
                 prototype = _.assignIfNotDefined(prototype, !0);
                 var temp = _.object();
-                for (var key in obj) (prototype || obj.hasOwnProperty(key)) && (temp[key] = obj[key]);
+                for (var key in obj) (prototype || obj.hasOwnProperty(key)) && (_.is.scalar(obj[key]) ? temp[key] = obj[key] : temp[key] = _.clone(obj[key]));
                 return temp;
             }, this.compare = function(value, condition, param) {
                 switch (condition) {
@@ -268,7 +266,7 @@
                     return value > param;
 
                   case "lst":
-                    return param > value;
+                    return value < param;
 
                   case "ct":
                     return value.toString().indexOf(param.toString()) > -1;
@@ -303,21 +301,48 @@
                 for (var i = 0; i < obj.length; i++) if (obj[i] == value) return !0;
                 return !1;
             }, this.countBy = function() {}, this.dashCase = function(str) {
-                return str.replace(/([A-Z])|([\W|\_])/g, function(match) {
-                    return /[\w]/.test(match) ? "_" === match ? "-" : "-" + match.toLowerCase() : "-";
+                return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
+                    return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "-" + match.toLowerCase() : "-" : "-";
                 });
             }, this.data = function(_) {}(this), this.dataset = function(_, undefined) {
                 var dataset = function() {};
                 return dataset.add = function() {}, dataset.get = function(el, name) {
                     return el.dataset ? el.dataset[name] : el.getAttribute("data-" + _.dashCase(name));
                 }, dataset;
-            }(this), this.decorator = function() {}, this.deformPathValue = function(obj, path, fn) {
+            }(this), this.date = function() {
+                var PERSIAN_EPOCH = 1948320.5, GREGORIAN_EPOCH = 1721425.5, date = {};
+                return date.persian = {}, date.persian.to = {}, date.georgian = {}, date.georgian.to = {}, 
+                date.julian = {}, date.julian.to = {}, date.persian.to.julian = function(year, month, day) {
+                    var epbase, epyear;
+                    return epbase = year - (year >= 0 ? 474 : 473), epyear = 474 + _.math.mod(epbase, 2820), 
+                    day + (month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6) + Math.floor((682 * epyear - 110) / 2816) + 365 * (epyear - 1) + 1029983 * Math.floor(epbase / 2820) + (PERSIAN_EPOCH - 1);
+                }, date.georgian.to.julian = function(year, month, day) {
+                    return GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) + -Math.floor((year - 1) / 100) + Math.floor((year - 1) / 400) + Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : _.is.georgianLeapYear(year) ? -1 : -2) + day);
+                }, date.julian.to.georgian = function(jd) {
+                    var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad, yindex, year, yearday, leapadj;
+                    return wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, quadricent = Math.floor(depoch / 146097), 
+                    dqc = _.math.mod(depoch, 146097), cent = Math.floor(dqc / 36524), dcent = _.math.mod(dqc, 36524), 
+                    quad = Math.floor(dcent / 1461), dquad = _.math.mod(dcent, 1461), yindex = Math.floor(dquad / 365), 
+                    year = 400 * quadricent + 100 * cent + 4 * quad + yindex, 4 != cent && 4 != yindex && year++, 
+                    yearday = wjd - _.date.georgian.to.julian(year, 1, 1), leapadj = wjd < _.date.georgian.to.julian(year, 3, 1) ? 0 : _.is.georgianLeapYear(year) ? 1 : 2, 
+                    month = Math.floor((12 * (yearday + leapadj) + 373) / 367), day = wjd - _.date.georgian.to.julian(year, month, 1) + 1, 
+                    new Array(year, month, day);
+                }, date.julian.to.persian = function(jd) {
+                    var year, month, day, depoch, cycle, cyear, ycycle, aux1, aux2, yday;
+                    return jd = Math.floor(jd) + .5, depoch = jd - _.date.persian.to.julian(475, 1, 1), 
+                    cycle = Math.floor(depoch / 1029983), cyear = _.math.mod(depoch, 1029983), 1029982 == cyear ? ycycle = 2820 : (aux1 = Math.floor(cyear / 366), 
+                    aux2 = _.math.mod(cyear, 366), ycycle = Math.floor((2134 * aux1 + 2816 * aux2 + 2815) / 1028522) + aux1 + 1), 
+                    year = ycycle + 2820 * cycle + 474, year <= 0 && year--, yday = jd - _.date.persian.to.julian(year, 1, 1) + 1, 
+                    month = yday <= 186 ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30), day = jd - _.date.persian.to.julian(year, month, 1) + 1, 
+                    new Array(year, month, day);
+                }, date;
+            }(), this.decorator = function() {}, this.deformPathValue = function(obj, fn, path) {
                 if (!obj) return undefined;
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 if (null != obj[path]) return obj[path] = fn(obj[path]);
-                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.isArray(res[_path]) && _.each(res[_path], function(item) {
-                    _.setValueOnPath(item, path.join("."), fn);
-                });
+                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.is.array(res[_path]) ? _.each(res[_path], function(item) {
+                    _.deformPathValue(item, fn, path.join("."));
+                }) : res[_path] && (res[_path] = fn(res[_path]));
             }, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
                     defaultValues = _defaultValues || {}, _.extend(this, defaultValues);
@@ -487,9 +512,9 @@
                     return nodes.indexOf(node) > -1;
                 };
                 is.object = function(_var) {
-                    return _.is.not.ie() ? "[object Object]" === Object.prototype.toString.call(_var) : _var ? "[object Object]" === Object.prototype.toString.call(_var) : !1;
+                    return _.is.not.ie() ? "[object Object]" === Object.prototype.toString.call(_var) : !!_var && "[object Object]" === Object.prototype.toString.call(_var);
                 }, is.nodeList = function(obj) {
-                    return _.is.not.ie() ? "[object NodeList]" === Object.prototype.toString.call(obj) : obj.length !== undefined && obj.push === undefined && (obj.length > 0 ? obj[0].tagName !== undefined : !0);
+                    return _.is.not.ie() ? "[object NodeList]" === Object.prototype.toString.call(obj) : !(obj.length === undefined || obj.push !== undefined || obj.length > 0 && obj[0].tagName === undefined);
                 }, is.element = function(obj) {
                     return Object.prototype.toString.call(obj).search("Element") > -1;
                 }, is.HTMLCollection = function(obj) {
@@ -514,7 +539,7 @@
                     return !!_var;
                 }, is.empty = function(o) {
                     if (_.is.object(0)) for (var i in o) if (o.hasOwnProperty(i)) return !1;
-                    return _.is.array(o) ? 0 === o.length : !0;
+                    return !_.is.array(o) || 0 === o.length;
                 }, is.truthy = function() {}, is.scalar = function(_var) {
                     return is.defined(_var) && is.not.array(_var) && is.not.object(_var) && is.not["function"](_var);
                 }, is.prototypeProp = function(obj, prop) {
@@ -541,6 +566,10 @@
                     return isTrident;
                 }, is.same = function(fv, sv) {
                     return fv.isEqualNode ? fv.isEqualNode(sv) : fv === sv;
+                }, is.persianLeapYear = function(year) {
+                    return 682 * ((year - (year > 0 ? 474 : 473)) % 2820 + 474 + 38) % 2816 < 682;
+                }, is.georgianLeapYear = function(year) {
+                    return year % 4 == 0 && !(year % 100 == 0 && year % 400 != 0);
                 };
                 var i, not = {};
                 for (i in is) (function(i) {
@@ -608,7 +637,12 @@
                 return _.each(obj, function(value, index, list) {
                     results.push(iterator.call(context, value, index, list));
                 }), results;
-            }, this.mediaHandler = function(_) {
+            }, this.math = function() {
+                var math = {};
+                return math.mod = function(a, b) {
+                    return a - b * Math.floor(a / b);
+                }, math;
+            }(), this.mediaHandler = function(_) {
                 var handler = {
                     "in": {},
                     out: {},
@@ -695,15 +729,15 @@
                 setTimeout(function() {
                     fn.apply(context, args);
                 }, 0);
-            }, this.note = function(text) {}, this.objToTwoDimArray = function() {
+            }, this.note = function(text) {}, this.object = function(init) {
+                var Fn = _.fn();
+                return _.extend(new Fn(), init);
+            }, this.objToTwoDimArray = function() {
                 var args = _.argToArray(arguments), obj = args[0], res = [];
                 return _.each(obj, function(itemValue, itemKey) {
                     var temp = [];
                     temp[0] = [ itemValue ], temp[1] = [ itemKey ], res.push(temp);
                 }), res;
-            }, this.object = function(init) {
-                var Fn = _.fn();
-                return _.extend(new Fn(), init);
             }, this._Observable = {
                 observers: [],
                 lastId: -1,
@@ -728,13 +762,13 @@
                 return Observable.prototype.observe = function(obj) {
                     this.subsciber.push(obj);
                 }, Observable.prototype.unobserve = function(obj) {
-                    for (var i = 0, len = this.subsciber.length; len > i; i++) if (this.subsciber[i] === obj) return this.subsciber.splice(i, 1), 
+                    for (var i = 0, len = this.subsciber.length; i < len; i++) if (this.subsciber[i] === obj) return this.subsciber.splice(i, 1), 
                     !0;
                     return !1;
                 }, Observable.prototype.notify = function() {
-                    for (var args = Array.prototype.slice.call(arguments, 0), i = 0, len = this.subsciber.length; len > i; i++) this.subsciber[i].update.apply(null, args);
+                    for (var args = Array.prototype.slice.call(arguments, 0), i = 0, len = this.subsciber.length; i < len; i++) this.subsciber[i].update.apply(null, args);
                 }, Observable.set = function(val) {}, Observable;
-            }(this);
+            }(this), this.on = function(dom, state, fn) {};
             var scrollTopSubs = {}, scrollDownSubs = {};
             this.onScrollDown = function(Y, fn) {
                 scrollDownSubs[Y] = scrollDownSubs[Y] || [], scrollDownSubs[Y].push(fn);
@@ -752,7 +786,7 @@
             }(window.onscroll), this.onscroll(function() {
                 var cs = window.scrollY;
                 that.each(scrollTopSubs, function(state, key) {
-                    cs > key && that.each(scrollTopSubs[key], function(handler) {
+                    key < cs && that.each(scrollTopSubs[key], function(handler) {
                         handler();
                     });
                 }), that.each(scrollDownSubs, function(state, key) {
@@ -838,13 +872,13 @@
                         "string" == prop.type ? item[prop.name] = _.randString(6) : "number" == prop.type && (item[prop.name] = _.random(0, 9));
                     }, this), res.push(item);
                 }, this), res;
+            }, this.random = function(min, max) {
+                return (max - min) * Math.random() + min;
             }, this.randString = function(len) {
                 var res = "", possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
                 return _.repeat(len, function() {
                     res += possible[_.random(0, possible.length).toFixed()];
                 }, this), res;
-            }, this.random = function(min, max) {
-                return (max - min) * Math.random() + min;
             }, this.recursive = function() {}, this.regex = function(_) {
                 var type = {
                     number: /\d+/g
@@ -866,7 +900,7 @@
                     i.currentScope && i.targetScope && _.remove(a, j);
                 }, this);
             }, this.repeat = function(len, fn, context) {
-                for (var res = [], i = 0; len > i; i++) res.push(fn.call(context));
+                for (var res = [], i = 0; i < len; i++) res.push(fn.call(context));
                 return res;
             }, this.replaceInArray = function(array, from, replaceBy) {
                 Array.prototype.splice.apply(array, [ from, replaceBy.length + from ].concat(replaceBy));
@@ -887,7 +921,7 @@
                 };
                 return Fn.skeleton = function(obj) {
                     return _.array.compact(_.map(Fn(obj), function(i) {
-                        return i.isLastNode ? i.path : !1;
+                        return !!i.isLastNode && i.path;
                     }));
                 }, Fn;
             }(this), this.rightCurry = function(_) {
@@ -919,7 +953,7 @@
                 var Fn = function() {};
                 return Fn.to = function(selectorOrDom, to, duration) {
                     var node = _.selectFirst(selectorOrDom);
-                    if (!(0 > duration)) {
+                    if (!(duration < 0)) {
                         var difference = to - window.pageYOffset, perTick = difference / duration * 10;
                         setTimeout(function() {
                             var y = window.pageYOffset + perTick;
@@ -930,12 +964,14 @@
             }(), this.sortBy = function(obj, typeOrOperator, path) {
                 return _.is["function"](typeOrOperator) ? obj.sort(typeOrOperator) : "string" == typeOrOperator ? obj.sort(function(a, b) {
                     var textA = _.getValue(a, path).toUpperCase(), textB = _.getValue(b, path).toUpperCase();
-                    return textB > textA ? -1 : textA > textB ? 1 : 0;
+                    return textA < textB ? -1 : textA > textB ? 1 : 0;
                 }) : "number" == typeOrOperator ? obj.sort(function(a, b) {
                     return _.getValue(a, path) > _.getValue(b, path) ? 1 : -1;
                 }) : void 0;
             }, this.spliteAndTrim = function(str) {
                 return _.trim(str).split(/[\s,]+/);
+            }, this.strStartsWith = function(str, prefix) {
+                return 0 === str.indexOf(prefix);
             }, this.subSet = function(fo, so) {}, this.transitionCallback = function(el, fn) {
                 var t = this.getTransitionEvent(), _fn = function() {
                     fn(), el.removeEventListener(t, _fn);
@@ -943,6 +979,10 @@
                 el.addEventListener(t, _fn);
             }, this.trim = function(str) {
                 return str.replace(/^\s+|\s+$/g, "");
+            }, this.underscoreCase = function(str) {
+                return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
+                    return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "_" + match.toLowerCase() : "_" : "_";
+                });
             }, this.update = function(toObj, fromObj, copyPrototype) {
                 return _.is.object(fromObj) && _.each(toObj, function(value, key) {
                     fromObj[key] !== undefined && (toObj[key] = fromObj[key]);
@@ -991,4 +1031,4 @@
             }
         };
     }(), "undefined" != typeof exports && "undefined" != typeof module && module.exports ? exports = module.exports = SUTILITY.install() : window.SUTILITY = SUTILITY;
-}).call(this);
+}).call();

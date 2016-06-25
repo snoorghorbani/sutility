@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/modules/callBox.js"],"names":["this","callBox","_","fn","boxTime","context","lastDate","Date","now","apply","arguments"],"mappings":";AAAAA,KAAKC,QAAU,SAAWC,GACtB,MAAO,UAAUC,EAAIC,EAASC,GAC1B,GAAIC,GAAW,IACf,OAAO,YACH,IAAKA,GAAYC,KAAKC,MAAQF,EAAWF,EAErC,MADAE,GAAWC,KAAKC,MACTL,EAAGM,MAAMJ,EAASK,cAItCV","file":"callBox.js"}

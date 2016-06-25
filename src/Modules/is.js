@@ -126,7 +126,15 @@
 		
 		return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
 	};
-	
+	is.persianLeapYear = function (year) {
+	    return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
+	}
+	is.georgianLeapYear = function (year) {
+	    return ((year % 4) == 0) &&
+                (!(((year % 100) == 0) && ((year % 400) != 0)));
+	}
+
+
 	var not = {};
 	var i;
 	for (i in is) (function (i) {

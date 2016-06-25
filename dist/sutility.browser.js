@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.88 - 2016-06-08
+ * sutility v0.0.91 - 2016-06-25
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -14,23 +14,6 @@ window.SUTILITY = (function () {
 var U = function () {
 var _ = this;
  var that = this;
-// var target = document.querySelector('#basketStepContainer');
-
-// // create an observer instance
-// var observer = new MutationObserver(function (mutations) {
-    // mutations.forEach(function (mutation) {
-        // console.log(mutation);
-        // _.each(mutation.addedNodes, function (node) {
-            // //console.log(node.innerHTML);
-        // });
-    // });
-// });
-
-// // configuration of the observer:
-// var config = { attributes: false, childList: true, characterData: true };
-
-// // pass in the target node, as well as the observer options
-// observer.observe(target, config);
 this.activate = function (selector, classname, callback) {
     classname = classname || 'active';
     //var parents = _.select(parentOrSelector);
@@ -44,6 +27,21 @@ this.activate = function (selector, classname, callback) {
     //    _.each(nodes, function (node) {
     //    });
     //});
+};
+
+this.activated = function (parentOrSelector, selector, classname, callback) {
+    classname = classname || 'active';
+    var parents = _.select(parentOrSelector);
+    _.each(parents, function (parent) {
+        var nodes = _.select(selector, parent);
+        _.each(nodes, function (node) {
+            _.event(node, 'click', function () {
+                _.className.remove(nodes, classname);
+                _.className.add(node, classname);
+                callback && callback(this);
+            });
+        });
+    });
 };
 
 this.ajax = function (options, callback) {
@@ -70,56 +68,56 @@ this.ajax = function (options, callback) {
     };
 };
 ;this.animation = (function (_, undefined) {
-	var fn = _.fn();
-	fn.endProp = _.memoize(function () {
-		var 
-                  element = document.createElement('div'),
-			animations = {
-				'animation': 'animationend',
-				'OAnimation': 'oAnimationEnd',
-				'MozAnimation': 'mozAnimationEnd',
-				'WebkitAnimation': 'webkitAnimationEnd'
-			},
-			animation
-		;
-		for (animation in animations) {
-			if (element.style[animation] !== undefined) {
-				return animations[animation];
-			}
-		}
-		return false;
-	});
-	fn.startProp = _.memoize(function () {
-		var 
-                  element = document.createElement('div'),
-			animations = {
-				'animation': 'animationstart',
-				'OAnimation': 'oAnimationStart',
-				'MozAnimation': 'mozAnimationStart',
-				'WebkitAnimation': 'webkitAnimationStart'
-			},
-			animation
-		;
-		for (animation in animations) {
-			if (element.style[animation] !== undefined) {
-				return animations[animation];
-			}
-		}
-		return false;
-	});
-	fn.end = function (el, callback) {
-		el.addEventListener(fn.endProp(), callback);
-	}
-	fn.to = function (el, startClass, endClass) {
-		_.className.add(el, startClass);
-		_.each(_.select(el), function (el) {
-			fn.end(el, _.callConstantly(function () {
-				_.className.remove(el, startClass);
-				_.className.add(el, endClass);
-			}, 1));
-		});
-	}
-	return fn;
+	// var fn = _.fn();
+	// fn.endProp = _.memoize(function () {
+		// var 
+                  // element = document.createElement('div'),
+			// animations = {
+				// 'animation': 'animationend',
+				// 'OAnimation': 'oAnimationEnd',
+				// 'MozAnimation': 'mozAnimationEnd',
+				// 'WebkitAnimation': 'webkitAnimationEnd'
+			// },
+			// animation
+		// ;
+		// for (animation in animations) {
+			// if (element.style[animation] !== undefined) {
+				// return animations[animation];
+			// }
+		// }
+		// return false;
+	// });
+	// fn.startProp = _.memoize(function () {
+		// var 
+                  // element = document.createElement('div'),
+			// animations = {
+				// 'animation': 'animationstart',
+				// 'OAnimation': 'oAnimationStart',
+				// 'MozAnimation': 'mozAnimationStart',
+				// 'WebkitAnimation': 'webkitAnimationStart'
+			// },
+			// animation
+		// ;
+		// for (animation in animations) {
+			// if (element.style[animation] !== undefined) {
+				// return animations[animation];
+			// }
+		// }
+		// return false;
+	// });
+	// fn.end = function (el, callback) {
+		// el.addEventListener(fn.endProp(), callback);
+	// }
+	// fn.to = function (el, startClass, endClass) {
+		// _.className.add(el, startClass);
+		// _.each(_.select(el), function (el) {
+			// fn.end(el, _.callConstantly(function () {
+				// _.className.remove(el, startClass);
+				// _.className.add(el, endClass);
+			// }, 1));
+		// });
+	// }
+	// return fn;
 })(this);
 
 this.argToArray = function (arg) {
@@ -131,22 +129,6 @@ this.argToArray = function (arg) {
             array.push(arg[i]);
         return array;
     }
-};
-
-this.arrToObj = function (/*arr , key , removeKey*/) {
-    var args = _.argToArray(arguments);
-    var arr = args.shift();
-    var key = args.shift();
-    var removeKey = args.shift();
-    
-    var res = {};
-    _.each(arr, function (item) {
-        var temp = item[key];
-        if (removeKey) delete item[key];
-        
-        res[temp] = item;
-    });
-    return res;
 };
 
 this.array = (function (_) {
@@ -254,6 +236,22 @@ this.array = (function (_) {
     };
     return fn;
 })(this);
+
+this.arrToObj = function (/*arr , key , removeKey*/) {
+    var args = _.argToArray(arguments);
+    var arr = args.shift();
+    var key = args.shift();
+    var removeKey = args.shift();
+    
+    var res = {};
+    _.each(arr, function (item) {
+        var temp = item[key];
+        if (removeKey) delete item[key];
+        
+        res[temp] = item;
+    });
+    return res;
+};
 
 this.assign = (function (_) {
     var fn = function () { };
@@ -748,15 +746,10 @@ this.className = (function (_, undefined) {
     return className;
 })(this);
 this.clone = function (arOrObj) {
-    if (arOrObj.concat)
-        return arOrObj.concat();
-    
-    var temp = {};
-    for (var key in arOrObj)
-        temp[key] = arOrObj[key];
-    return temp;
+    return (arOrObj.concat)
+        ? arOrObj.concat()
+        : _.cloneObj(arOrObj);
 };
-
 this.cloneArray = function (ar) {
     return ar.concat();
             //return this.map(ar, function (d) { return d })
@@ -766,13 +759,18 @@ this.cloneObj = function (obj, prototype) {
     prototype = _.assignIfNotDefined(prototype, true);
     var temp = _.object();
     for (var key in obj) {
-        if (prototype || obj.hasOwnProperty(key))
-            temp[key] = obj[key];
+        if (prototype || obj.hasOwnProperty(key)) {
+            if (_.is.scalar(obj[key])) {
+                temp[key] = obj[key];
+            }
+            else {
+                temp[key] = _.clone(obj[key]);
+            }
+        }
     }
-    
+
     return temp;
 };
-
 this.compare = function (value, condition, param) {
     switch (condition) {
         case 'eq':
@@ -906,11 +904,12 @@ this.css = (function (_) {
 	
 	return fn;
 })(this);
-this.dashCase = function (str) {
-    return str.replace(/([A-Z])|([\W|\_])/g, function (match) {
-        return (/[\w]/.test(match)) ?
-            (match === '_') ? '-' : '-' + match.toLowerCase() :
-            '-';
+;this.dashCase = function (str) {
+    return str.replace(/([A-Z])|([\W|\_])/g, function (match, a, b, index, originText) {
+        return (!(/[\w]/.test(match))) ? '-'
+          : (/[\w]/.test(match && index == 0)) ? match.toLowerCase()
+          : (/[\w]/.test(match)) ? '-' + match.toLowerCase()
+          : '-';
     });
 };
 this.data = (function (_) {
@@ -937,29 +936,129 @@ this.dataset = (function (_, undefined) {
 
     return dataset;
 })(this);
+;
+this.date = (function () {
+    var PERSIAN_EPOCH = 1948320.5,
+        GREGORIAN_EPOCH = 1721425.5;
+
+    var date = {};
+    date.persian = {};
+    date.persian.to = {};
+    date.georgian = {};
+    date.georgian.to = {};
+    date.julian = {};
+    date.julian.to = {};
+
+    date.persian.to.julian = function (year, month, day) {
+        var epbase, epyear;
+
+        epbase = year - ((year >= 0) ? 474 : 473);
+        epyear = 474 + _.math.mod(epbase, 2820);
+
+        return day +
+                ((month <= 7) ?
+                    ((month - 1) * 31) :
+                    (((month - 1) * 30) + 6)
+                ) +
+                Math.floor(((epyear * 682) - 110) / 2816) +
+                (epyear - 1) * 365 +
+                Math.floor(epbase / 2820) * 1029983 +
+                (PERSIAN_EPOCH - 1);
+    }
+
+    date.georgian.to.julian = function (year, month, day) {
+        return (GREGORIAN_EPOCH - 1) +
+               (365 * (year - 1)) +
+               Math.floor((year - 1) / 4) +
+               (-Math.floor((year - 1) / 100)) +
+               Math.floor((year - 1) / 400) +
+               Math.floor((((367 * month) - 362) / 12) +
+               ((month <= 2) ? 0 :
+                                   (_.is.georgianLeapYear(year) ? -1 : -2)
+               ) +
+               day);
+    }
+
+    date.julian.to.georgian = function (jd) {
+        var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,
+            yindex, dyindex, year, yearday, leapadj;
+
+        wjd = Math.floor(jd - 0.5) + 0.5;
+        depoch = wjd - GREGORIAN_EPOCH;
+        quadricent = Math.floor(depoch / 146097);
+        dqc = _.math.mod(depoch, 146097);
+        cent = Math.floor(dqc / 36524);
+        dcent = _.math.mod(dqc, 36524);
+        quad = Math.floor(dcent / 1461);
+        dquad = _.math.mod(dcent, 1461);
+        yindex = Math.floor(dquad / 365);
+        year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
+        if (!((cent == 4) || (yindex == 4))) {
+            year++;
+        }
+        yearday = wjd - _.date.georgian.to.julian(year, 1, 1);
+        leapadj = ((wjd < _.date.georgian.to.julian(year, 3, 1)) ? 0
+                                                      :
+                      (_.is.georgianLeapYear(year) ? 1 : 2)
+                  );
+        month = Math.floor((((yearday + leapadj) * 12) + 373) / 367);
+        day = (wjd - _.date.georgian.to.julian(year, month, 1)) + 1;
+
+        return new Array(year, month, day);
+    }
+    date.julian.to.persian = function (jd) {
+        var year, month, day, depoch, cycle, cyear, ycycle,
+            aux1, aux2, yday;
+
+
+        jd = Math.floor(jd) + 0.5;
+
+        depoch = jd - _.date.persian.to.julian(475, 1, 1);
+        cycle = Math.floor(depoch / 1029983);
+        cyear = _.math.mod(depoch, 1029983);
+        if (cyear == 1029982) {
+            ycycle = 2820;
+        } else {
+            aux1 = Math.floor(cyear / 366);
+            aux2 = _.math.mod(cyear, 366);
+            ycycle = Math.floor(((2134 * aux1) + (2816 * aux2) + 2815) / 1028522) +
+                        aux1 + 1;
+        }
+        year = ycycle + (2820 * cycle) + 474;
+        if (year <= 0) {
+            year--;
+        }
+        yday = (jd - _.date.persian.to.julian(year, 1, 1)) + 1;
+        month = (yday <= 186) ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30);
+        day = (jd - _.date.persian.to.julian(year, month, 1)) + 1;
+        return new Array(year, month, day);
+    }
+
+    return date;
+})()
+;
+
 this.decorator = function () { };
 
-this.deformPathValue = function (obj, path, fn) {
-	if (!obj) return undefined;
-	if (!obj) return this.warn('Utility getValue function first parameter not defined');
-	
-	if (obj[path] != null) return obj[path] = fn(obj[path]);
-	
-	var path = path.split('.');
-	var _path = path.shift();
-	var res = obj[_path];
-	while (_path = path.shift()) {
-		if (res[_path]) {
-			if (_.isArray(res[_path])) {
-				_.each(res[_path], function (item) {
-					_.setValueOnPath(item, path.join('.'), fn);
-				});
-			}
-		}
-	}
-	return;
-};
+this.deformPathValue = function (obj, fn, path) {
+    if (!obj) return undefined;
+    if (!obj) return this.warn('Utility getValue function first parameter not defined');
 
+    if (obj[path] != null) return obj[path] = fn(obj[path]);
+
+    var path = path.split('.');
+    var _path = path.shift();
+    var res = obj[_path];
+    while (_path = path.shift())
+        if (res[_path] && _.is.array(res[_path]))
+            _.each(res[_path], function (item) {
+                _.deformPathValue(item, fn, path.join('.'));
+            });
+        else if (res[_path])
+            res[_path] = fn(res[_path]);
+
+    return;
+};
 this.dictionary = (function (that, undefined) {
     var defaultValues = {};
     var Fn = function (_defaultValues) {
@@ -1786,7 +1885,15 @@ this.is = (function (_, undefined) {
 		
 		return (fv.isEqualNode) ? fv.isEqualNode(sv) : fv === sv;
 	};
-	
+	is.persianLeapYear = function (year) {
+	    return ((((((year - ((year > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
+	}
+	is.georgianLeapYear = function (year) {
+	    return ((year % 4) == 0) &&
+                (!(((year % 100) == 0) && ((year % 400) != 0)));
+	}
+
+
 	var not = {};
 	var i;
 	for (i in is) (function (i) {
@@ -1948,6 +2055,19 @@ this.map = function (obj, iterator, context) {
     return results;
 };
 
+;
+;
+this.math = (function () {
+    var math = {};
+
+    math.mod = function (a, b) {
+        return a - (b * Math.floor(a / b));
+    }
+
+    return math;
+})()
+;
+
 this.mediaHandler = (function (_) {
     var handler = {
         "in": {},
@@ -2066,6 +2186,23 @@ this.multiply = function (fn, ln) {
     return fn * ln;
 };
 
+// var target = document.querySelector('#basketStepContainer');
+
+// // create an observer instance
+// var observer = new MutationObserver(function (mutations) {
+    // mutations.forEach(function (mutation) {
+        // console.log(mutation);
+        // _.each(mutation.addedNodes, function (node) {
+            // //console.log(node.innerHTML);
+        // });
+    // });
+// });
+
+// // configuration of the observer:
+// var config = { attributes: false, childList: true, characterData: true };
+
+// // pass in the target node, as well as the observer options
+// observer.observe(target, config);
  this.nextTick = function (/*fn, context*/) {
                 var args = _.argToArray(arguments);
                 var fn = args.shift();
@@ -2076,6 +2213,11 @@ this.multiply = function (fn, ln) {
             };
 this.note = function (text) {
     console.log(['NOTE : ', text].join(' '));
+};
+
+this.object = function (init) {
+    var Fn = _.fn();
+    return _.extend(new Fn(), init);
 };
 
 this.objToTwoDimArray = function (/*obj*/) {
@@ -2089,11 +2231,6 @@ this.objToTwoDimArray = function (/*obj*/) {
         res.push(temp);
     });
     return res;
-};
-
-this.object = function (init) {
-    var Fn = _.fn();
-    return _.extend(new Fn(), init);
 };
 
 //#region move to pattern namespace
@@ -2161,6 +2298,10 @@ this.Observable = (function (that, undefined) {
     
     return Observable;
 })(this);
+
+this.on = function (dom, state, fn) {
+
+};
 
 //#region todo move to on() module 
 var scrollTopSubs = {};
@@ -2377,6 +2518,10 @@ this.randJson = function (len, props) {
     }, this);
     return res;
 };
+this.random = function (min, max) {
+    return ((max - min) * Math.random()) + min;
+};
+
 this.randString = function (len) {
     var res = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -2385,10 +2530,6 @@ this.randString = function (len) {
     }, this);
     
     return res;
-};
-
-this.random = function (min, max) {
-    return ((max - min) * Math.random()) + min;
 };
 
 this.ready = (function (_) {
@@ -2643,6 +2784,9 @@ this.spliteAndTrim = function (str) {
     return _.trim(str).split(/[\s,]+/);
 };
 
+this.strStartsWith = function (str, prefix) {
+    return str.indexOf(prefix) === 0;
+};
 this.subSet = function (fo, so) {
 
 };
@@ -2658,6 +2802,14 @@ this.subSet = function (fo, so) {
 this.trim = function (str) {
     return str.replace(/^\s+|\s+$/g, "");
 }
+this.underscoreCase = function (str) {
+    return str.replace(/([A-Z])|([\W|\_])/g, function (match, a, b, index, originText) {
+        return (!(/[\w]/.test(match))) ? '_'
+            : (/[\w]/.test(match && index == 0)) ? match.toLowerCase()
+            : (/[\w]/.test(match)) ? '_' + match.toLowerCase()
+            : '_';
+    });
+};
 this.update = function (toObj, fromObj, copyPrototype) {
     if (_.is.object(fromObj)) {
         _.each(toObj, function (value, key) {
@@ -2750,4 +2902,4 @@ if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.ex
 } else {
     window.SUTILITY = SUTILITY;
 }
-}).call(this);
+}).call();

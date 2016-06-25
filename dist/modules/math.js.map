@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/modules/math.js"],"names":["this","math","mod","a","b","Math","floor"],"mappings":";AAEAA,KAAKC,KAAO,WACR,GAAIA,KAMJ,OAJAA,GAAKC,IAAM,SAAUC,EAAGC,GACpB,MAAOD,GAAKC,EAAIC,KAAKC,MAAMH,EAAIC,IAG5BH","file":"math.js"}

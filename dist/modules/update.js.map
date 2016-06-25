@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/modules/update.js"],"names":["this","update","toObj","fromObj","copyPrototype","_","is","object","each","value","key","undefined"],"mappings":";AAAAA,KAAKC,OAAS,SAAUC,EAAOC,EAASC,GAMpC,MALIC,GAAEC,GAAGC,OAAOJ,IACZE,EAAEG,KAAKN,EAAO,SAAUO,EAAOC,GACNC,SAAjBR,EAAQO,KAAoBR,EAAMQ,GAAOP,EAAQO,MAGtDR","file":"update.js"}

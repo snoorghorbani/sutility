@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/modules/randColor.js"],"names":["this","randColor","r","random","toFixed","g","b"],"mappings":";AAAAA,KAAKC,UAAY,WACb,GAAIC,GAAIF,KAAKG,OAAO,EAAG,KAAKC,UACxBC,EAAIL,KAAKG,OAAO,EAAG,KAAKC,UACxBE,EAAIN,KAAKG,OAAO,EAAG,KAAKC,SAE5B,OAAO,OAASF,EAAI,IAAMG,EAAI,IAAMC,EAAI","file":"randColor.js"}

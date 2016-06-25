@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/modules/idMode.js"],"names":["this","idMode","ar","iden","item","res","i","active"],"mappings":";AACAA,KAAKC,OAAS,SAAUC,EAAIC,GAExB,IAAK,GAAWC,GADZC,KACKC,EAAI,EAASF,EAAOF,EAAGI,GAAIA,IAC5BF,EAAKD,KACLE,EAAID,EAAKD,IAASC,EAClBC,EAAID,EAAKD,IAAOI,OAAS,GAGjC,OAAOF","file":"idMode.js"}
