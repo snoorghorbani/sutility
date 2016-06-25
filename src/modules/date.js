@@ -27,6 +27,9 @@ this.date = (function () {
                 Math.floor(epbase / 2820) * 1029983 +
                 (PERSIAN_EPOCH - 1);
     }
+    date.persian.to.georgian = function (year, month, day) {
+        return date.julian.to.georgian(date.persian.to.julian(year, month, day));
+    }
 
     date.georgian.to.julian = function (year, month, day) {
         return (GREGORIAN_EPOCH - 1) +
@@ -43,7 +46,7 @@ this.date = (function () {
 
     date.julian.to.georgian = function (jd) {
         var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,
-            yindex, dyindex, year, yearday, leapadj;
+            yindex, dyindex, year,month,day, yearday, leapadj;
 
         wjd = Math.floor(jd - 0.5) + 0.5;
         depoch = wjd - GREGORIAN_EPOCH;
