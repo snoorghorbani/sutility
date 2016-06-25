@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.93 - 2016-06-25
+ * sutility v0.0.94 - 2016-06-25
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -432,11 +432,11 @@
                     return epbase = year - (year >= 0 ? 474 : 473), epyear = 474 + _.math.mod(epbase, 2820), 
                     day + (month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6) + Math.floor((682 * epyear - 110) / 2816) + 365 * (epyear - 1) + 1029983 * Math.floor(epbase / 2820) + (PERSIAN_EPOCH - 1);
                 }, date.persian.to.georgian = function(year, month, day) {
-                    return date.julian.to.georgian(date.persian.to.julian(year, month, day));
+                    return date.julian.to.georgian(parseInt(year), parseInt(month), parseInt(day));
                 }, date.georgian.to.julian = function(year, month, day) {
                     return GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) + -Math.floor((year - 1) / 100) + Math.floor((year - 1) / 400) + Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : _.is.georgianLeapYear(year) ? -1 : -2) + day);
                 }, date.georgian.to.persian = function(year, month, day) {
-                    return date.julian.to.persian(date.georgian.to.julian(year, month, day));
+                    return date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
                 }, date.julian.to.georgian = function(jd) {
                     var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad, yindex, year, month, day, yearday, leapadj;
                     return wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, quadricent = Math.floor(depoch / 146097), 

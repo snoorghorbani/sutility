@@ -1,3 +1,3 @@
-/*! sutility - v0.0.93 - 2016-06-25 */
+/*! sutility - v0.0.94 - 2016-06-25 */
 this.groupByFlatMode=function(){var a=this,b=_.argToArray(arguments),c=b.shift(),d=b.shift(),e={};return this.each(c,function(b){var c="";a.each(d,function(a){c+="_"+b[a]}),e[c]=e[c]||[],e[c].push(b)}),e};
 //# sourceMappingURL=groupByFlatMode.js.map
