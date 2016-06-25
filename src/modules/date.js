@@ -43,6 +43,9 @@ this.date = (function () {
                ) +
                day);
     }
+    date.georgian.to.persian = function (year, month, day) {
+        return date.julian.to.persian(date.georgian.to.julian(year, month, day));
+    }
 
     date.julian.to.georgian = function (jd) {
         var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,

@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.92 - 2016-06-25
+ * sutility v0.0.93 - 2016-06-25
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -320,6 +320,8 @@
                     return date.julian.to.georgian(date.persian.to.julian(year, month, day));
                 }, date.georgian.to.julian = function(year, month, day) {
                     return GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) + -Math.floor((year - 1) / 100) + Math.floor((year - 1) / 400) + Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : _.is.georgianLeapYear(year) ? -1 : -2) + day);
+                }, date.georgian.to.persian = function(year, month, day) {
+                    return date.julian.to.persian(date.georgian.to.julian(year, month, day));
                 }, date.julian.to.georgian = function(jd) {
                     var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad, yindex, year, month, day, yearday, leapadj;
                     return wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, quadricent = Math.floor(depoch / 146097), 

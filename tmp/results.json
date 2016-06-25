@@ -1,6 +1,6 @@
 {
 	"numResults": 328,
-	"creationDate": "2016-06-25 07:19:29",
+	"creationDate": "2016-06-25 11:10:02",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -516,51 +516,51 @@
 				"match": "_.is"
 			},
 			{
-				"line": 54,
+				"line": 57,
 				"match": "_.math"
 			},
 			{
-				"line": 56,
+				"line": 59,
 				"match": "_.math"
 			},
 			{
-				"line": 58,
+				"line": 61,
 				"match": "_.math"
-			},
-			{
-				"line": 64,
-				"match": "_.date"
-			},
-			{
-				"line": 65,
-				"match": "_.date"
 			},
 			{
 				"line": 67,
-				"match": "_.is"
+				"match": "_.date"
+			},
+			{
+				"line": 68,
+				"match": "_.date"
 			},
 			{
 				"line": 70,
+				"match": "_.is"
+			},
+			{
+				"line": 73,
 				"match": "_.date"
 			},
 			{
-				"line": 81,
+				"line": 84,
 				"match": "_.date"
 			},
 			{
-				"line": 83,
+				"line": 86,
 				"match": "_.math"
 			},
 			{
-				"line": 88,
+				"line": 91,
 				"match": "_.math"
 			},
 			{
-				"line": 96,
+				"line": 99,
 				"match": "_.date"
 			},
 			{
-				"line": 98,
+				"line": 101,
 				"match": "_.date"
 			}
 		],
