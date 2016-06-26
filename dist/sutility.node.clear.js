@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.94 - 2016-06-25
+ * sutility v0.0.95 - 2016-06-26
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -314,26 +314,27 @@
                 return date.persian = {}, date.persian.to = {}, date.georgian = {}, date.georgian.to = {}, 
                 date.julian = {}, date.julian.to = {}, date.persian.to.julian = function(year, month, day) {
                     var epbase, epyear;
-                    return epbase = year - (year >= 0 ? 474 : 473), epyear = 474 + _.math.mod(epbase, 2820), 
-                    day + (month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6) + Math.floor((682 * epyear - 110) / 2816) + 365 * (epyear - 1) + 1029983 * Math.floor(epbase / 2820) + (PERSIAN_EPOCH - 1);
+                    return year = parseInt(year), month = parseInt(month), day = parseInt(day), epbase = year - (year >= 0 ? 474 : 473), 
+                    epyear = 474 + _.math.mod(epbase, 2820), day + (month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6) + Math.floor((682 * epyear - 110) / 2816) + 365 * (epyear - 1) + 1029983 * Math.floor(epbase / 2820) + (PERSIAN_EPOCH - 1);
                 }, date.persian.to.georgian = function(year, month, day) {
-                    return date.julian.to.georgian(parseInt(year), parseInt(month), parseInt(day));
+                    return date.julian.to.georgian(date.persian.julian(parseInt(year), parseInt(month), parseInt(day)));
                 }, date.georgian.to.julian = function(year, month, day) {
-                    return GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) + -Math.floor((year - 1) / 100) + Math.floor((year - 1) / 400) + Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : _.is.georgianLeapYear(year) ? -1 : -2) + day);
+                    return year = parseInt(year), month = parseInt(month), day = parseInt(day), GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) + -Math.floor((year - 1) / 100) + Math.floor((year - 1) / 400) + Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : _.is.georgianLeapYear(year) ? -1 : -2) + day);
                 }, date.georgian.to.persian = function(year, month, day) {
                     return date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
                 }, date.julian.to.georgian = function(jd) {
                     var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad, yindex, year, month, day, yearday, leapadj;
-                    return wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, quadricent = Math.floor(depoch / 146097), 
-                    dqc = _.math.mod(depoch, 146097), cent = Math.floor(dqc / 36524), dcent = _.math.mod(dqc, 36524), 
-                    quad = Math.floor(dcent / 1461), dquad = _.math.mod(dcent, 1461), yindex = Math.floor(dquad / 365), 
-                    year = 400 * quadricent + 100 * cent + 4 * quad + yindex, 4 != cent && 4 != yindex && year++, 
-                    yearday = wjd - _.date.georgian.to.julian(year, 1, 1), leapadj = wjd < _.date.georgian.to.julian(year, 3, 1) ? 0 : _.is.georgianLeapYear(year) ? 1 : 2, 
+                    return jd = parseInt(jd), wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, 
+                    quadricent = Math.floor(depoch / 146097), dqc = _.math.mod(depoch, 146097), cent = Math.floor(dqc / 36524), 
+                    dcent = _.math.mod(dqc, 36524), quad = Math.floor(dcent / 1461), dquad = _.math.mod(dcent, 1461), 
+                    yindex = Math.floor(dquad / 365), year = 400 * quadricent + 100 * cent + 4 * quad + yindex, 
+                    4 != cent && 4 != yindex && year++, yearday = wjd - _.date.georgian.to.julian(year, 1, 1), 
+                    leapadj = wjd < _.date.georgian.to.julian(year, 3, 1) ? 0 : _.is.georgianLeapYear(year) ? 1 : 2, 
                     month = Math.floor((12 * (yearday + leapadj) + 373) / 367), day = wjd - _.date.georgian.to.julian(year, month, 1) + 1, 
                     new Array(year, month, day);
                 }, date.julian.to.persian = function(jd) {
                     var year, month, day, depoch, cycle, cyear, ycycle, aux1, aux2, yday;
-                    return jd = Math.floor(jd) + .5, depoch = jd - _.date.persian.to.julian(475, 1, 1), 
+                    return jd = parseInt(jd), jd = Math.floor(jd) + .5, depoch = jd - _.date.persian.to.julian(475, 1, 1), 
                     cycle = Math.floor(depoch / 1029983), cyear = _.math.mod(depoch, 1029983), 1029982 == cyear ? ycycle = 2820 : (aux1 = Math.floor(cyear / 366), 
                     aux2 = _.math.mod(cyear, 366), ycycle = Math.floor((2134 * aux1 + 2816 * aux2 + 2815) / 1028522) + aux1 + 1), 
                     year = ycycle + 2820 * cycle + 474, year <= 0 && year--, yday = jd - _.date.persian.to.julian(year, 1, 1) + 1, 

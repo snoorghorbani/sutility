@@ -1,6 +1,6 @@
 {
 	"numResults": 328,
-	"creationDate": "2016-06-25 11:36:25",
+	"creationDate": "2016-06-26 09:33:23",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -508,59 +508,59 @@
 		],
 		"src/modules/date.js": [
 			{
-				"line": 18,
+				"line": 21,
 				"match": "_.math"
 			},
 			{
-				"line": 42,
+				"line": 49,
 				"match": "_.is"
 			},
 			{
-				"line": 57,
-				"match": "_.math"
-			},
-			{
-				"line": 59,
-				"match": "_.math"
-			},
-			{
-				"line": 61,
+				"line": 65,
 				"match": "_.math"
 			},
 			{
 				"line": 67,
-				"match": "_.date"
-			},
-			{
-				"line": 68,
-				"match": "_.date"
-			},
-			{
-				"line": 70,
-				"match": "_.is"
-			},
-			{
-				"line": 73,
-				"match": "_.date"
-			},
-			{
-				"line": 84,
-				"match": "_.date"
-			},
-			{
-				"line": 86,
 				"match": "_.math"
 			},
 			{
-				"line": 91,
+				"line": 69,
+				"match": "_.math"
+			},
+			{
+				"line": 75,
+				"match": "_.date"
+			},
+			{
+				"line": 76,
+				"match": "_.date"
+			},
+			{
+				"line": 78,
+				"match": "_.is"
+			},
+			{
+				"line": 81,
+				"match": "_.date"
+			},
+			{
+				"line": 92,
+				"match": "_.date"
+			},
+			{
+				"line": 94,
 				"match": "_.math"
 			},
 			{
 				"line": 99,
+				"match": "_.math"
+			},
+			{
+				"line": 107,
 				"match": "_.date"
 			},
 			{
-				"line": 101,
+				"line": 109,
 				"match": "_.date"
 			}
 		],

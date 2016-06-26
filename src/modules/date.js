@@ -13,6 +13,9 @@ this.date = (function () {
 
     date.persian.to.julian = function (year, month, day) {
         var epbase, epyear;
+        year = parseInt(year);
+        month = parseInt(month);
+        day = parseInt(day);
 
         epbase = year - ((year >= 0) ? 474 : 473);
         epyear = 474 + _.math.mod(epbase, 2820);
@@ -28,10 +31,14 @@ this.date = (function () {
                 (PERSIAN_EPOCH - 1);
     }
     date.persian.to.georgian = function (year, month, day) {
-        return date.julian.to.georgian(parseInt(year), parseInt(month), parseInt(day));
+        return date.julian.to.georgian(date.persian.julian(parseInt(year), parseInt(month), parseInt(day)));
     }
 
     date.georgian.to.julian = function (year, month, day) {
+        year = parseInt(year);
+        month = parseInt(month);
+        day = parseInt(day);
+
         return (GREGORIAN_EPOCH - 1) +
                (365 * (year - 1)) +
                Math.floor((year - 1) / 4) +
@@ -50,6 +57,7 @@ this.date = (function () {
     date.julian.to.georgian = function (jd) {
         var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,
             yindex, dyindex, year, month, day, yearday, leapadj;
+        jd = parseInt(jd);
 
         wjd = Math.floor(jd - 0.5) + 0.5;
         depoch = wjd - GREGORIAN_EPOCH;
@@ -77,7 +85,7 @@ this.date = (function () {
     date.julian.to.persian = function (jd) {
         var year, month, day, depoch, cycle, cyear, ycycle,
             aux1, aux2, yday;
-
+        jd = parseInt(jd);
 
         jd = Math.floor(jd) + 0.5;
 
