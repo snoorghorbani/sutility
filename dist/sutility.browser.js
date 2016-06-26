@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.95 - 2016-06-26
+ * sutility v0.0.96 - 2016-06-26
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -969,7 +969,7 @@ this.date = (function () {
                 (PERSIAN_EPOCH - 1);
     }
     date.persian.to.georgian = function (year, month, day) {
-        return date.julian.to.georgian(date.persian.julian(parseInt(year), parseInt(month), parseInt(day)));
+        return date.julian.to.georgian(date.persian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
     }
 
     date.georgian.to.julian = function (year, month, day) {
