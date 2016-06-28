@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.96 - 2016-06-26
+ * sutility v0.0.97 - 2016-06-28
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -995,7 +995,7 @@ this.date = (function () {
     date.julian.to.georgian = function (jd) {
         var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad,
             yindex, dyindex, year, month, day, yearday, leapadj;
-        jd = parseInt(jd);
+        jd = parseFloat(jd);
 
         wjd = Math.floor(jd - 0.5) + 0.5;
         depoch = wjd - GREGORIAN_EPOCH;
@@ -1023,7 +1023,7 @@ this.date = (function () {
     date.julian.to.persian = function (jd) {
         var year, month, day, depoch, cycle, cyear, ycycle,
             aux1, aux2, yday;
-        jd = parseInt(jd);
+        jd = parseFloat(jd);
 
         jd = Math.floor(jd) + 0.5;
 

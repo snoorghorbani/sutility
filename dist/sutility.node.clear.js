@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.96 - 2016-06-26
+ * sutility v0.0.97 - 2016-06-28
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -324,7 +324,7 @@
                     return date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
                 }, date.julian.to.georgian = function(jd) {
                     var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad, yindex, year, month, day, yearday, leapadj;
-                    return jd = parseInt(jd), wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, 
+                    return jd = parseFloat(jd), wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, 
                     quadricent = Math.floor(depoch / 146097), dqc = _.math.mod(depoch, 146097), cent = Math.floor(dqc / 36524), 
                     dcent = _.math.mod(dqc, 36524), quad = Math.floor(dcent / 1461), dquad = _.math.mod(dcent, 1461), 
                     yindex = Math.floor(dquad / 365), year = 400 * quadricent + 100 * cent + 4 * quad + yindex, 
@@ -334,7 +334,7 @@
                     new Array(year, month, day);
                 }, date.julian.to.persian = function(jd) {
                     var year, month, day, depoch, cycle, cyear, ycycle, aux1, aux2, yday;
-                    return jd = parseInt(jd), jd = Math.floor(jd) + .5, depoch = jd - _.date.persian.to.julian(475, 1, 1), 
+                    return jd = parseFloat(jd), jd = Math.floor(jd) + .5, depoch = jd - _.date.persian.to.julian(475, 1, 1), 
                     cycle = Math.floor(depoch / 1029983), cyear = _.math.mod(depoch, 1029983), 1029982 == cyear ? ycycle = 2820 : (aux1 = Math.floor(cyear / 366), 
                     aux2 = _.math.mod(cyear, 366), ycycle = Math.floor((2134 * aux1 + 2816 * aux2 + 2815) / 1028522) + aux1 + 1), 
                     year = ycycle + 2820 * cycle + 474, year <= 0 && year--, yday = jd - _.date.persian.to.julian(year, 1, 1) + 1, 
