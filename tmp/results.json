@@ -1,6 +1,6 @@
 {
-	"numResults": 328,
-	"creationDate": "2016-06-28 06:11:30",
+	"numResults": 335,
+	"creationDate": "2016-07-02 13:26:34",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -172,6 +172,22 @@
 			{
 				"line": 95,
 				"match": "_.each"
+			},
+			{
+				"line": 106,
+				"match": "_.getValue"
+			},
+			{
+				"line": 106,
+				"match": "_.getValue"
+			},
+			{
+				"line": 108,
+				"match": "_.getValue"
+			},
+			{
+				"line": 108,
+				"match": "_.getValue"
 			}
 		],
 		"src/modules/arrToObj.js": [
@@ -508,59 +524,59 @@
 		],
 		"src/modules/date.js": [
 			{
-				"line": 21,
+				"line": 26,
 				"match": "_.math"
 			},
 			{
-				"line": 49,
+				"line": 55,
 				"match": "_.is"
 			},
 			{
-				"line": 65,
+				"line": 72,
 				"match": "_.math"
 			},
 			{
-				"line": 67,
+				"line": 74,
 				"match": "_.math"
-			},
-			{
-				"line": 69,
-				"match": "_.math"
-			},
-			{
-				"line": 75,
-				"match": "_.date"
 			},
 			{
 				"line": 76,
+				"match": "_.math"
+			},
+			{
+				"line": 82,
 				"match": "_.date"
 			},
 			{
-				"line": 78,
+				"line": 83,
+				"match": "_.date"
+			},
+			{
+				"line": 85,
 				"match": "_.is"
 			},
 			{
-				"line": 81,
+				"line": 88,
 				"match": "_.date"
-			},
-			{
-				"line": 92,
-				"match": "_.date"
-			},
-			{
-				"line": 94,
-				"match": "_.math"
 			},
 			{
 				"line": 99,
-				"match": "_.math"
-			},
-			{
-				"line": 107,
 				"match": "_.date"
 			},
 			{
-				"line": 109,
+				"line": 101,
+				"match": "_.math"
+			},
+			{
+				"line": 106,
+				"match": "_.math"
+			},
+			{
+				"line": 114,
+				"match": "_.date"
+			},
+			{
+				"line": 116,
 				"match": "_.date"
 			}
 		],
@@ -1336,6 +1352,20 @@
 			{
 				"line": 16,
 				"match": "_.select"
+			}
+		],
+		"src/modules/setValue.js": [
+			{
+				"line": 15,
+				"match": "_.is"
+			},
+			{
+				"line": 16,
+				"match": "_.each"
+			},
+			{
+				"line": 17,
+				"match": "_.setValue"
 			}
 		],
 		"src/modules/sortBy.js": [

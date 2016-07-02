@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.97 - 2016-06-28
+ * sutility v0.0.98 - 2016-07-02
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -60,6 +60,10 @@
                     return _.is["function"](idxOrIterator) ? _.each(arr, function(item, idx) {
                         idxOrIterator.call(context, item) && (res = idx);
                     }) : res = arr.indexOf(idxOrIterator), res;
+                }, fn.sort = function(array, key) {
+                    return array.sort(function(a, b) {
+                        return _.getValue(a, key) > _.getValue(b, key) ? 1 : _.getValue(a, key) < _.getValue(b, key) ? -1 : 0;
+                    }), array;
                 }, fn;
             }(this), this.arrToObj = function() {
                 var args = _.argToArray(arguments), arr = args.shift(), key = args.shift(), removeKey = args.shift(), res = {};
@@ -311,17 +315,23 @@
                 }, dataset;
             }(this), this.date = function() {
                 var PERSIAN_EPOCH = 1948320.5, GREGORIAN_EPOCH = 1721425.5, date = {};
-                return date.persian = {}, date.persian.to = {}, date.georgian = {}, date.georgian.to = {}, 
-                date.julian = {}, date.julian.to = {}, date.persian.to.julian = function(year, month, day) {
+                date.persian = {}, date.persian.to = {}, date.georgian = {}, date.georgian.to = {}, 
+                date.julian = {}, date.julian.to = {};
+                var insertZero = function(i) {
+                    return i = i.toString(), 1 == i.length ? "0" + i : i;
+                };
+                return date.persian.to.julian = function(year, month, day) {
                     var epbase, epyear;
                     return year = parseInt(year), month = parseInt(month), day = parseInt(day), epbase = year - (year >= 0 ? 474 : 473), 
                     epyear = 474 + _.math.mod(epbase, 2820), day + (month <= 7 ? 31 * (month - 1) : 30 * (month - 1) + 6) + Math.floor((682 * epyear - 110) / 2816) + 365 * (epyear - 1) + 1029983 * Math.floor(epbase / 2820) + (PERSIAN_EPOCH - 1);
-                }, date.persian.to.georgian = function(year, month, day) {
-                    return date.julian.to.georgian(date.persian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+                }, date.persian.to.georgian = function(year, month, day, joinCharacter) {
+                    var dateArray = date.julian.to.georgian(date.persian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+                    return joinCharacter ? dateArray.join(joinCharacter) : dateArray;
                 }, date.georgian.to.julian = function(year, month, day) {
                     return year = parseInt(year), month = parseInt(month), day = parseInt(day), GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) + -Math.floor((year - 1) / 100) + Math.floor((year - 1) / 400) + Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : _.is.georgianLeapYear(year) ? -1 : -2) + day);
-                }, date.georgian.to.persian = function(year, month, day) {
-                    return date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+                }, date.georgian.to.persian = function(year, month, day, joinCharacter) {
+                    var dateArray = date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+                    return joinCharacter ? dateArray.join(joinCharacter) : dateArray;
                 }, date.julian.to.georgian = function(jd) {
                     var wjd, depoch, quadricent, dqc, cent, dcent, quad, dquad, yindex, year, month, day, yearday, leapadj;
                     return jd = parseFloat(jd), wjd = Math.floor(jd - .5) + .5, depoch = wjd - GREGORIAN_EPOCH, 
@@ -331,7 +341,7 @@
                     4 != cent && 4 != yindex && year++, yearday = wjd - _.date.georgian.to.julian(year, 1, 1), 
                     leapadj = wjd < _.date.georgian.to.julian(year, 3, 1) ? 0 : _.is.georgianLeapYear(year) ? 1 : 2, 
                     month = Math.floor((12 * (yearday + leapadj) + 373) / 367), day = wjd - _.date.georgian.to.julian(year, month, 1) + 1, 
-                    new Array(year, month, day);
+                    new Array(insertZero(year), insertZero(month), insertZero(day));
                 }, date.julian.to.persian = function(jd) {
                     var year, month, day, depoch, cycle, cyear, ycycle, aux1, aux2, yday;
                     return jd = parseFloat(jd), jd = Math.floor(jd) + .5, depoch = jd - _.date.persian.to.julian(475, 1, 1), 
@@ -339,7 +349,7 @@
                     aux2 = _.math.mod(cyear, 366), ycycle = Math.floor((2134 * aux1 + 2816 * aux2 + 2815) / 1028522) + aux1 + 1), 
                     year = ycycle + 2820 * cycle + 474, year <= 0 && year--, yday = jd - _.date.persian.to.julian(year, 1, 1) + 1, 
                     month = yday <= 186 ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30), day = jd - _.date.persian.to.julian(year, month, 1) + 1, 
-                    new Array(year, month, day);
+                    new Array(insertZero(year), insertZero(month), insertZero(day));
                 }, date;
             }(), this.decorator = function() {}, this.deformPathValue = function(obj, fn, path) {
                 if (!obj) return undefined;
@@ -966,7 +976,16 @@
                         }, 10);
                     }
                 }, Fn;
-            }(), this.sortBy = function(obj, typeOrOperator, path) {
+            }(), this.setValue = function(obj, value, path) {
+                if (!obj) return undefined;
+                if (!obj) return this.warn("Utility getValue function first parameter not defined");
+                if (null != obj[path]) return obj[path] = value;
+                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; path.length > 1; ) _path = path.shift(), 
+                res[_path] = res[_path] || {}, res = res[_path], _.is.array(res) && _.each(res, function(item) {
+                    _.setValue(item, value, path.join("."));
+                });
+                return res[path[0]] = value, obj;
+            }, this.sortBy = function(obj, typeOrOperator, path) {
                 return _.is["function"](typeOrOperator) ? obj.sort(typeOrOperator) : "string" == typeOrOperator ? obj.sort(function(a, b) {
                     var textA = _.getValue(a, path).toUpperCase(), textB = _.getValue(b, path).toUpperCase();
                     return textA < textB ? -1 : textA > textB ? 1 : 0;

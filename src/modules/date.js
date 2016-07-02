@@ -10,7 +10,12 @@ this.date = (function () {
     date.georgian.to = {};
     date.julian = {};
     date.julian.to = {};
-
+	
+	var insertZero = function(i){
+		i = i.toString();
+		return(i.length==1)?"0"+i:i;
+	}
+	
     date.persian.to.julian = function (year, month, day) {
         var epbase, epyear;
         year = parseInt(year);
@@ -30,8 +35,9 @@ this.date = (function () {
                 Math.floor(epbase / 2820) * 1029983 +
                 (PERSIAN_EPOCH - 1);
     }
-    date.persian.to.georgian = function (year, month, day) {
-        return date.julian.to.georgian(date.persian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+    date.persian.to.georgian = function (year, month, day,joinCharacter) {
+        var dateArray = date.julian.to.georgian(date.persian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+		return (joinCharacter) ? dateArray.join(joinCharacter):dateArray;
     }
 
     date.georgian.to.julian = function (year, month, day) {
@@ -50,8 +56,9 @@ this.date = (function () {
                ) +
                day);
     }
-    date.georgian.to.persian = function (year, month, day) {
-        return date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+    date.georgian.to.persian = function (year, month, day, joinCharacter) {
+        var dateArray =  date.julian.to.persian(date.georgian.to.julian(parseInt(year), parseInt(month), parseInt(day)));
+		return (joinCharacter) ? dateArray.join(joinCharacter):dateArray;
     }
 
     date.julian.to.georgian = function (jd) {
@@ -80,7 +87,7 @@ this.date = (function () {
         month = Math.floor((((yearday + leapadj) * 12) + 373) / 367);
         day = (wjd - _.date.georgian.to.julian(year, month, 1)) + 1;
 
-        return new Array(year, month, day);
+        return new Array(insertZero(year), insertZero(month), insertZero(day));
     }
     date.julian.to.persian = function (jd) {
         var year, month, day, depoch, cycle, cyear, ycycle,
@@ -107,7 +114,7 @@ this.date = (function () {
         yday = (jd - _.date.persian.to.julian(year, 1, 1)) + 1;
         month = (yday <= 186) ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30);
         day = (jd - _.date.persian.to.julian(year, month, 1)) + 1;
-        return new Array(year, month, day);
+        return new Array(insertZero(year), insertZero(month), insertZero(day));
     }
 
     return date;
