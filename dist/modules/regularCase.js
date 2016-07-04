@@ -1,3 +1,3 @@
-/*! sutility - v0.0.98 - 2016-07-02 */
+/*! sutility - v0.0.981 - 2016-07-04 */
 this.regularCase=function(a){return a.replace(/([A-Z])/g," $1").replace(/^./,function(a){return a.toUpperCase()})};
 //# sourceMappingURL=regularCase.js.map

@@ -13,5 +13,5 @@ this.select = function (selectorOrDom, parent) {
     return nodes;
 };
 this.selectFirst = function (selectorOrDom, parent) {
-    return _.valueOf(_.select(selectorOrDom, parent), 0);
+    return _.getValue(_.select(selectorOrDom, parent), 0);
 };

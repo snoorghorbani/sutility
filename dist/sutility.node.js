@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.98 - 2016-07-02
+ * sutility v0.0.981 - 2016-07-04
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -238,7 +238,7 @@ this.callVoucher = (function (_) {
 this.callWhen = function (nameOrFnCondition, callback, infiniteCall, checkTime) {
     var conditionType = (_.is['function'](nameOrFnCondition)) ? "fn" : "string";
     var intervalId = setInterval(function () {
-        if (conditionType == "string" && !_.valueOf(nameOrFnCondition)) return;
+        if (conditionType == "string" && !_.getValue(nameOrFnCondition)) return;
         else if (conditionType == "fn" && !nameOrFnCondition()) return;
         
         !infiniteCall && clearInterval(intervalId);
@@ -1013,23 +1013,38 @@ this.getCumulativeOffset = function (obj) {
         y: top
     };
 };
-this.getValue = function (obj, path) {
+this.getValue = function (objOrArr, pathOrIndex) {
     if (DEBUG) {
-        if (!obj) return undefined;
-        if (!obj) return this.warn('UTILITY getValue function first parameter not defined');
+        if (!objOrArr) this.warn('UTILITY getValue function first parameter not defined');
+        if (!objOrArr) return undefined;
     }
-    
-    if (obj[path] !== null) return obj[path];
-    
-    path = path.split('.');
-    var i = 0;
-    var res = obj[path[i++]];
-    while (i < path.length) {
-        res = res[path[i++]];
-    }
-    return (i == path.length) ? res : null;
-};
 
+    if (arguments.length == 1) {
+        pathOrIndex = objOrArr;
+        objOrArr = window;
+    }
+
+    var tempobjOrArr;
+
+    if (_.is.array(objOrArr)) return objOrArr[pathOrIndex];
+    else {
+        tempobjOrArr = objOrArr;
+        var routes = pathOrIndex.split('.');
+        for (var i = 0, route; route = routes[i]; i++) {
+            if (!tempobjOrArr[route])
+                return void _.warn(['dont have ', route, 'property'].join(' '));
+            if (_.is.array(tempobjOrArr[route])) {
+                var res = [];
+                var partialRoutes = routes.splice(i + 1);
+                for (var j = 0, item; item = tempobjOrArr[route][j]; j++)
+                    res[j] = _.getValue(item, partialRoutes.join('.'));
+                return res;
+            } else
+                tempobjOrArr = tempobjOrArr[route];
+        }
+    }
+    return tempobjOrArr;
+};
 this.groupBy = function (obj, prop, fn) {
     fn = fn || _.i;
     var res = {};
@@ -1351,6 +1366,31 @@ this.leftCurry = function (fn, context) {
         };
     };
 };
+this.localStorage = (function (_, undefined) {
+    var fn = function () { };
+    fn.save = function (key, obj, expiredTime) {
+        localStorage.setItem(key, JSON.stringify({
+            value: obj,
+            expiredTime: expiredTime || 999999999,
+            storeTime: Date.now()
+        }));
+    };
+    fn.load = function (key) {
+        var value = localStorage.getItem(key);
+
+        value = JSON.parse(value);
+        if (!value) return;
+
+        value.isFresh = (value && (Date.now() - value.storeTime < value.expiredTime));
+
+        if (!value.isFresh) localStorage.removeItem(key);
+
+        return value;
+    };
+
+    return fn;
+})(this);
+
 this.map = function (obj, iterator, context) {
     var results = [];
     
@@ -2106,42 +2146,6 @@ this.upsert = function (container, item, indicator, updateAll) {
         container.push(item);
     }
 };
-this.valueOf = function (objOrArr, pathOrIndex) {
-    if (arguments.length == 1) {
-        pathOrIndex = objOrArr;
-        objOrArr = window;
-    }
-
-    var tempobjOrArr;
-
-    if (_.is.array(objOrArr)) return objOrArr[pathOrIndex];
-    else {
-        tempobjOrArr = objOrArr;
-        var routes = pathOrIndex.split('.');
-        for (var i = 0, route; route = routes[i]; i++) {
-            if (!tempobjOrArr[route])
-                return void _.warn(['dont have ', route, 'property'].join(' '));
-            if (_.is.array(tempobjOrArr[route])) {
-                var res = {};
-                var partialRoutes = routes.splice(i + 1);
-                for (var j = 0, item; item = tempobjOrArr[route][j]; j++)
-                    res[j] = _.getValue2(item, partialRoutes.join('.'));
-                return res;
-            } else
-                tempobjOrArr = tempobjOrArr[route];
-        }
-    }
-    return tempobjOrArr;
-};
-
-this.valueOfAll = function (arrayOfObject, key) {
-    var res = [];
-    _.each(arrayOfObject, function (item) {
-        item[key] && res.push(item[key]);
-    });
-    return res;
-};
-
 this.verify = function (obj, comparator) {
     if (DEBUG) {
         if (_.is.not.object(obj)) _.fail('is Not Object');
@@ -2151,6 +2155,11 @@ this.verify = function (obj, comparator) {
     
     var value = obj[comparator.key];
     return ((value !== undefined) && _.compare(value, comparator.condition, comparator.value));
+};
+
+this.warn = function (text) {
+    console.log(['WARNING : ', text].join(' '));
+    return undefined;
 };
 
 this.warn = function (text) {

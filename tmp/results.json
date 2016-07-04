@@ -1,6 +1,6 @@
 {
-	"numResults": 335,
-	"creationDate": "2016-07-02 13:26:34",
+	"numResults": 334,
+	"creationDate": "2016-07-04 03:41:20",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -229,7 +229,7 @@
 			},
 			{
 				"line": 4,
-				"match": "_.valueOf"
+				"match": "_.getValue"
 			}
 		],
 		"src/modules/catchall.js": [
@@ -920,6 +920,24 @@
 				"match": "_.is"
 			}
 		],
+		"src/modules/getValue.js": [
+			{
+				"line": 14,
+				"match": "_.is"
+			},
+			{
+				"line": 20,
+				"match": "_.warn"
+			},
+			{
+				"line": 21,
+				"match": "_.is"
+			},
+			{
+				"line": 25,
+				"match": "_.getValue"
+			}
+		],
 		"src/modules/groupBy.js": [
 			{
 				"line": 4,
@@ -1347,7 +1365,7 @@
 		"src/modules/select.js": [
 			{
 				"line": 16,
-				"match": "_.valueOf"
+				"match": "_.getValue"
 			},
 			{
 				"line": 16,
@@ -1413,30 +1431,6 @@
 			},
 			{
 				"line": 6,
-				"match": "_.each"
-			}
-		],
-		"src/modules/valueOf.js": [
-			{
-				"line": 9,
-				"match": "_.is"
-			},
-			{
-				"line": 15,
-				"match": "_.warn"
-			},
-			{
-				"line": 16,
-				"match": "_.is"
-			},
-			{
-				"line": 20,
-				"match": "_.getValue2"
-			}
-		],
-		"src/modules/valueOfAll.js": [
-			{
-				"line": 3,
 				"match": "_.each"
 			}
 		],
