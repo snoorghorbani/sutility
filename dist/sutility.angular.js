@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.981 - 2016-07-04
+ * sutility v0.0.982 - 2016-07-04
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -2968,6 +2968,11 @@ if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.ex
 }
 }).call();
 angular.module('sutility', [])
-    .factory('_', function () {
-        return SUTILITY.install();
+    .provider('_', function () {
+        return {
+            _: SUTILITY.install(),
+            $get: function () {
+                return SUTILITY.install();
+            }
+        };
     });

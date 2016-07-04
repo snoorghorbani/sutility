@@ -1,4 +1,9 @@
 angular.module('sutility', [])
-    .factory('_', function () {
-        return SUTILITY.install();
+    .provider('_', function () {
+        return {
+            _: SUTILITY.install(),
+            $get: function () {
+                return SUTILITY.install();
+            }
+        };
     });
