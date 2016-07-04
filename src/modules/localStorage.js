@@ -1,5 +1,6 @@
 ﻿this.localStorage = (function (_, undefined) {
     var fn = function () { };
+
     fn.save = function (key, obj, expiredTime) {
         localStorage.setItem(key, JSON.stringify({
             value: obj,
@@ -16,6 +17,8 @@
         value.isFresh = (value && (Date.now() - value.storeTime < value.expiredTime));
 
         if (!value.isFresh) localStorage.removeItem(key);
+
+        value.value = JSON.parse(value.value);
 
         return value;
     };

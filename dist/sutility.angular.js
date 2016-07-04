@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.982 - 2016-07-04
+ * sutility v0.0.986 - 2016-07-04
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -2095,6 +2095,7 @@ this.loadJS = (function (_) {
 
 this.localStorage = (function (_, undefined) {
     var fn = function () { };
+
     fn.save = function (key, obj, expiredTime) {
         localStorage.setItem(key, JSON.stringify({
             value: obj,
@@ -2111,6 +2112,8 @@ this.localStorage = (function (_, undefined) {
         value.isFresh = (value && (Date.now() - value.storeTime < value.expiredTime));
 
         if (!value.isFresh) localStorage.removeItem(key);
+
+        value.value = JSON.parse(value.value);
 
         return value;
     };
@@ -2905,6 +2908,17 @@ this.underscoreCase = function (str) {
             : '_';
     });
 };
+this.uniqueId = (function (_) {
+    var repos = {};
+    var fn = function (prefix, seperator, fn) {
+        repos[prefix] = repos[prefix] || 1;
+        repos[prefix] = repos[prefix] + 1;
+        var identifier = (fn) ? fn(repos[prefix]) : repos[prefix];
+        return [prefix, identifier].join(seperator || '_');
+    }
+
+    return fn;
+})(this);
 this.update = function (toObj, fromObj, copyPrototype) {
     if (_.is.object(fromObj)) {
         _.each(toObj, function (value, key) {

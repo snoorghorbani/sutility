@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.982 - 2016-07-04
+ * sutility v0.0.986 - 2016-07-04
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -665,7 +665,8 @@
                 }, fn.load = function(key) {
                     var value = localStorage.getItem(key);
                     if (value = JSON.parse(value)) return value.isFresh = value && Date.now() - value.storeTime < value.expiredTime, 
-                    value.isFresh || localStorage.removeItem(key), value;
+                    value.isFresh || localStorage.removeItem(key), value.value = JSON.parse(value.value), 
+                    value;
                 }, fn;
             }(this), this.map = function(obj, iterator, context) {
                 var results = [];
@@ -1027,7 +1028,14 @@
                 return str.replace(/([A-Z])|([\W|\_])/g, function(match, a, b, index, originText) {
                     return /[\w]/.test(match) ? /[\w]/.test(match && 0 == index) ? match.toLowerCase() : /[\w]/.test(match) ? "_" + match.toLowerCase() : "_" : "_";
                 });
-            }, this.update = function(toObj, fromObj, copyPrototype) {
+            }, this.uniqueId = function(_) {
+                var repos = {}, fn = function(prefix, seperator, fn) {
+                    repos[prefix] = repos[prefix] || 1, repos[prefix] = repos[prefix] + 1;
+                    var identifier = fn ? fn(repos[prefix]) : repos[prefix];
+                    return [ prefix, identifier ].join(seperator || "_");
+                };
+                return fn;
+            }(this), this.update = function(toObj, fromObj, copyPrototype) {
                 return _.is.object(fromObj) && _.each(toObj, function(value, key) {
                     fromObj[key] !== undefined && (toObj[key] = fromObj[key]);
                 }), toObj;

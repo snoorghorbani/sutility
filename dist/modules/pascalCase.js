@@ -1,3 +1,3 @@
-/*! sutility - v0.0.982 - 2016-07-04 */
+/*! sutility - v0.0.986 - 2016-07-04 */
 this.pascalCase=function(a){return a=_.camelCase(a),a[0].toUpperCase()+a.substr(1,a.lenght)};
 //# sourceMappingURL=pascalCase.js.map
