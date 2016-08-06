@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.987 - 2016-07-04
+ * sutility v0.0.988 - 2016-08-06
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -9,6 +9,8 @@
     "use strict";
     var instance = null;
 var DEBUG = true;
+var window = window || {};
+
 window.SUTILITY = (function () {
 
 var U = function () {
@@ -743,24 +745,30 @@ this.date = (function () {
 
 this.decorator = function () { };
 
-this.deformPathValue = function (obj, fn, path) {
+this.deformPathValue = function (obj, fn, path, createIfNotDefined) {
     if (!obj) return undefined;
-    if (!obj) return this.warn('Utility getValue function first parameter not defined');
 
     if (obj[path] != null) return obj[path] = fn(obj[path]);
 
     var path = path.split('.');
     var _path = path.shift();
     var res = obj[_path];
-    while (_path = path.shift())
-        if (res[_path] && _.is.array(res[_path]))
-            _.each(res[_path], function (item) {
-                _.deformPathValue(item, fn, path.join('.'));
+
+    if (createIfNotDefined && path.length == 0)
+        return obj[_path] = fn(obj);
+
+    while (_path = path.shift()) {
+        if (res[_path] && _.is.array(res[_path])) {
+            return _.map(res[_path], function (item) {
+                return _.deformPathValue(item, fn, path.join('.'), createIfNotDefined);
             });
+        }
         else if (res[_path])
             res[_path] = fn(res[_path]);
-
-    return;
+        else if (createIfNotDefined && path.length == 0)
+            return res[_path] = fn(res);
+    }
+    debugger;
 };
 this.dictionary = (function (that, undefined) {
     var defaultValues = {};
@@ -1169,13 +1177,7 @@ this.is = (function (_, undefined) {
 	};
 	
 	is.object = function (_var) {
-		if (_.is.not.ie())
-			return Object.prototype.toString.call(_var) === '[object Object]';
-		else {
-			if (!_var) return false;
-			return Object.prototype.toString.call(_var) === '[object Object]';
-
-		}
+		return Object.prototype.toString.call(_var) === '[object Object]';
 	};
 	is.nodeList = function (obj) {
 		if (_.is.not.ie())
@@ -1266,6 +1268,8 @@ this.is = (function (_, undefined) {
 		return r.constructor.name === "RegExp";
 	};
 	is.ie = function (v) {
+		if(!window || !window.navigator) return false;
+
 		var reg = new RegExp("(MSIE)\W\d", 'g');
 		reg = new RegExp("MSIE 8.0|MSIE 7.0", 'g');
 		
@@ -2021,29 +2025,35 @@ this.scroll = (function () {
     return Fn;
 }());
 
-this.setValue = function (obj, value, path) {
-    if (!obj) return undefined;
-    if (!obj) return this.warn('Utility getValue function first parameter not defined');
+            this.setValue = function (obj, value, path) {
+                if (!obj) return undefined;
+                if (!obj) return this.warn('Utility getValue function first parameter not defined');
 
-    if (obj[path] != null) return obj[path] = value;
+                var path = path.split('.');
 
-    var path = path.split('.');
-    var _path = path.shift();
-    var res = obj[_path];
-    while (path.length > 1) {
-        _path = path.shift()
-        res[_path] = res[_path] || {}
-        res = res[_path];
+                if (path.length == 1) {
+                    obj[path] = value;
+                    return obj
+                }
 
-        if (_.is.array(res))
-            _.each(res, function (item) {
-                _.setValue(item, value, path.join('.'));
-            });
-    }
-    res[path[0]] = value;
+                var _path = path.shift();
 
-    return obj;
-};
+                var res = obj[_path];
+                while (path.length > 1) {
+                    _path = path.shift()
+                    res[_path] = res[_path] || {}
+                    res = res[_path];
+
+                    if (_.is.array(res))
+                        _.each(res, function (item) {
+                            _.setValue(item, value, path.join('.'));
+                        });
+                }
+                res[path[0]] = value;
+
+                return obj;
+            };
+
 
 this.sortBy = function (obj, typeOrOperator, path) {
     if (_.is['function'](typeOrOperator))
@@ -2193,8 +2203,8 @@ return {
 
 })();
 
-if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = SUTILITY.install();;
+if (typeof module !== 'undefined' && module.exports) {
+    exports = module.exports = window.SUTILITY.install();;
 } else {
     window.SUTILITY = SUTILITY;
 }

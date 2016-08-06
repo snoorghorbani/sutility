@@ -1,3 +1,3 @@
-/*! sutility - v0.0.987 - 2016-07-04 */
-this.deformPathValue=function(a,b,c){if(a){if(!a)return this.warn("Utility getValue function first parameter not defined");if(null!=a[c])return a[c]=b(a[c]);for(var c=c.split("."),d=c.shift(),e=a[d];d=c.shift();)e[d]&&_.is.array(e[d])?_.each(e[d],function(a){_.deformPathValue(a,b,c.join("."))}):e[d]&&(e[d]=b(e[d]))}};
+/*! sutility - v0.0.988 - 2016-08-06 */
+this.deformPathValue=function(a,b,c,d){if(a){if(null!=a[c])return a[c]=b(a[c]);var c=c.split("."),e=c.shift(),f=a[e];if(d&&0==c.length)return a[e]=b(a);for(;e=c.shift();){if(f[e]&&_.is.array(f[e]))return _.map(f[e],function(a){return _.deformPathValue(a,b,c.join("."),d)});if(f[e])f[e]=b(f[e]);else if(d&&0==c.length)return f[e]=b(f)}}};
 //# sourceMappingURL=deformPathValue.js.map

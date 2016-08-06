@@ -1,23 +1,28 @@
-﻿this.setValue = function (obj, value, path) {
-    if (!obj) return undefined;
-    if (!obj) return this.warn('Utility getValue function first parameter not defined');
+﻿            this.setValue = function (obj, value, path) {
+                if (!obj) return undefined;
+                if (!obj) return this.warn('Utility getValue function first parameter not defined');
 
-    if (obj[path] != null) return obj[path] = value;
+                var path = path.split('.');
 
-    var path = path.split('.');
-    var _path = path.shift();
-    var res = obj[_path];
-    while (path.length > 1) {
-        _path = path.shift()
-        res[_path] = res[_path] || {}
-        res = res[_path];
+                if (path.length == 1) {
+                    obj[path] = value;
+                    return obj
+                }
 
-        if (_.is.array(res))
-            _.each(res, function (item) {
-                _.setValue(item, value, path.join('.'));
-            });
-    }
-    res[path[0]] = value;
+                var _path = path.shift();
 
-    return obj;
-};
+                var res = obj[_path];
+                while (path.length > 1) {
+                    _path = path.shift()
+                    res[_path] = res[_path] || {}
+                    res = res[_path];
+
+                    if (_.is.array(res))
+                        _.each(res, function (item) {
+                            _.setValue(item, value, path.join('.'));
+                        });
+                }
+                res[path[0]] = value;
+
+                return obj;
+            };

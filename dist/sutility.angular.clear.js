@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.987 - 2016-07-04
+ * sutility v0.0.988 - 2016-08-06
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -7,7 +7,7 @@
  */
 (function(undefined) {
     "use strict";
-    var instance = null, DEBUG = !0;
+    var instance = null, DEBUG = !0, window = window || {};
     window.SUTILITY = function() {
         var U = function() {
             var _ = this, that = this;
@@ -466,13 +466,17 @@
                     month = yday <= 186 ? Math.ceil(yday / 31) : Math.ceil((yday - 6) / 30), day = jd - _.date.persian.to.julian(year, month, 1) + 1, 
                     new Array(insertZero(year), insertZero(month), insertZero(day));
                 }, date;
-            }(), this.decorator = function() {}, this.deformPathValue = function(obj, fn, path) {
+            }(), this.decorator = function() {}, this.deformPathValue = function(obj, fn, path, createIfNotDefined) {
                 if (!obj) return undefined;
-                if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 if (null != obj[path]) return obj[path] = fn(obj[path]);
-                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; _path = path.shift(); ) res[_path] && _.is.array(res[_path]) ? _.each(res[_path], function(item) {
-                    _.deformPathValue(item, fn, path.join("."));
-                }) : res[_path] && (res[_path] = fn(res[_path]));
+                var path = path.split("."), _path = path.shift(), res = obj[_path];
+                if (createIfNotDefined && 0 == path.length) return obj[_path] = fn(obj);
+                for (;_path = path.shift(); ) {
+                    if (res[_path] && _.is.array(res[_path])) return _.map(res[_path], function(item) {
+                        return _.deformPathValue(item, fn, path.join("."), createIfNotDefined);
+                    });
+                    if (res[_path]) res[_path] = fn(res[_path]); else if (createIfNotDefined && 0 == path.length) return res[_path] = fn(res);
+                }
             }, this.dictionary = function(that, undefined) {
                 var defaultValues = {}, Fn = function(_defaultValues) {
                     defaultValues = _defaultValues || {}, _.extend(this, defaultValues);
@@ -799,7 +803,7 @@
                     return nodes.indexOf(node) > -1;
                 };
                 is.object = function(_var) {
-                    return _.is.not.ie() ? "[object Object]" === Object.prototype.toString.call(_var) : !!_var && "[object Object]" === Object.prototype.toString.call(_var);
+                    return "[object Object]" === Object.prototype.toString.call(_var);
                 }, is.nodeList = function(obj) {
                     return _.is.not.ie() ? "[object NodeList]" === Object.prototype.toString.call(obj) : !(obj.length === undefined || obj.push !== undefined || obj.length > 0 && obj[0].tagName === undefined);
                 }, is.element = function(obj) {
@@ -844,6 +848,7 @@
                 }, is.regex = function(r) {
                     return "RegExp" === r.constructor.name;
                 }, is.ie = function(v) {
+                    if (!window || !window.navigator) return !1;
                     var reg = new RegExp("(MSIE)Wd", "g");
                     reg = new RegExp("MSIE 8.0|MSIE 7.0", "g");
                     var version = window.navigator.userAgent.match(reg);
@@ -1321,8 +1326,9 @@
             }, this.setValue = function(obj, value, path) {
                 if (!obj) return undefined;
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
-                if (null != obj[path]) return obj[path] = value;
-                for (var path = path.split("."), _path = path.shift(), res = obj[_path]; path.length > 1; ) _path = path.shift(), 
+                var path = path.split(".");
+                if (1 == path.length) return obj[path] = value, obj;
+                for (var _path = path.shift(), res = obj[_path]; path.length > 1; ) _path = path.shift(), 
                 res[_path] = res[_path] || {}, res = res[_path], _.is.array(res) && _.each(res, function(item) {
                     _.setValue(item, value, path.join("."));
                 });
@@ -1386,7 +1392,7 @@
                 return "[object Object]" === Object.prototype.toString.call(_) ? U.call(_) : window[_] = this.install();
             }
         };
-    }(), "undefined" != typeof exports && "undefined" != typeof module && module.exports ? exports = module.exports = SUTILITY.install() : window.SUTILITY = SUTILITY;
+    }(), "undefined" != typeof module && module.exports ? exports = module.exports = window.SUTILITY.install() : window.SUTILITY = SUTILITY;
 }).call(), angular.module("sutility", []).provider("_", function() {
     return {
         _: SUTILITY.install(),

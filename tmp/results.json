@@ -1,6 +1,6 @@
 {
-	"numResults": 334,
-	"creationDate": "2016-07-04 08:57:19",
+	"numResults": 333,
+	"creationDate": "2016-08-06 08:41:37",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -582,15 +582,15 @@
 		],
 		"src/modules/deformPathValue.js": [
 			{
-				"line": 11,
+				"line": 14,
 				"match": "_.is"
 			},
 			{
-				"line": 12,
-				"match": "_.each"
+				"line": 15,
+				"match": "_.map"
 			},
 			{
-				"line": 13,
+				"line": 16,
 				"match": "_.deformPathValue"
 			}
 		],
@@ -986,23 +986,23 @@
 		],
 		"src/modules/is.js": [
 			{
-				"line": 10,
+				"line": 13,
 				"match": "_.is"
 			},
 			{
-				"line": 19,
+				"line": 60,
 				"match": "_.is"
 			},
 			{
-				"line": 66,
+				"line": 64,
 				"match": "_.is"
 			},
 			{
-				"line": 70,
+				"line": 84,
 				"match": "_.is"
 			},
 			{
-				"line": 90,
+				"line": 85,
 				"match": "_.is"
 			},
 			{
@@ -1010,19 +1010,15 @@
 				"match": "_.is"
 			},
 			{
-				"line": 97,
-				"match": "_.is"
-			},
-			{
-				"line": 97,
+				"line": 91,
 				"match": "_.partial"
 			},
 			{
-				"line": 97,
+				"line": 91,
 				"match": "_.report"
 			},
 			{
-				"line": 100,
+				"line": 94,
 				"match": "_.is"
 			}
 		],
@@ -1374,15 +1370,15 @@
 		],
 		"src/modules/setValue.js": [
 			{
-				"line": 15,
+				"line": 20,
 				"match": "_.is"
 			},
 			{
-				"line": 16,
+				"line": 21,
 				"match": "_.each"
 			},
 			{
-				"line": 17,
+				"line": 22,
 				"match": "_.setValue"
 			}
 		],

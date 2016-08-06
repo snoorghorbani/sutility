@@ -7,13 +7,7 @@
 	};
 	
 	is.object = function (_var) {
-		if (_.is.not.ie())
-			return Object.prototype.toString.call(_var) === '[object Object]';
-		else {
-			if (!_var) return false;
-			return Object.prototype.toString.call(_var) === '[object Object]';
-
-		}
+		return Object.prototype.toString.call(_var) === '[object Object]';
 	};
 	is.nodeList = function (obj) {
 		if (_.is.not.ie())
@@ -104,6 +98,8 @@
 		return r.constructor.name === "RegExp";
 	};
 	is.ie = function (v) {
+		if(!window || !window.navigator) return false;
+
 		var reg = new RegExp("(MSIE)\W\d", 'g');
 		reg = new RegExp("MSIE 8.0|MSIE 7.0", 'g');
 		

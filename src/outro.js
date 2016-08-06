@@ -10,8 +10,8 @@ return {
 
 })();
 
-if (typeof exports !== 'undefined' && typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = SUTILITY.install();;
+if (typeof module !== 'undefined' && module.exports) {
+    exports = module.exports = window.SUTILITY.install();;
 } else {
     window.SUTILITY = SUTILITY;
 }
