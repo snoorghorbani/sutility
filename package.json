@@ -1,6 +1,6 @@
 {
   "name": "sutility",
-  "version": "0.0.988",
+  "version": "0.0.989",
   "author": "soushians noorghorbani <snoorghorbani@gmail.com>",
   "description": "Functional Library",
   "contributors": [
@@ -9,7 +9,7 @@
       "email": "snoorghorbani@gmail.com"
     }
   ],
-  "main": "/dist/sutility.node.js",
+  "main": "dist/sutility.node.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/snoorghorbani/sutility.git"

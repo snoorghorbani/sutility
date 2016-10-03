@@ -1,3 +1,3 @@
-/*! sutility - v0.0.988 - 2016-08-06 */
+/*! sutility - v0.0.989 - 2016-10-03 */
 this.extend=function(a,b,c){return _.is.array(a)?_.safeAssignArray(a,b):_.is.object(a)?(_.safeClear(a),_.each(b,function(b,c){a[c]=b},this,c)):a=b,a};
 //# sourceMappingURL=extend.js.map

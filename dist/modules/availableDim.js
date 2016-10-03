@@ -1,3 +1,3 @@
-/*! sutility - v0.0.988 - 2016-08-06 */
+/*! sutility - v0.0.989 - 2016-10-03 */
 this.availableDim=function(){var a=document.createElement("div");a.style.position="fixed",a.style.top="0px",a.style.right="0px",a.style.bottom="0px",a.style.left="0px",document.body.appendChild(a);var b=a.offsetHeight,c=a.offsetWidth;return a.parentNode.removeChild(a),{height:b,width:c}};
 //# sourceMappingURL=availableDim.js.map

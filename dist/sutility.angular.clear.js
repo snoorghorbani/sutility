@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.988 - 2016-08-06
+ * sutility v0.0.989 - 2016-10-03
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -7,8 +7,8 @@
  */
 (function(undefined) {
     "use strict";
-    var instance = null, DEBUG = !0, window = window || {};
-    window.SUTILITY = function() {
+    var instance = null, DEBUG = !0, w = window || {};
+    w.SUTILITY = function() {
         var U = function() {
             var _ = this, that = this;
             this.activate = function(selector, classname, callback) {
@@ -1328,7 +1328,7 @@
                 if (!obj) return this.warn("Utility getValue function first parameter not defined");
                 var path = path.split(".");
                 if (1 == path.length) return obj[path] = value, obj;
-                for (var _path = path.shift(), res = obj[_path]; path.length > 1; ) _path = path.shift(), 
+                for (var _path = path.shift(), res = obj[_path] = obj[_path] || {}; path.length > 1; ) _path = path.shift(), 
                 res[_path] = res[_path] || {}, res = res[_path], _.is.array(res) && _.each(res, function(item) {
                     _.setValue(item, value, path.join("."));
                 });
@@ -1340,8 +1340,10 @@
                 }) : "number" == typeOrOperator ? obj.sort(function(a, b) {
                     return _.getValue(a, path) > _.getValue(b, path) ? 1 : -1;
                 }) : void 0;
-            }, this.spliteAndTrim = function(str) {
-                return _.trim(str).split(/[\s,]+/);
+            }, this.spliteAndTrim = function(str, seprator) {
+                return _.trim(str).split(seprator || /[\s,]+/);
+            }, this.splitAndTrim = function(str, seprator) {
+                return _.trim(str).split(seprator || /[\s,]+/);
             }, this.strStartsWith = function(str, prefix) {
                 return 0 === str.indexOf(prefix);
             }, this.subSet = function(fo, so) {}, this.transitionCallback = function(el, fn) {

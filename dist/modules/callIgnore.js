@@ -1,3 +1,3 @@
-/*! sutility - v0.0.988 - 2016-08-06 */
+/*! sutility - v0.0.989 - 2016-10-03 */
 this.callIgnore=function(a){return function(a,b,c,d){var e=b;return function(){if(0==b--)return b=d?e:b,a.apply(c,arguments)}}}(this);
 //# sourceMappingURL=callIgnore.js.map

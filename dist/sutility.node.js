@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.988 - 2016-08-06
+ * sutility v0.0.989 - 2016-10-03
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -9,9 +9,9 @@
     "use strict";
     var instance = null;
 var DEBUG = true;
-var window = window || {};
+var w = window || {};
 
-window.SUTILITY = (function () {
+w.SUTILITY = (function () {
 
 var U = function () {
 var _ = this;
@@ -2025,35 +2025,37 @@ this.scroll = (function () {
     return Fn;
 }());
 
-            this.setValue = function (obj, value, path) {
-                if (!obj) return undefined;
-                if (!obj) return this.warn('Utility getValue function first parameter not defined');
+;
+this.setValue = function (obj, value, path) {
+	if (!obj) return undefined;
+	if (!obj) return this.warn('Utility getValue function first parameter not defined');
 
-                var path = path.split('.');
+	var path = path.split('.');
 
-                if (path.length == 1) {
-                    obj[path] = value;
-                    return obj
-                }
+	if (path.length == 1) {
+		obj[path] = value;
+		return obj
+	}
 
-                var _path = path.shift();
+	var _path = path.shift();
 
-                var res = obj[_path];
-                while (path.length > 1) {
-                    _path = path.shift()
-                    res[_path] = res[_path] || {}
-                    res = res[_path];
 
-                    if (_.is.array(res))
-                        _.each(res, function (item) {
-                            _.setValue(item, value, path.join('.'));
-                        });
-                }
-                res[path[0]] = value;
+	var res = obj[_path] = obj[_path] || {};
+	while (path.length > 1) {
+		_path = path.shift()
+		res[_path] = res[_path] || {}
+		res = res[_path];
 
-                return obj;
-            };
+		if (_.is.array(res))
+			_.each(res, function (item) {
+				_.setValue(item, value, path.join('.'));
+			});
+	}
+	res[path[0]] = value;
 
+	return obj;
+}
+;
 
 this.sortBy = function (obj, typeOrOperator, path) {
     if (_.is['function'](typeOrOperator))
@@ -2106,10 +2108,12 @@ this.sortBy = function (obj, typeOrOperator, path) {
 
 //return (is.object) ? this.arrToObj(res, '__key', true) : res;
 
-this.spliteAndTrim = function (str) {
-    return _.trim(str).split(/[\s,]+/);
+this.spliteAndTrim = function (str, seprator) {
+    return _.trim(str).split(seprator || /[\s,]+/);
 };
-
+this.splitAndTrim = function (str, seprator) {
+    return _.trim(str).split(seprator || /[\s,]+/);
+};
 this.strStartsWith = function (str, prefix) {
     return str.indexOf(prefix) === 0;
 };

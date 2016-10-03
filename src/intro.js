@@ -2,9 +2,9 @@
     "use strict";
     var instance = null;
 var DEBUG = true;
-var window = window || {};
+var w = window || {};
 
-window.SUTILITY = (function () {
+w.SUTILITY = (function () {
 
 var U = function () {
 var _ = this;

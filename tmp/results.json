@@ -1,6 +1,6 @@
 {
-	"numResults": 333,
-	"creationDate": "2016-08-06 08:41:37",
+	"numResults": 334,
+	"creationDate": "2016-10-03 08:20:53",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -1370,15 +1370,15 @@
 		],
 		"src/modules/setValue.js": [
 			{
-				"line": 20,
+				"line": 22,
 				"match": "_.is"
 			},
 			{
-				"line": 21,
+				"line": 23,
 				"match": "_.each"
 			},
 			{
-				"line": 22,
+				"line": 24,
 				"match": "_.setValue"
 			}
 		],
@@ -1407,6 +1407,10 @@
 		"src/modules/spliteAndTrim.js": [
 			{
 				"line": 2,
+				"match": "_.trim"
+			},
+			{
+				"line": 5,
 				"match": "_.trim"
 			}
 		],

@@ -1,3 +1,3 @@
-/*! sutility - v0.0.988 - 2016-08-06 */
+/*! sutility - v0.0.989 - 2016-10-03 */
 this.propByPrefix=function(a,b,c){c=_.assignIfNotDefined(c,!1);var d={};for(var e in a)if(0===e.search(b)){var f=c?_.camelCase(e.substr(b.length)):e;d[f]=a[e]}return d};
 //# sourceMappingURL=propByPrefix.js.map

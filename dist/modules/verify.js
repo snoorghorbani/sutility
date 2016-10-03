@@ -1,3 +1,3 @@
-/*! sutility - v0.0.988 - 2016-08-06 */
+/*! sutility - v0.0.989 - 2016-10-03 */
 this.verify=function(a,b){var c=a[b.key];return void 0!==c&&_.compare(c,b.condition,b.value)};
 //# sourceMappingURL=verify.js.map
