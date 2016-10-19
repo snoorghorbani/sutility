@@ -6,9 +6,8 @@
  * Licensed MIT
  */
 (function(undefined) {
-    "use strict";
-    var instance = null, DEBUG = !0, window = window || {};
-    window.SUTILITY = function() {
+    var instance = null, DEBUG = !0;
+    SUTILITY = function() {
         var U = function() {
             var _ = this, that = this;
             this.argToArray = function(arg) {
@@ -1073,5 +1072,5 @@
                 return "[object Object]" === Object.prototype.toString.call(_) ? U.call(_) : window[_] = this.install();
             }
         };
-    }(), "undefined" != typeof module && module.exports && (exports = module.exports = window.SUTILITY.install());
+    }(), "undefined" != typeof module && module.exports && (exports = module.exports = SUTILITY.install());
 }).call();

@@ -6,12 +6,10 @@
  * Licensed MIT
  */
 ;(function(undefined){
-    "use strict";
     var instance = null;
-var DEBUG = true;
-var window = window || {};
+	var DEBUG = true;
 
-window.SUTILITY = (function () {
+SUTILITY = (function () {
 
 var U = function () {
 var _ = this;
@@ -2990,6 +2988,6 @@ return {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = window.SUTILITY.install();;
+    exports = module.exports = SUTILITY.install();;
 }
 }).call();

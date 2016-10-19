@@ -11,6 +11,6 @@ return {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = window.SUTILITY.install();;
+    exports = module.exports = SUTILITY.install();;
 }
 }).call();
