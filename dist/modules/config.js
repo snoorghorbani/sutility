@@ -1,3 +1,3 @@
-/*! sutility - v0.0.994 - 2016-10-19 */
+/*! sutility - v0.0.995 - 2016-10-19 */
 this.config=function(a,b){for(var c in a)this[c]=b&&b[c]||a[c]};
 //# sourceMappingURL=config.js.map

@@ -1,7 +1,7 @@
 angular.module('sutility', [])
     .provider('_', function () {
         return {
-            _: SUTILITY.install(),
+            _: window.SUTILITY.install(),
             $get: function () {
                 return window.SUTILITY.install();
             }
