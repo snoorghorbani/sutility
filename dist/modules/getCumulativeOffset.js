@@ -1,3 +1,3 @@
-/*! sutility - v0.0.991 - 2016-10-19 */
+/*! sutility - v0.0.992 - 2016-10-19 */
 this.getCumulativeOffset=function(a){var b,c;if(b=c=0,a.offsetParent)do b+=a.offsetLeft,c+=a.offsetTop;while(a=a.offsetParent);return{x:b,y:c}};
 //# sourceMappingURL=getCumulativeOffset.js.map

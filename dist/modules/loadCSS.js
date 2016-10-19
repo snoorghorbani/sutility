@@ -1,3 +1,3 @@
-/*! sutility - v0.0.991 - 2016-10-19 */
+/*! sutility - v0.0.992 - 2016-10-19 */
 this.loadCSS=function(a){var b={};return function(a,c){if(!b[a]){var d=document.createElement("link");d.setAttribute("rel","stylesheet"),d.setAttribute("href","/"+a),document.getElementsByTagName("head")[0].appendChild(d)}}}(this);
 //# sourceMappingURL=loadCSS.js.map

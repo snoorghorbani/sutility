@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.991 - 2016-10-19
+ * sutility v0.0.992 - 2016-10-19
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -9,9 +9,9 @@
     "use strict";
     var instance = null;
 var DEBUG = true;
-var w = window || {};
+var window = window || {};
 
-w.SUTILITY = (function () {
+window.SUTILITY = (function () {
 
 var U = function () {
 var _ = this;
