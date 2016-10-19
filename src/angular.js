@@ -3,7 +3,7 @@ angular.module('sutility', [])
         return {
             _: SUTILITY.install(),
             $get: function () {
-                return SUTILITY.install();
+                return window.SUTILITY.install();
             }
         };
     });

@@ -12,7 +12,5 @@ return {
 
 if (typeof module !== 'undefined' && module.exports) {
     exports = module.exports = window.SUTILITY.install();;
-} else {
-    window.SUTILITY = SUTILITY;
 }
 }).call();

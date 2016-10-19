@@ -1,3 +1,3 @@
-/*! sutility - v0.0.992 - 2016-10-19 */
+/*! sutility - v0.0.994 - 2016-10-19 */
 this.objToTwoDimArray=function(){var a=_.argToArray(arguments),b=a[0],c=[];return _.each(b,function(a,b){var d=[];d[0]=[a],d[1]=[b],c.push(d)}),c};
 //# sourceMappingURL=objToTwoDimArray.js.map
