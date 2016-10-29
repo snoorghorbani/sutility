@@ -1,3 +1,3 @@
-/*! sutility - v0.0.996 - 2016-10-29 */
+/*! sutility - v0.0.997 - 2016-10-29 */
 this.localStorage=function(a,b){var c=function(){};return c.save=function(a,b,c){localStorage.setItem(a,JSON.stringify({value:b,expiredTime:c||999999999,storeTime:Date.now()}))},c.load=function(a){var b=localStorage.getItem(a);if(b=JSON.parse(b))return b.isFresh=b&&Date.now()-b.storeTime<b.expiredTime,b.isFresh||localStorage.removeItem(a),b.value=JSON.parse(b.value),b},c}(this);
 //# sourceMappingURL=localStorage.js.map
