@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.995 - 2016-10-19
+ * sutility v0.0.996 - 2016-10-29
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -756,7 +756,10 @@ this.deformPathValue = function (obj, fn, path, createIfNotDefined) {
         return obj[_path] = fn(obj);
 
     while (_path = path.shift()) {
-        if (res[_path] && _.is.array(res[_path])) {
+        if (res[_path] && _.is.array(res[_path]) && path.length == 0) {
+            return res[_path] = fn(res);
+        }
+        else if (res[_path] && _.is.array(res[_path])) {
             return _.map(res[_path], function (item) {
                 return _.deformPathValue(item, fn, path.join('.'), createIfNotDefined);
             });

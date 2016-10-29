@@ -1,5 +1,5 @@
 /**
- * sutility v0.0.995 - 2016-10-19
+ * sutility v0.0.996 - 2016-10-29
  * Functional Library
  *
  * Copyright (c) 2016 soushians noorghorbani <snoorghorbani@gmail.com>
@@ -471,6 +471,7 @@
                 var path = path.split("."), _path = path.shift(), res = obj[_path];
                 if (createIfNotDefined && 0 == path.length) return obj[_path] = fn(obj);
                 for (;_path = path.shift(); ) {
+                    if (res[_path] && _.is.array(res[_path]) && 0 == path.length) return res[_path] = fn(res);
                     if (res[_path] && _.is.array(res[_path])) return _.map(res[_path], function(item) {
                         return _.deformPathValue(item, fn, path.join("."), createIfNotDefined);
                     });

@@ -11,7 +11,10 @@
         return obj[_path] = fn(obj);
 
     while (_path = path.shift()) {
-        if (res[_path] && _.is.array(res[_path])) {
+        if (res[_path] && _.is.array(res[_path]) && path.length == 0) {
+            return res[_path] = fn(res);
+        }
+        else if (res[_path] && _.is.array(res[_path])) {
             return _.map(res[_path], function (item) {
                 return _.deformPathValue(item, fn, path.join('.'), createIfNotDefined);
             });

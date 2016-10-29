@@ -1,6 +1,6 @@
 {
-	"numResults": 334,
-	"creationDate": "2016-10-19 15:14:22",
+	"numResults": 335,
+	"creationDate": "2016-10-29 13:04:35",
 	"results": {
 		"src/modules/activate.js": [
 			{
@@ -586,11 +586,15 @@
 				"match": "_.is"
 			},
 			{
-				"line": 15,
+				"line": 17,
+				"match": "_.is"
+			},
+			{
+				"line": 18,
 				"match": "_.map"
 			},
 			{
-				"line": 16,
+				"line": 19,
 				"match": "_.deformPathValue"
 			}
 		],
