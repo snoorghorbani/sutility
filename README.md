@@ -1,3 +1,4 @@
+
 # SUtility - A Functional JavaScript Utility Library
 
 [![NPM Version](https://img.shields.io/npm/v/sutility.svg?style=flat-square)](https://www.npmjs.com/package/sutility)
@@ -5,7 +6,24 @@
 
 SUtility is a comprehensive functional programming library for JavaScript, providing over 180 utility functions that operate without modifying native prototypes. It is designed to be a business-independent, zero-dependency toolkit for any project.
 
-This library is isomorphic, supporting both **browser** and **Node.js** environments.
+As the sole author and maintainer of the library, I was responsible for its full lifecycle from conception to ongoing support. My key contributions included engineering its innovative tree-shaking feature for optimized builds, developing a comprehensive unit test suite to ensure code quality, and writing detailed API and end-user documentation for all 180+ functions.
+
+---
+
+## Table of Contents
+
+* [Key Features](#key-features)
+* [Installation](#installation)
+* [Basic Usage](#basic-usage)
+* [The Optimizer: Custom Production Builds](#the-optimizer-custom-production-builds)
+* [API Reference](#api-reference)
+* [The Lightweight MV* Framework](#the-lightweight-mv-framework)
+* [Design Pattern Utilities](#design-pattern-utilities)
+* [Function Helpers](#function-helpers)
+* [Type Checking with 'is'](#type-checking-with-is)
+* [Testing](#testing)
+* [Contributing](#contributing)
+* [License](#license)
 
 ---
 
@@ -15,9 +33,8 @@ This library is isomorphic, supporting both **browser** and **Node.js** environm
 * **Functional-First:** Encourages a clean, functional programming style.
 * **Zero Dependencies:** Lightweight and will not bloat your project with other packages.
 * **Safe:** Does not extend or modify any built-in JavaScript objects.
-* **Lightweight MVW Framework:** Includes a simple Model-View-* framework to help organize code.
+* **Lightweight MV* Framework:** Includes a simple Model-View-* framework to help organize code.
 * **Unique Optimizer:** Includes a built-in tool to create a production build of the library that only contains the functions your project actually uses.
-* **Compatibility:** Compatible with multiple JavaScript environments, including Node.js, AngularJS, and Vanilla JavaScript.
 
 ## Installation
 
@@ -64,31 +81,56 @@ You can then import the custom, smaller build in your production code.
 
 ---
 
-## Design Patterns & Architecture
-
-SUtility is built with proven design patterns to ensure the code is clean, maintainable, and predictable. The library primarily follows a functional-first approach but also includes structural patterns for better application organization.
-
-### Functional Programming Patterns
-
-At its core, SUtility provides tools that enable a functional style of programming:
-
-* **Higher-Order Functions:** Many functions in the library are higher-order, meaning they take functions as arguments or return them as results. This allows for powerful and reusable abstractions, similar to `Array.prototype.map` or `.filter`.
-* **Composition:** The utilities are designed to be easily composed, allowing you to build complex logic by chaining together simple, pure functions to solve more significant problems.
-* **Immutability:** All functions are designed to be non-destructive. They do not modify your input data; instead, they always return new arrays or objects, preventing side effects and making your application's state more predictable.
-
-### Structural Patterns
-
-* **Module Pattern:** Each function is encapsulated in its own module. This allows developers to import only the specific functions they need, which works hand-in-hand with the library's custom optimizer to keep production builds as small as possible.
-* **MV\* (Model-View-*) Framework:** The library includes a lightweight MV\* framework that helps organize your application's code by separating data logic (Model), presentation (View), and user input (Controller/ViewModel). This promotes a clean and scalable application architecture.
-
 ## API Reference
 
 The full API is extensively documented within the source code itself. Each function includes comments explaining its parameters, return values, and usage examples. Please feel free to explore the `lib` directory to see all available functions.
 
 ---
-You are absolutely right to clarify. Implementing classic design patterns as reusable functions is a key feature of a high-quality utility library. My apologies for not understanding that nuance initially.
+## The Lightweight MV* Framework
 
-Based on your clarification, here is a professionally written Markdown section for your `README.md` file. It explains that your library provides helpers to implement specific, well-known design patterns.
+SUtility includes a simple yet powerful MV* (Model-View-*) framework to help you structure your client-side applications. It provides a clear separation of concerns, making your code more organized, scalable, and easier to reason about without the overhead of a large, complex framework.
+
+This micro-framework is built around three core concepts:
+
+* **State (Model):** A plain JavaScript object that holds all your application's data. It is the single source of truth.
+* **Actions (Controller):** Functions that are the only way to change the state. All state mutations happen through actions, making your data flow predictable.
+* **Views:** Functions that subscribe to state changes. They are automatically called whenever any part of the state updates, allowing you to update the DOM or render your UI.
+
+### Usage Example
+
+```javascript
+import { framework } from 'sutility';
+
+// 1. Define the initial state of your application
+const initialState = {
+  count: 0
+};
+
+// 2. Define actions that return a new state object
+const actions = {
+  increment: (state) => ({ ...state, count: state.count + 1 }),
+  decrement: (state) => ({ ...state, count: state.count - 1 }),
+  add: (state, amount) => ({ ...state, count: state.count + amount })
+};
+
+// 3. Define views that react to any state change
+const views = {
+  logCountToConsole: (state) => {
+    console.log(`The current count is: ${state.count}`);
+  }
+};
+
+// 4. Create the application instance
+const app = framework({
+  state: initialState,
+  actions,
+  views
+});
+
+// 5. Dispatch actions to update the state.
+app.dispatch('increment');       // Console logs: "The current count is: 1"
+app.dispatch('add', 5);          // Console logs: "The current count is: 6"
+```
 
 ---
 
@@ -98,71 +140,199 @@ Beyond its core functional helpers, SUtility provides functions to easily implem
 
 ### Memoization (Flyweight Pattern)
 
-The Memoization pattern is a performance optimization technique used to cache the results of expensive function calls and avoid redundant computations. It's a specific implementation of the Flyweight pattern's goal of sharing common data. SUtility provides a `memoize` helper that wraps any function and stores its return values.
+The Memoization pattern is a performance optimization technique used to cache the results of expensive function calls. SUtility provides a `memoize` helper that wraps any function and stores its return values.
 
 ```javascript
 import { memoize } from 'sutility';
-
-// An expensive function that we don't want to re-run with the same arguments
-const expensiveCalculation = (num) => {
-  console.log('Performing expensive calculation...');
-  return num * 2;
-};
-
-const memoizedCalc = memoize(expensiveCalculation);
-
-memoizedCalc(5); // Logs "Performing expensive calculation..." and returns 10
-memoizedCalc(5); // Returns 10 instantly from cache
-memoizedCalc(10); // Logs "Performing expensive calculation..." and returns 20
-memoizedCalc(10); // Returns 20 instantly from cache
+const expensiveCalc = (num) => { /* ... time-consuming logic ... */ };
+const memoizedCalc = memoize(expensiveCalc);
+memoizedCalc(5); // Runs the calculation
+memoizedCalc(5); // Returns the cached result instantly
 ```
 
 ### Observer Pattern (Publish/Subscribe)
 
-Decouple different parts of your application with a simple event bus. The Observer pattern allows objects (subscribers) to be notified automatically when another object's state (the publisher) changes.
+Decouple parts of your application with a simple event bus. The Observer pattern allows objects to subscribe to events and be notified when they are published.
 
 ```javascript
 import { createEventBus } from 'sutility';
-
 const appEvents = createEventBus();
+appEvents.subscribe('user:login', (user) => console.log(`${user.name} logged in.`));
+appEvents.publish('user:login', { name: 'John' });
+```
+### Decorator Pattern
 
-// Subscriber 1
-appEvents.subscribe('user:login', (user) => {
-  console.log(`Analytics service notified: ${user.name} logged in.`);
-});
+Dynamically add new functionality to existing functions without altering their source code using the `decorate` helper.
 
-// Subscriber 2
-appEvents.subscribe('user:login', (user) => {
-  console.log(`UI service notified: Welcome, ${user.name}!`);
-});
+```javascript
+import { decorate } from 'sutility';
 
-// Publishing an event
-appEvents.publish('user:login', { name: 'John Doe' });
+// The original function
+const add = (a, b) => a + b;
+
+// A decorator to log when a function is called
+const withLogging = (fn) => (...args) => {
+  console.log(`Calling function '${fn.name}'...`);
+  return fn(...args);
+};
+
+// Apply the decorator
+const loggedAdd = decorate(add, withLogging);
+
+const result = loggedAdd(5, 7);
+// Console logs: "Calling function 'add'..."
+
+console.log(result);
+// => 12
 ```
 
 ### Singleton Pattern
 
-Ensure that a class has only one instance and provide a global point of access to it. This is perfect for managing shared state like a configuration object, a database connection, or a service.
+Ensure that a class has only one instance and provide a global point of access to it. This is useful for managing shared state like a configuration object or a service.
 
 ```javascript
 import { createSingleton } from 'sutility';
-
-class AppConfig {
-  constructor() {
-    this.apiUrl = '[https://api.example.com](https://api.example.com)';
-    this.timestamp = Date.now(); // Will be the same on every call
-  }
-}
-
-const getConfig = createSingleton(AppConfig);
-
+class Config { /* ... */ }
+const getConfig = createSingleton(Config);
 const config1 = getConfig();
 const config2 = getConfig();
-
-// Both constants point to the exact same instance
-console.log(config1 === config2); // => true
-console.log(config1.timestamp === config2.timestamp); // => true
+// config1 === config2
 ```
+---
+
+## Function Helpers
+
+Higher-order functions that add functionality to your existing functions, helping you control execution, manage arguments, and compose logic.
+
+### debounce
+`_.debounce(func, wait, [options])`
+
+Creates a debounced function that delays invoking `func` until after `wait` milliseconds have elapsed since the last time the debounced function was invoked. This is useful for preventing a function from firing too often, such as handling search input or window resizing events.
+
+**Parameters**
+1. `func` (*Function*): The function to debounce.
+2. `wait` (*Number*): The number of milliseconds to delay.
+3. `[options]` (*Object*): An optional options object.
+    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `false`.
+    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
+
+**Returns**
+(*Function*): Returns the new debounced function.
+
+**Example**
+```javascript
+import { debounce } from 'sutility';
+
+// A search function that would normally call an API
+const performSearch = (query) => {
+  console.log(`Searching for: ${query}`);
+};
+
+const debouncedSearch = debounce(performSearch, 300);
+
+// Imagine a user typing 'hello' into a search bar quickly
+debouncedSearch('hello'); // This is the only call that will execute after 300ms
+
+// => Console logs: "Searching for: hello"
+```
+
+### throttle
+`_.throttle(func, wait, [options])`
+
+Creates a throttled function that only invokes `func` at most once per every `wait` milliseconds. This is useful for rate-limiting functions that execute on rapidly-firing events, like scrolling or mouse movement.
+
+**Parameters**
+1. `func` (*Function*): The function to throttle.
+2. `wait` (*Number*): The number of milliseconds to throttle invocations to.
+3. `[options]` (*Object*): An optional options object.
+    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `true`.
+    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
+
+**Returns**
+(*Function*): Returns the new throttled function.
+
+**Example**
+```javascript
+import { throttle } from 'sutility';
+
+const onScroll = () => {
+  console.log('Scroll event handled!');
+};
+
+const throttledScroll = throttle(onScroll, 1000);
+
+// The console will log "Scroll event handled!" at most once every second.
+window.addEventListener('scroll', throttledScroll);
+```
+
+### curry
+`_.curry(func)`
+
+Creates a function that accepts arguments of `func` one at a time. This allows for partial application, making it easier to create specialized functions and compose them.
+
+**Parameters**
+1. `func` (*Function*): The function to curry.
+
+**Returns**
+(*Function*): Returns the new curried function.
+
+**Example**
+```javascript
+import { curry } from 'sutility';
+
+const add = (a, b, c) => a + b + c;
+
+const curriedAdd = curry(add);
+
+const add5 = curriedAdd(5);
+const add5and10 = add5(10);
+
+console.log(add5and10(20)); // => 35
+```
+
+### pipe
+`_.pipe(...funcs)`
+
+Performs left-to-right function composition. Creates a new function that passes the result of each function to the next one in the sequence.
+
+**Parameters**
+1. `...funcs` (*Function[]*): The sequence of functions to compose.
+
+**Returns**
+(*Function*): Returns the new composite function.
+
+**Example**
+```javascript
+import { pipe } from 'sutility';
+
+const add5 = (x) => x + 5;
+const multiplyBy2 = (x) => x * 2;
+
+const processNumber = pipe(add5, multiplyBy2);
+
+console.log(processNumber(10)); // => 30
+```
+---
+
+## Type Checking with `is`
+
+SUtility includes a comprehensive `is` object that provides a whole suite of convenient and readable methods for type checking and other common assertions. All checks are also available in a negated form under the `is.not` property (e.g., `is.not.string(val)`).
+
+### Available Checks
+
+#### Type Checks
+`string`, `number`, `boolean`, `array`, `object`, `function`, `asyncFunction`, `promise`, `date`, `regexp`, `symbol`, `error`
+
+#### Value Checks
+`null`, `undefined`, `nan`, `truthy`, `falsy`
+
+#### Content & Format Checks
+`empty` (for arrays, objects, strings), `json` (for strings), `url` (for strings), `email` (for strings), `integer`, `float`
+
+#### Environment Checks
+`browser`, `node`, `domElement`
+
+---
 
 ## Testing
 
@@ -192,4 +362,3 @@ Contributions are welcome! If you'd like to help improve SUtility, please feel f
 ## License
 
 This project is licensed under the MIT License - see the `LICENSE.md` file for details.
-```
