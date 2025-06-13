@@ -396,11 +396,30 @@ console.log(processNumber(10)); // => 30
 
 ## Design Pattern Utilities
 
-Beyond its core functional helpers, SUtility provides functions to easily implement common software design patterns, helping you write robust, scalable, and efficient code without the boilerplate.
+SUtility provides helper functions to easily implement common software design patterns, helping you write robust and scalable code without the boilerplate.
+
+### publisher
+`_.publisher(object)`
+
+Applies a full suite of publish/subscribe capabilities to any given object, turning it into a powerful event emitter. This function augments the target object with `publish`, `subscribe`, and `unsubscribe` methods.
+
+**Example**
+```javascript
+import { publisher } from 'sutility';
+
+const appEvents = publisher({}); // Make a plain object an event hub
+
+appEvents.subscribe('user:login', (user) => {
+  console.log(`Notification: ${user.name} has logged in.`);
+});
+
+appEvents.publish('user:login', { name: 'John Doe' });
+// => Console logs: "Notification: John Doe has logged in."
+```
 
 ### Memoization (Flyweight Pattern)
 
-The Memoization pattern is a performance optimization technique used to cache the results of expensive function calls. SUtility provides a `memoize` helper that wraps any function and stores its return values.
+Creates a new function that caches the results of the wrapped function.
 
 ```javascript
 import { memoize } from 'sutility';
@@ -410,53 +429,32 @@ memoizedCalc(5); // Runs the calculation
 memoizedCalc(5); // Returns the cached result instantly
 ```
 
-### Observer Pattern (Publish/Subscribe)
-
-Decouple parts of your application with a simple event bus. The Observer pattern allows objects to subscribe to events and be notified when they are published.
-
-```javascript
-import { createEventBus } from 'sutility';
-const appEvents = createEventBus();
-appEvents.subscribe('user:login', (user) => console.log(`${user.name} logged in.`));
-appEvents.publish('user:login', { name: 'John' });
-```
 ### Decorator Pattern
 
-Dynamically add new functionality to existing functions without altering their source code using the `decorate` helper.
+Dynamically adds new functionality to existing functions without altering their source code using the `decorate` helper.
 
 ```javascript
 import { decorate } from 'sutility';
 
-// The original function
 const add = (a, b) => a + b;
-
-// A decorator to log when a function is called
 const withLogging = (fn) => (...args) => {
   console.log(`Calling function '${fn.name}'...`);
   return fn(...args);
 };
-
-// Apply the decorator
 const loggedAdd = decorate(add, withLogging);
-
-const result = loggedAdd(5, 7);
-// Console logs: "Calling function 'add'..."
-
-console.log(result);
-// => 12
+loggedAdd(5, 7);
 ```
 
 ### Singleton Pattern
 
-Ensure that a class has only one instance and provide a global point of access to it. This is useful for managing shared state like a configuration object or a service.
+Ensure that a class has only one instance and provide a global point of access to it.
 
 ```javascript
 import { createSingleton } from 'sutility';
 class Config { /* ... */ }
 const getConfig = createSingleton(Config);
 const config1 = getConfig();
-const config2 = getConfig();
-// config1 === config2
+const config2 = getConfig(); // config1 === config2
 ```
 
 ---
@@ -512,7 +510,7 @@ The library currently has over 40% code coverage, with a clear roadmap to increa
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository, make your changes, and open a pull request.
+Contributions are welcome! Please feel free to fork the repository, make your changes, and open a pull request.
 
 1.  Fork the repository.
 2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
