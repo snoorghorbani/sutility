@@ -21,6 +21,7 @@ As the sole author and maintainer of the library, I was responsible for its full
 * [Method Manipulators](#method-manipulators)
 * [Design Pattern Utilities](#design-pattern-utilities)
 * [The Lightweight MV* Framework](#the-lightweight-mv-framework)
+* [State Management & Persistence](#state-management--persistence)
 * [The Optimizer: Custom Production Builds](#the-optimizer-custom-production-builds)
 * [API Reference](#api-reference)
 * [Testing](#testing)
@@ -277,12 +278,6 @@ SUtility provides a readable fluent interface for conditional execution by chain
 ```javascript
 import _ from 'sutility';
 
-// Simple if...then
-_.if.is.string('hello', () => {
-  console.log('It is a string!');
-});
-// => Logs: "It is a string!"
-
 // If...else chain
 _.if.is.number(42, () => {
   console.log('It is a number.');
@@ -306,9 +301,6 @@ Creates a debounced function that delays invoking `func` until after `wait` mill
 **Parameters**
 1. `func` (*Function*): The function to debounce.
 2. `wait` (*Number*): The number of milliseconds to delay.
-3. `[options]` (*Object*): An optional options object.
-    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `false`.
-    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
 
 **Returns**
 (*Function*): Returns the new debounced function.
@@ -316,25 +308,18 @@ Creates a debounced function that delays invoking `func` until after `wait` mill
 **Example**
 ```javascript
 import { debounce } from 'sutility';
-
-const performSearch = (query) => {
-  console.log(`Searching for: ${query}`);
-};
-const debouncedSearch = debounce(performSearch, 300);
-debouncedSearch('hello'); // This is the only call that will execute after 300ms
+const debouncedSearch = debounce((query) => console.log(`Searching for: ${query}`), 300);
+debouncedSearch('hello');
 ```
 
 ### throttle
-`_.throttle(func, wait, [options])`
+`_.throttle(func, wait)`
 
-Creates a throttled function that only invokes `func` at most once per every `wait` milliseconds. This is useful for rate-limiting functions that execute on rapidly-firing events, like scrolling or mouse movement.
+Creates a throttled function that only invokes `func` at most once per every `wait` milliseconds. This is useful for rate-limiting functions that execute on rapidly-firing events.
 
 **Parameters**
 1. `func` (*Function*): The function to throttle.
 2. `wait` (*Number*): The number of milliseconds to throttle invocations to.
-3. `[options]` (*Object*): An optional options object.
-    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `true`.
-    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
 
 **Returns**
 (*Function*): Returns the new throttled function.
@@ -342,11 +327,7 @@ Creates a throttled function that only invokes `func` at most once per every `wa
 **Example**
 ```javascript
 import { throttle } from 'sutility';
-
-const onScroll = () => {
-  console.log('Scroll event handled!');
-};
-const throttledScroll = throttle(onScroll, 1000);
+const throttledScroll = throttle(() => console.log('Scroll event handled!'), 1000);
 window.addEventListener('scroll', throttledScroll);
 ```
 
@@ -364,12 +345,10 @@ Creates a function that accepts arguments of `func` one at a time. This allows f
 **Example**
 ```javascript
 import { curry } from 'sutility';
-
 const add = (a, b, c) => a + b + c;
 const curriedAdd = curry(add);
-const add5 = curriedAdd(5);
-const add5and10 = add5(10);
-console.log(add5and10(20)); // => 35
+const add10 = curriedAdd(10);
+console.log(add10(5)(20)); // => 35
 ```
 
 ### pipe
@@ -386,7 +365,6 @@ Performs left-to-right function composition. Creates a new function that passes 
 **Example**
 ```javascript
 import { pipe } from 'sutility';
-
 const add5 = (x) => x + 5;
 const multiplyBy2 = (x) => x * 2;
 const processNumber = pipe(add5, multiplyBy2);
@@ -401,76 +379,27 @@ A collection of higher-order functions designed to manipulate or control the exe
 
 ### callBox
 `_.callBox(func, [errorHandler])`
-
 Wraps a function in a `try...catch` block. If the original function throws an error, the optional `errorHandler` is called.
-
-```javascript
-import { callBox } from 'sutility';
-const riskyFunction = () => { throw new Error('Error!'); };
-const logError = (err) => { console.error(err.message); };
-const safeFunction = callBox(riskyFunction, logError);
-safeFunction(); // Console logs: "Error!"
-```
 
 ### callConstantly
 `_.callConstantly(func, interval)`
-
 Creates a controller object that repeatedly calls `func` every `interval` milliseconds. Returns an object with `.start()` and `.stop()` methods.
-
-```javascript
-import { callConstantly } from 'sutility';
-const ticker = callConstantly(() => console.log('tick'), 1000);
-ticker.start();
-setTimeout(() => ticker.stop(), 3500);
-```
 
 ### callIgnore
 `_.callIgnore(func)`
-
 Creates a new function that, when called, invokes the original `func` with no arguments, ignoring any arguments it receives.
-
-```javascript
-import { callIgnore } from 'sutility';
-const sayHello = () => console.log('Hello!');
-const ignoredArgsHello = callIgnore(sayHello);
-ignoredArgsHello('a', 'b', 'c'); // Console logs: "Hello!"
-```
 
 ### callVoucher
 `_.callVoucher(func)`
-
-Creates a version of a function that can only be invoked one time. Subsequent calls return the result of the first invocation. Also known as `once`.
-
-```javascript
-import { callVoucher } from 'sutility';
-const initializeOnce = callVoucher(() => console.log('Initialized.'));
-initializeOnce(); // Logs "Initialized."
-initializeOnce(); // Does nothing.
-```
+Creates a version of a function that can only be invoked one time. Also known as `once`.
 
 ### callWhen
 `_.callWhen(predicate, func)`
-
 Creates a new function that will only execute `func` if the `predicate` function returns `true`.
-
-```javascript
-import { callWhen } from 'sutility';
-const isAuthorized = (user) => user.role === 'admin';
-const grantAccess = (user) => console.log(`Access granted to ${user.name}.`);
-const attemptLogin = callWhen(isAuthorized, grantAccess);
-attemptLogin({ name: 'Alice', role: 'admin' }); // Logs "Access granted to Alice."
-```
 
 ### callWithDelay
 `_.callWithDelay(func, delay, ...args)`
-
 Invokes `func` after a specified `delay` in milliseconds, applying any provided `args`.
-
-```javascript
-import { callWithDelay } from 'sutility';
-callWithDelay((name) => console.log(`Hello, ${name}`), 2000, 'Alice');
-// After 2 seconds, console logs: "Hello, Alice!"
-```
 
 ---
 
@@ -488,13 +417,10 @@ Applies a full suite of publish/subscribe capabilities to any given object, turn
 import { publisher } from 'sutility';
 
 const appEvents = publisher({}); // Make a plain object an event hub
-
 appEvents.subscribe('user:login', (user) => {
   console.log(`Notification: ${user.name} has logged in.`);
 });
-
 appEvents.publish('user:login', { name: 'John Doe' });
-// => Console logs: "Notification: John Doe has logged in."
 ```
 
 ### Memoization (Flyweight Pattern)
@@ -519,12 +445,8 @@ Dynamically adds new functionality to existing functions without altering their 
 **Example**
 ```javascript
 import { decorate } from 'sutility';
-
 const add = (a, b) => a + b;
-const withLogging = (fn) => (...args) => {
-  console.log(`Calling function '${fn.name}'...`);
-  return fn(...args);
-};
+const withLogging = (fn) => (...args) => { console.log(`Calling...`); return fn(...args); };
 const loggedAdd = decorate(add, withLogging);
 loggedAdd(5, 7);
 ```
@@ -539,7 +461,7 @@ Ensures a class has only one instance and provides a global point of access to i
 import { createSingleton } from 'sutility';
 class Config { /* ... */ }
 const getConfig = createSingleton(Config);
-const config1 =getConfig();
+const config1 = getConfig();
 const config2 = getConfig(); // config1 === config2
 ```
 ---
@@ -559,6 +481,25 @@ const app = framework({
 app.dispatch('increment'); // Logs: "Count is: 1"
 ```
 
+---
+
+## State Management & Persistence
+
+Utilities for managing and persisting the state of your application.
+
+### enableBackup
+`_.enableBackup(appInstance, [options])`
+
+Automatically backs up the state of an MV* framework instance to the browser's Web Storage (`localStorage` or `sessionStorage`). This utility persists the application state, allowing it to be restored across page reloads for a seamless user experience.
+
+**Example**
+```javascript
+import { framework, enableBackup } from 'sutility';
+const app = framework({ state: { user: null } });
+enableBackup(app, { key: 'my-app-backup' });
+app.dispatch('login', { name: 'Alice' });
+// Check your browser's localStorage for the key 'my-app-backup'.
+```
 ---
 
 ## The Optimizer: Custom Production Builds
