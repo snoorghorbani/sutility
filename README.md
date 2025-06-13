@@ -17,6 +17,7 @@ This library is isomorphic, supporting both **browser** and **Node.js** environm
 * **Safe:** Does not extend or modify any built-in JavaScript objects.
 * **Lightweight MVW Framework:** Includes a simple Model-View-* framework to help organize code.
 * **Unique Optimizer:** Includes a built-in tool to create a production build of the library that only contains the functions your project actually uses.
+* **Compatibility:** Compatible with multiple JavaScript environments, including Node.js, AngularJS, and Vanilla JavaScript.
 
 ## Installation
 
@@ -63,11 +64,105 @@ You can then import the custom, smaller build in your production code.
 
 ---
 
+## Design Patterns & Architecture
+
+SUtility is built with proven design patterns to ensure the code is clean, maintainable, and predictable. The library primarily follows a functional-first approach but also includes structural patterns for better application organization.
+
+### Functional Programming Patterns
+
+At its core, SUtility provides tools that enable a functional style of programming:
+
+* **Higher-Order Functions:** Many functions in the library are higher-order, meaning they take functions as arguments or return them as results. This allows for powerful and reusable abstractions, similar to `Array.prototype.map` or `.filter`.
+* **Composition:** The utilities are designed to be easily composed, allowing you to build complex logic by chaining together simple, pure functions to solve more significant problems.
+* **Immutability:** All functions are designed to be non-destructive. They do not modify your input data; instead, they always return new arrays or objects, preventing side effects and making your application's state more predictable.
+
+### Structural Patterns
+
+* **Module Pattern:** Each function is encapsulated in its own module. This allows developers to import only the specific functions they need, which works hand-in-hand with the library's custom optimizer to keep production builds as small as possible.
+* **MV\* (Model-View-*) Framework:** The library includes a lightweight MV\* framework that helps organize your application's code by separating data logic (Model), presentation (View), and user input (Controller/ViewModel). This promotes a clean and scalable application architecture.
+
 ## API Reference
 
 The full API is extensively documented within the source code itself. Each function includes comments explaining its parameters, return values, and usage examples. Please feel free to explore the `lib` directory to see all available functions.
 
 ---
+You are absolutely right to clarify. Implementing classic design patterns as reusable functions is a key feature of a high-quality utility library. My apologies for not understanding that nuance initially.
+
+Based on your clarification, here is a professionally written Markdown section for your `README.md` file. It explains that your library provides helpers to implement specific, well-known design patterns.
+
+---
+
+## Design Pattern Utilities
+
+Beyond its core functional helpers, SUtility provides functions to easily implement common software design patterns, helping you write robust, scalable, and efficient code without the boilerplate.
+
+### Memoization (Flyweight Pattern)
+
+The Memoization pattern is a performance optimization technique used to cache the results of expensive function calls and avoid redundant computations. It's a specific implementation of the Flyweight pattern's goal of sharing common data. SUtility provides a `memoize` helper that wraps any function and stores its return values.
+
+```javascript
+import { memoize } from 'sutility';
+
+// An expensive function that we don't want to re-run with the same arguments
+const expensiveCalculation = (num) => {
+  console.log('Performing expensive calculation...');
+  return num * 2;
+};
+
+const memoizedCalc = memoize(expensiveCalculation);
+
+memoizedCalc(5); // Logs "Performing expensive calculation..." and returns 10
+memoizedCalc(5); // Returns 10 instantly from cache
+memoizedCalc(10); // Logs "Performing expensive calculation..." and returns 20
+memoizedCalc(10); // Returns 20 instantly from cache
+```
+
+### Observer Pattern (Publish/Subscribe)
+
+Decouple different parts of your application with a simple event bus. The Observer pattern allows objects (subscribers) to be notified automatically when another object's state (the publisher) changes.
+
+```javascript
+import { createEventBus } from 'sutility';
+
+const appEvents = createEventBus();
+
+// Subscriber 1
+appEvents.subscribe('user:login', (user) => {
+  console.log(`Analytics service notified: ${user.name} logged in.`);
+});
+
+// Subscriber 2
+appEvents.subscribe('user:login', (user) => {
+  console.log(`UI service notified: Welcome, ${user.name}!`);
+});
+
+// Publishing an event
+appEvents.publish('user:login', { name: 'John Doe' });
+```
+
+### Singleton Pattern
+
+Ensure that a class has only one instance and provide a global point of access to it. This is perfect for managing shared state like a configuration object, a database connection, or a service.
+
+```javascript
+import { createSingleton } from 'sutility';
+
+class AppConfig {
+  constructor() {
+    this.apiUrl = '[https://api.example.com](https://api.example.com)';
+    this.timestamp = Date.now(); // Will be the same on every call
+  }
+}
+
+const getConfig = createSingleton(AppConfig);
+
+const config1 = getConfig();
+const config2 = getConfig();
+
+// Both constants point to the exact same instance
+console.log(config1 === config2); // => true
+console.log(config1.timestamp === config2.timestamp); // => true
+```
 
 ## Testing
 
