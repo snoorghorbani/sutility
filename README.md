@@ -3,9 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/sutility.svg?style=flat-square)](https://www.npmjs.com/package/sutility)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-SUtility is a comprehensive functional programming library for JavaScript, providing over 180 utility functions that operate without modifying native prototypes. It is designed to be a business-independent, zero-dependency toolkit for any project.
-
-As the sole author and maintainer of the library, I was responsible for its full lifecycle from conception to ongoing support. My key contributions included engineering its innovative tree-shaking feature for optimized builds, developing a comprehensive unit test suite to ensure code quality, and writing detailed API and end-user documentation for all 180+ functions.
+SUtility is a powerful, zero-dependency toolkit for professional JavaScript development. More than just a collection of helpers, SUtility provides a lightweight MV* application framework, built-in utilities for implementing design patterns (like Publisher, Singleton, and Decorator), and a unique fluent interface for conditional logic. With over 180 functions and a custom build optimizer that tree-shakes the library for a minimal production footprint, SUtility is designed to help you write clean, efficient, and scalable code without modifying native prototypes.
 
 ---
 
