@@ -34,7 +34,7 @@ SUtility is a powerful, zero-dependency toolkit for professional JavaScript deve
 * **Functional-First:** Encourages a clean, functional programming style.
 * **Zero Dependencies:** Lightweight and will not bloat your project with other packages.
 * **Safe:** Does not extend or modify any built-in JavaScript objects.
-* **Lightweight MV* Framework:** Includes a simple Model-View-* framework to help organize code.
+* **Lightweight MVW Framework:** Includes a simple Model-View-* framework to help organize code.
 * **Unique Optimizer:** Includes a built-in tool to create a production build of the library that only contains the functions your project actually uses.
 
 ## Installation
