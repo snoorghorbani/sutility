@@ -18,6 +18,7 @@ As the sole author and maintainer of the library, I was responsible for its full
 * [String Manipulation](#string-manipulation)
 * [Assertion & Conditional Execution](#assertion--conditional-execution)
 * [Function Helpers](#function-helpers)
+* [Method Manipulators](#method-manipulators)
 * [Design Pattern Utilities](#design-pattern-utilities)
 * [The Lightweight MV* Framework](#the-lightweight-mv-framework)
 * [The Optimizer: Custom Production Builds](#the-optimizer-custom-production-builds)
@@ -394,6 +395,85 @@ console.log(processNumber(10)); // => 30
 
 ---
 
+## Method Manipulators
+
+A collection of higher-order functions designed to manipulate or control the execution of other functions.
+
+### callBox
+`_.callBox(func, [errorHandler])`
+
+Wraps a function in a `try...catch` block. If the original function throws an error, the optional `errorHandler` is called.
+
+```javascript
+import { callBox } from 'sutility';
+const riskyFunction = () => { throw new Error('Error!'); };
+const logError = (err) => { console.error(err.message); };
+const safeFunction = callBox(riskyFunction, logError);
+safeFunction(); // Console logs: "Error!"
+```
+
+### callConstantly
+`_.callConstantly(func, interval)`
+
+Creates a controller object that repeatedly calls `func` every `interval` milliseconds. Returns an object with `.start()` and `.stop()` methods.
+
+```javascript
+import { callConstantly } from 'sutility';
+const ticker = callConstantly(() => console.log('tick'), 1000);
+ticker.start();
+setTimeout(() => ticker.stop(), 3500);
+```
+
+### callIgnore
+`_.callIgnore(func)`
+
+Creates a new function that, when called, invokes the original `func` with no arguments, ignoring any arguments it receives.
+
+```javascript
+import { callIgnore } from 'sutility';
+const sayHello = () => console.log('Hello!');
+const ignoredArgsHello = callIgnore(sayHello);
+ignoredArgsHello('a', 'b', 'c'); // Console logs: "Hello!"
+```
+
+### callVoucher
+`_.callVoucher(func)`
+
+Creates a version of a function that can only be invoked one time. Subsequent calls return the result of the first invocation. Also known as `once`.
+
+```javascript
+import { callVoucher } from 'sutility';
+const initializeOnce = callVoucher(() => console.log('Initialized.'));
+initializeOnce(); // Logs "Initialized."
+initializeOnce(); // Does nothing.
+```
+
+### callWhen
+`_.callWhen(predicate, func)`
+
+Creates a new function that will only execute `func` if the `predicate` function returns `true`.
+
+```javascript
+import { callWhen } from 'sutility';
+const isAuthorized = (user) => user.role === 'admin';
+const grantAccess = (user) => console.log(`Access granted to ${user.name}.`);
+const attemptLogin = callWhen(isAuthorized, grantAccess);
+attemptLogin({ name: 'Alice', role: 'admin' }); // Logs "Access granted to Alice."
+```
+
+### callWithDelay
+`_.callWithDelay(func, delay, ...args)`
+
+Invokes `func` after a specified `delay` in milliseconds, applying any provided `args`.
+
+```javascript
+import { callWithDelay } from 'sutility';
+callWithDelay((name) => console.log(`Hello, ${name}`), 2000, 'Alice');
+// After 2 seconds, console logs: "Hello, Alice!"
+```
+
+---
+
 ## Design Pattern Utilities
 
 SUtility provides helper functions to easily implement common software design patterns, helping you write robust and scalable code without the boilerplate.
@@ -418,9 +498,11 @@ appEvents.publish('user:login', { name: 'John Doe' });
 ```
 
 ### Memoization (Flyweight Pattern)
+`_.memoize(func)`
 
-Creates a new function that caches the results of the wrapped function.
+Creates a new function that caches the results of the wrapped function to avoid re-computing for the same arguments.
 
+**Example**
 ```javascript
 import { memoize } from 'sutility';
 const expensiveCalc = (num) => { /* ... time-consuming logic ... */ };
@@ -430,9 +512,11 @@ memoizedCalc(5); // Returns the cached result instantly
 ```
 
 ### Decorator Pattern
+`_.decorate(func, ...decorators)`
 
 Dynamically adds new functionality to existing functions without altering their source code using the `decorate` helper.
 
+**Example**
 ```javascript
 import { decorate } from 'sutility';
 
@@ -446,17 +530,18 @@ loggedAdd(5, 7);
 ```
 
 ### Singleton Pattern
+`_.createSingleton(class)`
 
-Ensure that a class has only one instance and provide a global point of access to it.
+Ensures a class has only one instance and provides a global point of access to it.
 
+**Example**
 ```javascript
 import { createSingleton } from 'sutility';
 class Config { /* ... */ }
 const getConfig = createSingleton(Config);
-const config1 = getConfig();
+const config1 =getConfig();
 const config2 = getConfig(); // config1 === config2
 ```
-
 ---
 
 ## The Lightweight MV* Framework
@@ -464,20 +549,13 @@ const config2 = getConfig(); // config1 === config2
 SUtility includes a simple yet powerful MV* (Model-View-*) framework to help you structure your client-side applications. It provides a clear separation of concerns, making your code more organized, scalable, and easier to reason about without the overhead of a large, complex framework.
 
 ### Usage Example
-
 ```javascript
 import { framework } from 'sutility';
-
 const app = framework({
   state: { count: 0 },
-  actions: {
-    increment: (state) => ({ ...state, count: state.count + 1 }),
-  },
-  views: {
-    logCount: (state) => console.log(`Count is: ${state.count}`)
-  }
+  actions: { increment: (state) => ({ ...state, count: state.count + 1 }) },
+  views: { logCount: (state) => console.log(`Count is: ${state.count}`) }
 });
-
 app.dispatch('increment'); // Logs: "Count is: 1"
 ```
 
@@ -485,13 +563,13 @@ app.dispatch('increment'); // Logs: "Count is: 1"
 
 ## The Optimizer: Custom Production Builds
 
-One of the most powerful features of SUtility is its ability to create a lightweight, optimized build for your production environment. The optimizer tool parses your project's source code, detects which SUtility functions are being used, and generates a new library file that includes *only* those functions.
+One of SUtility's most powerful features is a built-in tool that creates a lightweight, optimized build for your production environment by including *only* the functions your project uses.
 
 ---
 
 ## API Reference
 
-The full API is extensively documented within the source code itself. Each function includes comments explaining its parameters, return values, and usage examples. Please feel free to explore the `lib` directory to see all available functions.
+The full API is extensively documented within the source code itself. Please feel free to explore the `lib` directory to see all available functions.
 
 ---
 
@@ -512,12 +590,6 @@ The library currently has over 40% code coverage, with a clear roadmap to increa
 
 Contributions are welcome! Please feel free to fork the repository, make your changes, and open a pull request.
 
-1.  Fork the repository.
-2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4.  Push to the branch (`git push origin feature/AmazingFeature`).
-5.  Open a Pull Request.
-
 ## License
 
-This project is licensed under the MIT License - see the `LICENSE.md` file for details.
+This project is licensed under the MIT License.
