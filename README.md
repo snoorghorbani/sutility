@@ -37,6 +37,12 @@ SUtility is a powerful, zero-dependency toolkit for professional JavaScript deve
 * **Lightweight MVW Framework:** Includes a simple Model-View-* framework to help organize code.
 * **Unique Optimizer:** Includes a built-in tool to create a production build of the library that only contains the functions your project actually uses.
 
+## The Optimizer: Custom Production Builds
+
+One of the most powerful features of SUtility is its ability to create a lightweight, optimized build for your production environment. The optimizer tool parses your project's source code, detects which SUtility functions are being used, and generates a new library file that includes *only* those functions.
+
+This results in the smallest possible production footprint, improving your application's load time and performance.
+
 ## Installation
 
 Install the library using npm:
@@ -63,12 +69,6 @@ console.log(get(user, 'profile.name', 'Default Name'));
 ```
 
 ---
-
-## The Optimizer: Custom Production Builds
-
-One of the most powerful features of SUtility is its ability to create a lightweight, optimized build for your production environment. The optimizer tool parses your project's source code, detects which SUtility functions are being used, and generates a new library file that includes *only* those functions.
-
-This results in the smallest possible production footprint, improving your application's load time and performance.
 
 ### How to use the Optimizer:
 
