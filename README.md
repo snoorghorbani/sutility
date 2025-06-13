@@ -1,4 +1,3 @@
-
 # SUtility - A Functional JavaScript Utility Library
 
 [![NPM Version](https://img.shields.io/npm/v/sutility.svg?style=flat-square)](https://www.npmjs.com/package/sutility)
@@ -15,6 +14,7 @@ As the sole author and maintainer of the library, I was responsible for its full
 * [Key Features](#key-features)
 * [Installation](#installation)
 * [Basic Usage](#basic-usage)
+* [Array Manipulation & Querying](#array-manipulation--querying)
 * [The Optimizer: Custom Production Builds](#the-optimizer-custom-production-builds)
 * [API Reference](#api-reference)
 * [The Lightweight MV* Framework](#the-lightweight-mv-framework)
@@ -59,6 +59,112 @@ console.log(capitalize('hello world'));
 const user = { profile: { name: 'John Doe' } };
 console.log(get(user, 'profile.name', 'Default Name'));
 // => 'John Doe'
+```
+
+---
+
+## Array Manipulation & Querying
+
+A suite of functions for array manipulation, transformation, and querying.
+
+### chunk
+`_.chunk(array, [size=1])`
+Creates an array of elements split into groups the length of `size`.
+
+```javascript
+chunk(['a', 'b', 'c', 'd'], 2);
+// => [['a', 'b'], ['c', 'd']]
+```
+
+### compact
+`_.compact(array)`
+Creates an array with all falsey values removed (`false`, `null`, `0`, `""`, `undefined`, `NaN`).
+
+```javascript
+compact([0, 1, false, 2, '', 3]);
+// => [1, 2, 3]
+```
+
+### difference
+`_.difference(array, [values])`
+Creates an array of values from the first array that are not present in the other given arrays.
+
+```javascript
+difference([2, 1], [2, 3]);
+// => [1]
+```
+
+### findIndex
+`_.findIndex(array, [predicate])`
+Returns the index of the first element `predicate` returns truthy for.
+
+```javascript
+const users = [{ 'name': 'barney', 'active': false }, { 'name': 'fred', 'active': true }];
+findIndex(users, user => user.active);
+// => 1
+```
+
+### flatten
+`_.flatten(array)`
+Flattens a nested array one level deep. For recursive flattening, use `flattenDeep`.
+
+```javascript
+flatten([1, [2, [3, [4]], 5]]);
+// => [1, 2, [3, [4]], 5]
+```
+
+### head
+`_.head(array)`
+Gets the first element of an array.
+
+```javascript
+head([1, 2, 3]);
+// => 1
+```
+
+### tail
+`_.tail(array)`
+Gets all but the first element of an array.
+
+```javascript
+tail([1, 2, 3]);
+// => [2, 3]
+```
+
+### take
+`_.take(array, [n=1])`
+Creates a slice of an array with `n` elements taken from the beginning.
+
+```javascript
+take([1, 2, 3], 2);
+// => [1, 2]
+```
+
+### union
+`_.union(...arrays)`
+Creates an array of unique values, in order, from all given arrays.
+
+```javascript
+union([2, 3], [1, 2]);
+// => [2, 3, 1]
+```
+
+### uniq
+`_.uniq(array)`
+Creates a duplicate-free version of an array.
+
+```javascript
+uniq([2, 1, 2]);
+// => [2, 1]
+```
+
+### zip
+`_.zip(...arrays)`
+Creates an array of grouped elements, where the first element contains the first elements of the input arrays, the second contains the second, and so on.
+
+```javascript
+zip(['a', 'b'], [1, 2], [true, false]);
+// => [['a', 1, true], ['b', 2, false]]
 ```
 
 ---
