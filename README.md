@@ -15,12 +15,13 @@ As the sole author and maintainer of the library, I was responsible for its full
 * [Installation](#installation)
 * [Basic Usage](#basic-usage)
 * [Array Manipulation & Querying](#array-manipulation--querying)
+* [String Manipulation](#string-manipulation)
+* [Assertion & Conditional Execution](#assertion--conditional-execution)
+* [Function Helpers](#function-helpers)
+* [Design Pattern Utilities](#design-pattern-utilities)
+* [The Lightweight MV* Framework](#the-lightweight-mv-framework)
 * [The Optimizer: Custom Production Builds](#the-optimizer-custom-production-builds)
 * [API Reference](#api-reference)
-* [The Lightweight MV* Framework](#the-lightweight-mv-framework)
-* [Design Pattern Utilities](#design-pattern-utilities)
-* [Function Helpers](#function-helpers)
-* [Type Checking with 'is'](#type-checking-with-is)
 * [Testing](#testing)
 * [Contributing](#contributing)
 * [License](#license)
@@ -166,76 +167,229 @@ Creates an array of grouped elements, where the first element contains the first
 zip(['a', 'b'], [1, 2], [true, false]);
 // => [['a', 1, true], ['b', 2, false]]
 ```
-
 ---
 
-## The Optimizer: Custom Production Builds
+## String Manipulation
 
-One of the most powerful features of SUtility is its ability to create a lightweight, optimized build for your production environment. The optimizer tool parses your project's source code, detects which SUtility functions are being used, and generates a new library file that includes *only* those functions.
+Utilities for common string transformations and manipulations.
 
-This results in the smallest possible production footprint, improving your application's load time and performance.
-
-### How to use the Optimizer:
-
-Run the following command from your project's root directory:
-
-```bash
-npx sutility build --input ./src --output ./sutility.custom.js
-```
-
-You can then import the custom, smaller build in your production code.
-
----
-
-## API Reference
-
-The full API is extensively documented within the source code itself. Each function includes comments explaining its parameters, return values, and usage examples. Please feel free to explore the `lib` directory to see all available functions.
-
----
-## The Lightweight MV* Framework
-
-SUtility includes a simple yet powerful MV* (Model-View-*) framework to help you structure your client-side applications. It provides a clear separation of concerns, making your code more organized, scalable, and easier to reason about without the overhead of a large, complex framework.
-
-This micro-framework is built around three core concepts:
-
-* **State (Model):** A plain JavaScript object that holds all your application's data. It is the single source of truth.
-* **Actions (Controller):** Functions that are the only way to change the state. All state mutations happen through actions, making your data flow predictable.
-* **Views:** Functions that subscribe to state changes. They are automatically called whenever any part of the state updates, allowing you to update the DOM or render your UI.
-
-### Usage Example
+### capitalize
+`_.capitalize(string)`
+Converts the first character of a string to upper case and the rest to lower case.
 
 ```javascript
-import { framework } from 'sutility';
+capitalize('hello WORLD');
+// => 'Hello world'
+```
 
-// 1. Define the initial state of your application
-const initialState = {
-  count: 0
-};
+### camelCase
+`_.camelCase([string=''])`
+Converts a string to camelCase.
 
-// 2. Define actions that return a new state object
-const actions = {
-  increment: (state) => ({ ...state, count: state.count + 1 }),
-  decrement: (state) => ({ ...state, count: state.count - 1 }),
-  add: (state, amount) => ({ ...state, count: state.count + amount })
-};
+```javascript
+camelCase('Foo Bar');
+// => 'fooBar'
+```
 
-// 3. Define views that react to any state change
-const views = {
-  logCountToConsole: (state) => {
-    console.log(`The current count is: ${state.count}`);
-  }
-};
+### kebabCase
+`_.kebabCase([string=''])`
+Converts a string to kebab-case.
 
-// 4. Create the application instance
-const app = framework({
-  state: initialState,
-  actions,
-  views
+```javascript
+kebabCase('Foo Bar');
+// => 'foo-bar'
+```
+
+### snakeCase
+`_.snakeCase([string=''])`
+Converts a string to snake\_case.
+
+```javascript
+snakeCase('Foo Bar');
+// => 'foo_bar'
+```
+
+### pad
+`_.pad([string=''], [length=0], [chars=' '])`
+Pads a string on both sides with `chars` if it's shorter than `length`.
+
+```javascript
+pad('abc', 5);
+// => ' abc '
+```
+
+### startsWith
+`_.startsWith([string=''], [target], [position=0])`
+Checks if a string starts with the given target string.
+
+```javascript
+startsWith('abc', 'a');
+// => true
+```
+
+### endsWith
+`_.endsWith([string=''], [target], [position=string.length])`
+Checks if a string ends with the given target string.
+
+```javascript
+endsWith('abc', 'c');
+// => true
+```
+
+### trim
+`_.trim([string=''], [chars=whitespace])`
+Removes leading and trailing whitespace or specified characters from a string.
+
+```javascript
+trim('  abc  ');
+// => 'abc'
+```
+
+### splitAndTrim
+`_.splitAndTrim(string, separator)`
+Splits a string by a separator and then trims the whitespace from each resulting substring.
+
+```javascript
+splitAndTrim('a, b , c  ', ',');
+// => ['a', 'b', 'c']
+```
+---
+
+## Assertion & Conditional Execution
+
+### Type Checking with `is`
+
+SUtility includes a comprehensive `is` object that provides a whole suite of convenient and readable methods for type checking. All checks are also available in a negated form under the `is.not` property (e.g., `is.not.string(val)`).
+
+**Available Checks:**
+* **Type Checks:** `string`, `number`, `boolean`, `array`, `object`, `function`, `asyncFunction`, `promise`, `date`, `regexp`, `symbol`, `error`
+* **Value Checks:** `null`, `undefined`, `nan`, `truthy`, `falsy`
+* **Content & Format Checks:** `empty`, `json`, `url`, `email`, `integer`, `float`
+* **Environment Checks:** `browser`, `node`, `domElement`
+
+### Conditional Execution with `_.if`
+
+> **Note:** In JavaScript, `if` is a reserved keyword. This utility avoids syntax errors by being used as a property on the main library object (e.g., `_.if`), not as a standalone import.
+
+SUtility provides a readable fluent interface for conditional execution by chaining with the `is` utility.
+
+```javascript
+import _ from 'sutility';
+
+// Simple if...then
+_.if.is.string('hello', () => {
+  console.log('It is a string!');
 });
+// => Logs: "It is a string!"
 
-// 5. Dispatch actions to update the state.
-app.dispatch('increment');       // Console logs: "The current count is: 1"
-app.dispatch('add', 5);          // Console logs: "The current count is: 6"
+// If...else chain
+_.if.is.number(42, () => {
+  console.log('It is a number.');
+}).else(() => {
+  console.log('It is NOT a number.');
+});
+// => Logs: "It is a number."
+```
+
+---
+
+## Function Helpers
+
+Higher-order functions that add functionality to your existing functions, helping you control execution, manage arguments, and compose logic.
+
+### debounce
+`_.debounce(func, wait, [options])`
+
+Creates a debounced function that delays invoking `func` until after `wait` milliseconds have elapsed since the last time the debounced function was invoked. This is useful for preventing a function from firing too often, such as handling search input or window resizing events.
+
+**Parameters**
+1. `func` (*Function*): The function to debounce.
+2. `wait` (*Number*): The number of milliseconds to delay.
+3. `[options]` (*Object*): An optional options object.
+    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `false`.
+    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
+
+**Returns**
+(*Function*): Returns the new debounced function.
+
+**Example**
+```javascript
+import { debounce } from 'sutility';
+
+const performSearch = (query) => {
+  console.log(`Searching for: ${query}`);
+};
+const debouncedSearch = debounce(performSearch, 300);
+debouncedSearch('hello'); // This is the only call that will execute after 300ms
+```
+
+### throttle
+`_.throttle(func, wait, [options])`
+
+Creates a throttled function that only invokes `func` at most once per every `wait` milliseconds. This is useful for rate-limiting functions that execute on rapidly-firing events, like scrolling or mouse movement.
+
+**Parameters**
+1. `func` (*Function*): The function to throttle.
+2. `wait` (*Number*): The number of milliseconds to throttle invocations to.
+3. `[options]` (*Object*): An optional options object.
+    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `true`.
+    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
+
+**Returns**
+(*Function*): Returns the new throttled function.
+
+**Example**
+```javascript
+import { throttle } from 'sutility';
+
+const onScroll = () => {
+  console.log('Scroll event handled!');
+};
+const throttledScroll = throttle(onScroll, 1000);
+window.addEventListener('scroll', throttledScroll);
+```
+
+### curry
+`_.curry(func)`
+
+Creates a function that accepts arguments of `func` one at a time. This allows for partial application, making it easier to create specialized functions and compose them.
+
+**Parameters**
+1. `func` (*Function*): The function to curry.
+
+**Returns**
+(*Function*): Returns the new curried function.
+
+**Example**
+```javascript
+import { curry } from 'sutility';
+
+const add = (a, b, c) => a + b + c;
+const curriedAdd = curry(add);
+const add5 = curriedAdd(5);
+const add5and10 = add5(10);
+console.log(add5and10(20)); // => 35
+```
+
+### pipe
+`_.pipe(...funcs)`
+
+Performs left-to-right function composition. Creates a new function that passes the result of each function to the next one in the sequence.
+
+**Parameters**
+1. `...funcs` (*Function[]*): The sequence of functions to compose.
+
+**Returns**
+(*Function*): Returns the new composite function.
+
+**Example**
+```javascript
+import { pipe } from 'sutility';
+
+const add5 = (x) => x + 5;
+const multiplyBy2 = (x) => x * 2;
+const processNumber = pipe(add5, multiplyBy2);
+console.log(processNumber(10)); // => 30
 ```
 
 ---
@@ -304,147 +458,48 @@ const config1 = getConfig();
 const config2 = getConfig();
 // config1 === config2
 ```
+
 ---
 
-## Function Helpers
+## The Lightweight MV* Framework
 
-Higher-order functions that add functionality to your existing functions, helping you control execution, manage arguments, and compose logic.
+SUtility includes a simple yet powerful MV* (Model-View-*) framework to help you structure your client-side applications. It provides a clear separation of concerns, making your code more organized, scalable, and easier to reason about without the overhead of a large, complex framework.
 
-### debounce
-`_.debounce(func, wait, [options])`
+### Usage Example
 
-Creates a debounced function that delays invoking `func` until after `wait` milliseconds have elapsed since the last time the debounced function was invoked. This is useful for preventing a function from firing too often, such as handling search input or window resizing events.
-
-**Parameters**
-1. `func` (*Function*): The function to debounce.
-2. `wait` (*Number*): The number of milliseconds to delay.
-3. `[options]` (*Object*): An optional options object.
-    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `false`.
-    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
-
-**Returns**
-(*Function*): Returns the new debounced function.
-
-**Example**
 ```javascript
-import { debounce } from 'sutility';
+import { framework } from 'sutility';
 
-// A search function that would normally call an API
-const performSearch = (query) => {
-  console.log(`Searching for: ${query}`);
-};
+const app = framework({
+  state: { count: 0 },
+  actions: {
+    increment: (state) => ({ ...state, count: state.count + 1 }),
+  },
+  views: {
+    logCount: (state) => console.log(`Count is: ${state.count}`)
+  }
+});
 
-const debouncedSearch = debounce(performSearch, 300);
-
-// Imagine a user typing 'hello' into a search bar quickly
-debouncedSearch('hello'); // This is the only call that will execute after 300ms
-
-// => Console logs: "Searching for: hello"
+app.dispatch('increment'); // Logs: "Count is: 1"
 ```
 
-### throttle
-`_.throttle(func, wait, [options])`
-
-Creates a throttled function that only invokes `func` at most once per every `wait` milliseconds. This is useful for rate-limiting functions that execute on rapidly-firing events, like scrolling or mouse movement.
-
-**Parameters**
-1. `func` (*Function*): The function to throttle.
-2. `wait` (*Number*): The number of milliseconds to throttle invocations to.
-3. `[options]` (*Object*): An optional options object.
-    * `leading` (*boolean*): Specify invoking on the leading edge of the timeout. Defaults to `true`.
-    * `trailing` (*boolean*): Specify invoking on the trailing edge of the timeout. Defaults to `true`.
-
-**Returns**
-(*Function*): Returns the new throttled function.
-
-**Example**
-```javascript
-import { throttle } from 'sutility';
-
-const onScroll = () => {
-  console.log('Scroll event handled!');
-};
-
-const throttledScroll = throttle(onScroll, 1000);
-
-// The console will log "Scroll event handled!" at most once every second.
-window.addEventListener('scroll', throttledScroll);
-```
-
-### curry
-`_.curry(func)`
-
-Creates a function that accepts arguments of `func` one at a time. This allows for partial application, making it easier to create specialized functions and compose them.
-
-**Parameters**
-1. `func` (*Function*): The function to curry.
-
-**Returns**
-(*Function*): Returns the new curried function.
-
-**Example**
-```javascript
-import { curry } from 'sutility';
-
-const add = (a, b, c) => a + b + c;
-
-const curriedAdd = curry(add);
-
-const add5 = curriedAdd(5);
-const add5and10 = add5(10);
-
-console.log(add5and10(20)); // => 35
-```
-
-### pipe
-`_.pipe(...funcs)`
-
-Performs left-to-right function composition. Creates a new function that passes the result of each function to the next one in the sequence.
-
-**Parameters**
-1. `...funcs` (*Function[]*): The sequence of functions to compose.
-
-**Returns**
-(*Function*): Returns the new composite function.
-
-**Example**
-```javascript
-import { pipe } from 'sutility';
-
-const add5 = (x) => x + 5;
-const multiplyBy2 = (x) => x * 2;
-
-const processNumber = pipe(add5, multiplyBy2);
-
-console.log(processNumber(10)); // => 30
-```
 ---
 
-## Type Checking with `is`
+## The Optimizer: Custom Production Builds
 
-SUtility includes a comprehensive `is` object that provides a whole suite of convenient and readable methods for type checking and other common assertions. All checks are also available in a negated form under the `is.not` property (e.g., `is.not.string(val)`).
+One of the most powerful features of SUtility is its ability to create a lightweight, optimized build for your production environment. The optimizer tool parses your project's source code, detects which SUtility functions are being used, and generates a new library file that includes *only* those functions.
 
-### Available Checks
+---
 
-#### Type Checks
-`string`, `number`, `boolean`, `array`, `object`, `function`, `asyncFunction`, `promise`, `date`, `regexp`, `symbol`, `error`
+## API Reference
 
-#### Value Checks
-`null`, `undefined`, `nan`, `truthy`, `falsy`
-
-#### Content & Format Checks
-`empty` (for arrays, objects, strings), `json` (for strings), `url` (for strings), `email` (for strings), `integer`, `float`
-
-#### Environment Checks
-`browser`, `node`, `domElement`
+The full API is extensively documented within the source code itself. Each function includes comments explaining its parameters, return values, and usage examples. Please feel free to explore the `lib` directory to see all available functions.
 
 ---
 
 ## Testing
 
-This library uses a comprehensive suite of unit tests.
-
-To run the tests yourself, clone the repository and run:
+This library uses a comprehensive suite of unit tests. To run the tests yourself, clone the repository and run:
 
 ```bash
 npm install
@@ -457,7 +512,7 @@ The library currently has over 40% code coverage, with a clear roadmap to increa
 
 ## Contributing
 
-Contributions are welcome! If you'd like to help improve SUtility, please feel free to fork the repository, make your changes, and submit a pull request.
+Contributions are welcome! Please fork the repository, make your changes, and open a pull request.
 
 1.  Fork the repository.
 2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
