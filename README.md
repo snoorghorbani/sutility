@@ -3,9 +3,9 @@
 [![NPM Version](https://img.shields.io/npm/v/sutility.svg?style=flat-square)](https://www.npmjs.com/package/sutility)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-SUtility is a comprehensive functional programming library for JavaScript, providing over 180 utility functions that operate without modifying native prototypes. Designed for both browser and Node.js environments, it also includes a lightweight MV* framework to promote organized code structure. A key innovation of this library is its ability to parse a target project's codebase and generate an optimized, tree-shaken build containing only the required functions for a minimal production footprint.
+SUtility is a comprehensive functional programming library for JavaScript, providing over 180 utility functions that operate without modifying native prototypes. It is designed to be a business-independent, zero-dependency toolkit for any project.
 
-As the sole author and maintainer of the library, I was responsible for its full lifecycle from conception to ongoing support. My key contributions included engineering its innovative tree-shaking feature for optimized builds, developing a comprehensive unit test suite to ensure code quality, and writing detailed API and end-user documentation for all 180+ functions.
+This library is isomorphic, supporting both **browser** and **Node.js** environments.
 
 ---
 
@@ -15,19 +15,22 @@ As the sole author and maintainer of the library, I was responsible for its full
 * **Functional-First:** Encourages a clean, functional programming style.
 * **Zero Dependencies:** Lightweight and will not bloat your project with other packages.
 * **Safe:** Does not extend or modify any built-in JavaScript objects.
-* **Lightweight MV* Framework:** Includes a simple Model-View-* framework to help organize code.
+* **Lightweight MVW Framework:** Includes a simple Model-View-* framework to help organize code.
 * **Unique Optimizer:** Includes a built-in tool to create a production build of the library that only contains the functions your project actually uses.
 
 ## Installation
 
 Install the library using npm:
 
+```bash
 npm install sutility
+```
 
 ## Basic Usage
 
 Import the functions you need and start using them right away.
 
+```javascript
 import { capitalize, get } from 'sutility';
 
 // Example 1: String manipulation
@@ -38,6 +41,7 @@ console.log(capitalize('hello world'));
 const user = { profile: { name: 'John Doe' } };
 console.log(get(user, 'profile.name', 'Default Name'));
 // => 'John Doe'
+```
 
 ---
 
@@ -51,7 +55,9 @@ This results in the smallest possible production footprint, improving your appli
 
 Run the following command from your project's root directory:
 
+```bash
 npx sutility build --input ./src --output ./sutility.custom.js
+```
 
 You can then import the custom, smaller build in your production code.
 
@@ -69,8 +75,10 @@ This library uses a comprehensive suite of unit tests.
 
 To run the tests yourself, clone the repository and run:
 
+```bash
 npm install
 npm test
+```
 
 The library currently has over 40% code coverage, with a clear roadmap to increase this significantly.
 
@@ -89,3 +97,4 @@ Contributions are welcome! If you'd like to help improve SUtility, please feel f
 ## License
 
 This project is licensed under the MIT License - see the `LICENSE.md` file for details.
+```
